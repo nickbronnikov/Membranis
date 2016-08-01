@@ -1,0 +1,133 @@
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v17/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+}
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}
+.maincolor{
+    color: #607d8b;
+}
+#mainpanel{
+    background-color: #607d8b;
+    background-image: url(../img/library.jpg);
+    min-height: 500px;
+}
+@font-face {
+    font-family: Cuprum;
+    src: url(../font/Cuprum-Bold.ttf);
+}
+#mainnav{
+    min-height: 70px;
+}
+.navel{
+    padding-top: 10px;
+}
+h1{
+    font-family: 'Cuprum',sans-serif;
+}
+.maintext{
+    color: white!important;
+}
+.button-color {
+    background-color: #607d8b!important;
+    border-color: #607d8b!important;
+}
+.button-nav{
+    margin: 0 10px 0 0;
+}
+.body{
+    background-image: linear-gradient(180deg, #f5f5f5, #fff);
+}
+.navbar-default{
+    background-color: #FFFFFF!important;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+#headinfo{
+    font-size: 3em;
+}
+#button-reg {
+    width: 100%;
+}
+#width-full {
+    width: 100%;
+}
+.regform{
+    padding-top: 5%;
+}
+#width-full2 {
+    width: 100%;
+}
+.table-reg{
+    display: table;
+    width: 100%;
+    padding: 0;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    margin: 30px auto 0;
+    overflow: hidden;
+    list-style: none;
+}
+.table-reg li:first-child{
+    border-left: 0;
+}
+.table-reg li.current{
+    color: #333333;
+    background-color: #FFFFFF;
+}
+.success-col{
+    color: #5cb85c;
+}
+.alert-col{
+    color: #a94442;
+}
+.table-reg li {
+    display: table-cell;
+    width: 33.3%;
+    padding: 10px 15px;
+    color: #ccc;
+    cursor: default;
+    background-color: #fafafa;
+    border-left: 1px solid #ddd;
+}
+li{
+    text-align: -webkit-match-parent;
+}
+.step-column{
+    border-right: 2px solid #ccc;
+    width: 33%!important;
+}
+.table-reg li .icon{
+    float: left;
+    margin-right: 15px;
+    margin-bottom: 5px;
+}
+.form-reg{
+    padding-top: 3%;
+}
+.info-reg{
+    min-height: 16px;
+    font-size: 12px;
+    color: #8c8c8c;
+    margin: 4px 0 30px 0;
+
+}

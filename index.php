@@ -1,3 +1,6 @@
+<?php
+require 'includes/db.php';
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,19 +38,14 @@
     <div class="jumbotron" id="mainpanel">
         <div class="container">
             <div class="row">
-                <div class="col-md-7 col-lg-7 col-sm-7 col-xs-12">
-                    <h1 class="center-block maintext">Облачная библиотека</h1>
-                        <h2 class="maintext">Ваши книги. Всегда, везде, с вами.</h2>
-            </div>
-                <div class="col-md-4 col-lg-4 col-sm-4 col-xs-12">
-                    <br><br><br><br>
-                    <form>
-                        <input type="text" class="form-control" id="login" placeholder="Enter login"><br>
-                        <input type="text" class="form-control" id="email" placeholder="Enter e-mail"><br>
-                        <input type="text" class="form-control" id="password" placeholder="Enter password"><br>
-                        <button type="submit" class="btn btn-success btn-lg center-block" id="button-reg">Sign up</button>
-                    </form>
+                <div class="col-md-7 col-md-offset-3 col-lg-7 col-lg-offset-3 col-sm-12 col-xs-12">
+                    <div class="center-block reg main-jumbotron">
+                        <h1 class="maintext">Облачная библиотека</h1>
+                        <h2 class="maintext">Ваши книги. Всегда, везде, с вами.
+                        <div class="button-reg"><a href="signup.php" class="btn btn-success btn-lg center-block" id="button-reg">Sign up</a>
+                    </div>
                 </div>
+            </div>
         </div>
     </div>
 </div>

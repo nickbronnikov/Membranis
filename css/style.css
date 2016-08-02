@@ -41,11 +41,19 @@
 .navel{
     padding-top: 10px;
 }
-h1{
-    font-family: 'Cuprum',sans-serif;
+#regbutton {
+    width: 100%;
+}
+#button-reg{
+    width: 50%;
 }
 .maintext{
     color: white!important;
+}
+.button-plan{
+    background-color: #607d8b!important;
+    border-color: #607d8b!important;
+    width: 95%;
 }
 .button-color {
     background-color: #607d8b!important;
@@ -64,16 +72,23 @@ h1{
 #headinfo{
     font-size: 3em;
 }
-#button-reg {
-    width: 100%;
+.button-reg {
+    padding-top: 5%;
+
 }
 #width-full {
     width: 100%;
 }
-.regform{
+.main-jumbotron{
+    padding-top: 10%;
+}
+.footer{
     padding-top: 5%;
 }
-#width-full2 {
+.regform{
+    padding-top: 3%;
+}
+.width-full {
     width: 100%;
 }
 .table-reg{
@@ -109,6 +124,10 @@ h1{
     background-color: #fafafa;
     border-left: 1px solid #ddd;
 }
+.done{
+    padding-left: 5%;
+    font-size: 3em;
+}
 li{
     text-align: -webkit-match-parent;
 }
@@ -129,5 +148,10 @@ li{
     font-size: 12px;
     color: #8c8c8c;
     margin: 4px 0 30px 0;
-
 }
+.info-plan{
+     min-height: 16px;
+     font-size: 18px;
+     color: #8c8c8c;
+     margin: 4px 0 30px 0;
+ }

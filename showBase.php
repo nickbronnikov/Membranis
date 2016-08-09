@@ -1,10 +1,9 @@
 <?php
-require 'db.php';
-$table_name='test_table';
-$res = B::selectFromBase($table_name, null, null, null);
+require 'includes/db.php';
+$table_name='users';
+$conditions=array('login');
+$key=array('mark.watney');
+$res = B::selectFromBase($table_name, null, $conditions, $key);
 $row = $res->fetchAll();
-for ($i = 0; $i < count($row); $i++) {
-    echo $row[$i]['id'] . '  ' . $row[$i]['login'] . '  ' . $row[$i]['password'];
-    echo '<br>';
-}
+print_r ($row[0]['id']);
 ?>

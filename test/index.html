@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<title>Download</title>
+		<link href="../css/download-style.css" type="text/css" rel="stylesheet"/>
+		<link href="../css/bootstrap.css" type="text/css" rel="stylesheet"/>
+	</head>
+	<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-3 col-lg-3">
+				<button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="bottom" data-content='
+				<div class="well well-lg">Hello world!sdfgsdfgwregwergwer.vjnwervwuebvrhuwrevknwierlvjwervjkwervihjkwerhvbiwjhv</div>'>
+					Информер внизу
+				</button>
+				<form id="upload" method="post" action="upload.php" enctype="multipart/form-data">
+					<div id="drop">
+						<a class="btn btn-default width-full"><i class="material-icons">add_circle</i></a>
+						<input type="file" name="upl" multiple />
+					</div>
+					<div class="width-full" id="append">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	        
+		<!-- JavaScript Includes -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script src="../js/js-download/jquery.knob.js"></script>
+
+		<!-- jQuery File Upload Dependencies -->
+		<script src="../js/js-download/jquery.ui.widget.js"></script>
+		<script src="../js/js-download/jquery.iframe-transport.js"></script>
+		<script src="../js/js-download/jquery.fileupload.js"></script>
+		
+		<!-- Our main JS file -->
+		<script src="../js/js-download/script.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+
+	</body>
+</html>

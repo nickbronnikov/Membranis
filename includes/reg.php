@@ -24,17 +24,21 @@ if ($_POST['function']=='allCheck'){
 function allCheck($login,$email,$password){
     $login=htmlspecialchars(trim($login));
     $email=htmlspecialchars(trim($email));
-    $password=htmlspecialchars(trim($password));
+    $password=htmlspecialchars($password);
     $table_name='users';
     $json=array();
     if (!checkField($table_name,array('login'),array($login)) && !checkField($table_name,array('email'),array($email)) && strlen($password)>=5){
         $time=time();
         $password=password_hash($password,PASSWORD_DEFAULT);
-        $fields=array('login', 'email', 'password', 'join_date');
-        $data=array($login, $email, $password,$time);
+        $folder=preg_replace ("/[^a-zA-ZА-Яа-я0-9\s]/","",crypt(rus2translit($login)));
+        $fields=array('login', 'email', 'password', 'join_date','folder');
+        $data=array($login, $email, $password,$time,$folder);
         $success=B::inBase($table_name,$fields,$data);
         if ($success) {
-            mkdir("../users_files/".rus2translit($login),0777);
+            if (!file_exists("../users_files/".$folder)) mkdir("../users_files/".$folder);
+            $res = B::selectFromBase($table_name, null, array('login'), array($login));
+            $row = $res->fetchAll();
+            $_SESSION['logged_user']=$row[0]['login'];
             $json['error']='false';
             $json['test']='true';
         }

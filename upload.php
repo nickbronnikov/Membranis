@@ -1,33 +1,17 @@
 <?php
-require 'change_files.php';
-$ds = DIRECTORY_SEPARATOR;
-$storeFolder = 'uploads';
-if (!empty($_FILES)) {
-    $whitelist = array(".fb2", ".jpeg", ".pdf", ".mp4");
-    $data = array();
-    $error = true;
-
-    //Проверяем разрешение файла
-    foreach  ($whitelist as  $item) {
-        if(preg_match("/$item\$/i",$_FILES['file']['name'])) $error = false;
-    }
-    if (!$error) {
-        $tempFile = $_FILES['file']['tmp_name'];
-        $targetPath = dirname(__FILE__) . $ds . $storeFolder . $ds;
-        $targetFile = $targetPath . rus2translit($_FILES['file']['name']);
-        move_uploaded_file($tempFile, $targetFile);
+require 'includes/change_files.php';
+require 'includes/db.php';
+$allowed = array('png', 'jpg', 'gif','fb2','pdf');
+if(isset($_FILES['upl']) && $_FILES['upl']['error'] == 0){
+    $extension = pathinfo($_FILES['upl']['name'], PATHINFO_EXTENSION);
+    $stmt=B::selectFromBase('users',array('id','folder'),array('login'),array($_SESSION['logged_user']));
+    $data=$stmt->fetchAll();
+    $file_info=pathinfo($_FILES['upl']['name']);
+    $name=preg_replace ("/[^a-zA-ZА-Яа-я0-9\s]/","",crypt(rus2translit($file_info['filename']))).'.'.$file_info['extension'];
+    if(in_array(strtolower($extension), $allowed)) {
+        if (move_uploaded_file($_FILES['upl']['tmp_name'], 'users_files/'.$data[0]['folder'].'/'.$name)) {
+            B::inBase('users_files',array('id_users','path','original_name'),array($data[0]['id'],'users_files/'.$data[0]['folder'].'/'.$name,$_FILES['upl']['name']));
+        }
     }
 }
 ?>
-<!doctype html>
-<html>
-<head>
-    <link href="css/materialize.css" type="text/css" rel="stylesheet">
-    <script src="js/dropzone.js" type="text/javascript"></script>
-    <script src="js/materialize.min.js" type="text/javascript"></script>
-    <script src="js/script.js" type="text/javascript"></script>
-    <link href="css/style.css" type="text/css" rel="stylesheet">
-</head>
-<body>
-</body>
-</html>

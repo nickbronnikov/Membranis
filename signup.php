@@ -1,27 +1,20 @@
 <?php
-require 'includes/db.php';
-$login=htmlspecialchars(trim($_POST['login']));
-$email=htmlspecialchars(trim($_POST['email']));
-$password=htmlspecialchars(trim($_POST['password']));
-$_SESSION['login']=$login;
-$_SESSION['email']=$email;
-$_SESSION['password']=$password;
+
 ?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>CloudLibrary</title>
+    <title>Join Membranis</title>
     <script src="js/jquery-3.1.0.min.js"></script>
-    <script src="js/dropzone.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/script.js"></script>
+    <script src="js/signup.js"></script>
     <link href="css/style.css" type="text/css" rel="stylesheet">
     <link href="css/bootstrap.css" type="text/css" rel="stylesheet">
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
 </head>
 <body>
-<div class="navbar navbar-default navbar-static-top" id="mainnav" role="navigation">
+<div class="navbar navbar-default navbar-static-top" id="nav" role="navigation">
     <div class="container navel">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -34,7 +27,7 @@ $_SESSION['password']=$password;
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right navel">
-                <a class="btn btn-success pull-left button-nav button-color">Sign in</a>
+                <a class="btn btn-success pull-left button-nav button-color" href="signin">Sign in</a>
             </ul>
         </div>
     </div>
@@ -88,7 +81,7 @@ $_SESSION['password']=$password;
                     <input type="text" class="form-control" id="emailreg">
                     <span class="input-group-addon" id="emailregcheck"></span>
                 </div>
-                <span id="emailregalert"><p class="info-reg">This is your e-mail address. We promise not to share your email with anyone.</p></span>
+                <span id="emailregalert"><p class="info-reg">We promise not to share your email with anyone.</p></span>
                 <label for="passwordreg">Password</label>
                 <div class="input-group">
                     <input type="password" class="form-control" id="passwordreg">

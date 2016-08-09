@@ -6,13 +6,9 @@ function checkField($table_name,$fild,$key){
     if (count($resr)==0) return false; else return true;
 }
 function checkPassword($logpas){
-    $mysqli= new mysqli("localhost","mysql","mysql","Library");
-    $mysqli->query("SET NAMES 'utf8'");
-    $login=$logpas[1];
-    $res = $mysqli->query ("SELECT * FROM `users` WHERE `login`='$logpas[1]'");
-    $row=$res->fetch_assoc();
-    $mysqli->close();
-    return password_verify($logpas[2],$row['password']);
+    $res=B::selectFromBase('users',null,array('login'),array($logpas[1]));
+    $resr=$res->fetchAll();
+    return password_verify($logpas[2],$resr[0]['password']);
 }
 class B{
     public $db_login="mysql";

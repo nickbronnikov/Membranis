@@ -57,7 +57,7 @@ if ($_SESSION['logged_user']==null)  echo '<META HTTP-EQUIV="Refresh" CONTENT="0
                         <li><a href="#">Другое действие</a></li>
                         <li><a href="#">Что-то еще</a></li>
                         <li class="divider"></li>
-                        <li><a href="#">Log out</a></li>
+                        <li><a href="logout">Log out</a></li>
                     </ul>
                 </li>
             </ul>

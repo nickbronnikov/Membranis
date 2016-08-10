@@ -40,7 +40,7 @@ require 'includes/db.php';
                         <li><a href="library">Your library</a></li>
                         <li><a href="#">Settings</a></li>
                         <li class="divider"></li>
-                        <li><a href="#" onclick="logout()">Log out</a></li>
+                        <li><a href="logout">Log out</a></li>
                     </ul>
                 </li>
             </ul>
@@ -56,7 +56,7 @@ require 'includes/db.php';
                     <div class="center-block reg main-jumbotron">
                         <h1 class="maintext text-center">Облачная библиотека</h1>
                         <h2 class="maintext text-center">Ваши книги. Всегда, везде, с вами.
-                        <div class="button-reg"><a href="signup.php" class="btn btn-success btn-lg center-block" id="button-reg">Sign up</a>
+                        <div class="button-reg"><a href="signup" class="btn btn-success btn-lg center-block" id="button-reg">Sign up</a>
                     </div>
                 </div>
             </div>
@@ -80,10 +80,4 @@ require 'includes/db.php';
 <div id="logout"></div>
 </body>
 
-<footer >
-    <hr>
-    <div class="container">
-        <p>© CloudLibrary 2014</p>
-    </div>
-</footer>
 </html>

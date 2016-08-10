@@ -1,5 +1,5 @@
 <?php
-require '../includes/change_files.php';
+require '../includes/file_work.php';
 $allowed = array('png', 'jpg', 'gif','fb2','pdf');
 if(isset($_FILES['upl']) && $_FILES['upl']['error'] == 0){
 	$extension = pathinfo($_FILES['upl']['name'], PATHINFO_EXTENSION);

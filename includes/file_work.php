@@ -74,4 +74,33 @@ function dsCrypt($input,$decrypt=false) {
         $o[] = $decrypt ? $s1[$al[1]][$al[0]] : $s2[$al[1]][$al[0]];
     return implode('',$o);
 }
+class Cover{
+    static function pdfCover($filename,$filefolder,$namecover){
+        //заготовка, есть проблемы с белым фоном
+        $imagick = new Imagick();
+        $imagick->readImage($_SERVER['DOCUMENT_ROOT'] . $filename.'[0]');
+        $imagick->writeImage($_SERVER['DOCUMENT_ROOT'] . $filefolder.$namecover.'.jpg');
+    }
+    static function fb2Cover($filename,$filefolder,$namecover){
+        $namecover=$namecover.'.jpg';
+        $fb2DOM=new DOMDocument();
+        $fb2DOM->load($filename);
+        $test=$fb2DOM->getElementsByTagName('image');
+        $binary_image_code='';
+        foreach ($binary=$fb2DOM->getElementsByTagName('binary') as $atr){
+            $_SESSION['test']='enter234';
+            $atrn=$atr->getAttribute('id');
+            if ($atrn==str_replace('#','',$test[0]->getAttribute('l:href'))) $binary_image_code=$atr->nodeValue;
+            $ftext=fopen('test.txt','w');
+            fwrite($ftext,$binary_image_code);
+            fclose($ftext);
+        }
+        $cover=base64_decode($binary_image_code);
+        $fjpg=fopen($namecover,'w');
+        fwrite($fjpg,$cover);
+        copy($namecover,$filefolder.$namecover);
+        fclose($fjpg);
+        unlink($namecover);
+    }
+}
 ?>

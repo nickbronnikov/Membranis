@@ -95,11 +95,5 @@
         </div>
     </div>
 </div>
-<footer class="footer">
-    <hr>
-    <div class="container">
-        <p><i class="material-icons md-18">copyright</i> CloudLibrary 2014</p>
-    </div>
-</footer>
 </body>
 </html>

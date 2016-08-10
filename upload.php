@@ -15,7 +15,7 @@ if(isset($_FILES['upl']) && $_FILES['upl']['error'] == 0){
                     Cover::fb2Cover('users_files/'.$data[0]['folder'].'/'.$name,'users_files/'.$data[0]['folder'].'/covers/',preg_replace ("/[^a-zA-ZА-Яа-я0-9\s]/","",crypt(rus2translit($file_info['filename']))));
                     break;
             }
-            B::inBase('users_files',array('id_users','path','original_name','cover'),array($data[0]['id'],'users_files/'.$data[0]['folder'].'/'.$name,$_FILES['upl']['name'],'users_files/'.$data[0]['folder'].'/covers/'.preg_replace ("/[^a-zA-ZА-Яа-я0-9\s]/","",crypt(rus2translit($file_info['filename'])).'jpg')));
+            B::inBase('users_files',array('id_users','path','original_name','cover'),array($data[0]['id'],'users_files/'.$data[0]['folder'].'/'.$name,$_FILES['upl']['name'],'users_files/'.$data[0]['folder'].'/covers/'.preg_replace ("/[^a-zA-ZА-Яа-я0-9\s]/","",crypt(rus2translit($file_info['filename']))).'.jpg'));
         }
     }
 }

@@ -1,34 +1,54 @@
-<?php 
+<?php
 require 'includes/db.php';
-if ($_SESSION['logged_user']==null)  echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=index.php">';
+require 'includes/file_work.php';
+$_SESSION[$_GET['id']]=0;
+$_SESSION['id-book']=$_GET['id'];
+$stmt=B::selectFromBase('users_files',null,array('id'),array($_GET['id']));
+$data=$stmt->fetchAll();
+$file_info=pathinfo($data[0]['path']);
+switch ($file_info['extension']){
+    case 'fb2':
+        if ($data[0]['progress']==null) $str=fb2($data[0]['path'],str_replace('cover.jpg', '', $data[0]['cover']),0); else{
+            $progress=json_decode($data[0]['progress'],true);
+            $str=fb2($data[0]['path'],str_replace('cover.jpg', '', $data[0]['cover']),$progress['chapter']);
+            $function='<script>progressPage('.$progress['page_progress'].')</script>';
+        }
+        $reader='<div class="container">
+    <div class="row">
+        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">
+            <button class="btn btn-success nav-btn" id="scrollUp">Up</button>
+        </div>
+        <div class="col-md-10 col-lg-10 col-sm-10 col-xs-10 well" id="fb2-reader">
+            '.$str.'
+        </div>
+        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">
+            <button class="btn btn-success nav-btn" id="scrollDown">Down</button>
+        </div>
+    </div>
+</div>'.$function;
+        break;
+
+}
 ?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>CloudLibrary</title>
+    <title>CloudReader</title>
     <script src="js/jquery-3.1.0.min.js"></script>
     <link href="css/download-style.css" type="text/css" rel="stylesheet"/>
     <link href="css/bootstrap.css" type="text/css" rel="stylesheet"/>
     <link href="css/style.css" type="text/css" rel="stylesheet"/>
     <link href="css/progress.css" type="text/css" rel="stylesheet"/>
     <script src="js/js-download/jquery.knob.js"></script>
-    <script src="js/library.js"></script>
-    <script src="js/js-download/jquery.ui.widget.js"></script>
-    <script src="js/js-download/jquery.iframe-transport.js"></script>
-    <script src="js/js-download/jquery.fileupload.js"></script>
-    <script src="js/js-download/script.js"></script>
+    <script src="js/reader.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/jqueryScrollTo.js"></script>
     <script src="js/progress-bar/progress.js"></script>
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
 </head>
 <body>
-<script>
-    $('body').show();
-    $('.version').text(NProgress.version);
-    NProgress.start();
-    setTimeout(function() { NProgress.done(); $('.fade').removeClass('out'); }, 1000);
-</script>
+<div id="page">
 <div class="navbar navbar-default navbar-static-top" id="nav" role="navigation">
     <div class="container navel">
         <div class="navbar-header">
@@ -42,23 +62,6 @@ if ($_SESSION['logged_user']==null)  echo '<META HTTP-EQUIV="Refresh" CONTENT="0
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li class="li-nav"><form id="upload" method="post" action="upload.php" enctype="multipart/form-data">
-                    <div id="drop">
-                        <a class="btn btn-default" id="download">Download</a>
-                        <input type="file" name="upl" multiple />
-                    </div>
-                </form></li>
-                <li class="li-nav-progress"><span class="progress-download" id="pd">
-                    <span class="dropdown">
-                        <a class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" disabled="disabled" id="pd-btn"><b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu download-info">
-                            <span id="append"></span>
-                            <li class="divider"></li>
-                            <li><a  class="width-full btn btn-default" id="clearprogressbar">Clear downloads list</a></li>
-                        </ul>
-                    </span>
-                </span></li>
                 <li class="dropdown maincolor li-nav">
                     <button href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><?=$_SESSION['logged_user'];?>   <b class="caret"></b></button>
                     <ul class="dropdown-menu">
@@ -73,9 +76,8 @@ if ($_SESSION['logged_user']==null)  echo '<META HTTP-EQUIV="Refresh" CONTENT="0
         </div>
     </div>
 </div>
-<div class="container lib-body">
-    <div class="row" id="book">
-
+    <div id="reader-body">
+        <?=$reader?>
     </div>
 </div>
 </body>

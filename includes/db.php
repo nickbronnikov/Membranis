@@ -31,6 +31,21 @@ class B{
         $pdo=null;
         return $values;
     }
+    static function updateBase($table_name,$fields,$values,$conditions,$key){
+        $db=new B();
+        $query="UPDATE `$db->db_name`.`$table_name` SET ";
+        $dsn = "mysql:host=$db->db_host;dbname=$db->db_name;charset=$db->db_charset";
+        $opt=array(
+            PDO::ATTR_ERRMODE  =>PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+        );
+        $pdo=new PDO($dsn,$db->db_login,$db->db_password,$opt);
+        $sql =$query.B::pdoUpdate($fields,$values,$conditions,$key);
+        $stm = $pdo->prepare($sql);
+        $stm->execute($values);
+        $pdo=null;
+        return $stm;
+    }
     static function selectFromBase($table_name,$fields,$conditions,$key){
         $db=new B();
         $dsn = "mysql:host=$db->db_host;dbname=$db->db_name;charset=$db->db_charset";
@@ -74,6 +89,23 @@ class B{
         }
         $last=count($values)-1;
         $query=$query."?".")";
+        return $query;
+    }
+    function pdoUpdate($fields, $values,$conditions,$key) {
+        $query="";
+        for ($i=0;$i<count($fields)-1;$i++){
+            $query=$query."`$fields[$i]`='".$values[$i]."', ";
+        }
+        $last=count($fields)-1;
+        $query=$query."`$fields[$last]`='".$values[$last]."'";
+        if ($conditions!=null && $key!=null) {
+            $query=$query.' WHERE ';
+            for ($i = 0; $i < count($conditions) - 1; $i++) {
+                $query = $query . "`$conditions[$i]`='" . $key[$i] . "', ";
+            }
+            $last = count($conditions) - 1;
+            $query = $query . "`$conditions[$last]`='" . $key[$last] . "'";
+        }
         return $query;
     }
 }

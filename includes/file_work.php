@@ -74,33 +74,85 @@ function dsCrypt($input,$decrypt=false) {
         $o[] = $decrypt ? $s1[$al[1]][$al[0]] : $s2[$al[1]][$al[0]];
     return implode('',$o);
 }
+function fb2($file_name,$path,$chapter){
+    $fb2DOM = new DOMDocument();
+    $fb2DOM->load($file_name);
+    $bodytag = $fb2DOM->getElementsByTagName('body');
+    $sectiontag = $bodytag[0]->getElementsByTagName('section');
+    $el = $sectiontag[$chapter];
+    $newdoc = new DOMDocument();
+    $cloned = $el->cloneNode(TRUE);
+    $newdoc->appendChild($newdoc->importNode($cloned, TRUE));
+    $str = $newdoc->saveXML();
+    $str = str_replace('<title>', '<h2>', $str);
+    $str = str_replace('</title>', '</h2>', $str);
+    $str = str_replace('<empty-line/>', '<br/>', $str);
+    $str = str_replace('<image', '<img', $str);
+    $str = str_replace('l:href="#', 'src="'.$path, $str);
+    return $str;
+}
+function strlenFB2($path){
+    $fb2DOM = new DOMDocument();
+    $fb2DOM->load($path);
+    $text = $fb2DOM->getElementsByTagName('body');
+    $longstr=strlen($text[0]->textContent);
+    return $longstr;
+}
 class Cover{
     static function pdfCover($filename,$filefolder,$namecover){
         //заготовка, есть проблемы с белым фоном
+        $_SESSION['test']=$_SERVER['DOCUMENT_ROOT'] .'/'.$filename.'\n'.$_SERVER['DOCUMENT_ROOT'] .'/'. $filefolder.$namecover;
         $imagick = new Imagick();
-        $imagick->readImage($_SERVER['DOCUMENT_ROOT'] . $filename.'[0]');
-        $imagick->writeImage($_SERVER['DOCUMENT_ROOT'] . $filefolder.$namecover.'.jpg');
+        $imagick->readImage($_SERVER['DOCUMENT_ROOT'] .'/'. $filename.'[0]');
+        $imagick->writeImage($_SERVER['DOCUMENT_ROOT'] .'/'. $filefolder.$namecover);
     }
-    static function fb2Cover($filename,$filefolder,$namecover){
-        $namecover=$namecover.'.jpg';
-        $fb2DOM=new DOMDocument();
+    static function fb2Cover($filename,$filefolder,$namecover)
+    {
+        $fb2DOM = new DOMDocument();
         $fb2DOM->load($filename);
-        $test=$fb2DOM->getElementsByTagName('image');
-        $binary_image_code='';
-        foreach ($binary=$fb2DOM->getElementsByTagName('binary') as $atr){
-            $_SESSION['test']='enter234';
-            $atrn=$atr->getAttribute('id');
-            if ($atrn==str_replace('#','',$test[0]->getAttribute('l:href'))) $binary_image_code=$atr->nodeValue;
-            $ftext=fopen('test.txt','w');
-            fwrite($ftext,$binary_image_code);
-            fclose($ftext);
-        }
-        $cover=base64_decode($binary_image_code);
-        $fjpg=fopen($namecover,'w');
-        fwrite($fjpg,$cover);
-        copy($namecover,$filefolder.$namecover);
-        fclose($fjpg);
-        unlink($namecover);
+        $coverDom=$fb2DOM->getElementsByTagName('coverpage');
+        $coveratr=$coverDom[0]->getElementsByTagName('image');
+        $namecoverid=str_replace('#','',$coveratr[0]->getAttribute('l:href'));
+        $test = $fb2DOM->getElementsByTagName('image');
+        $binary_image_code = '';
+        foreach ($binary = $fb2DOM->getElementsByTagName('binary') as $atr) {
+            $atrn = $atr->getAttribute('id');
+            if ($atrn == $namecoverid) {
+                $binary_image_code = $atr->nodeValue;
+                $imgDecode = base64_decode($binary_image_code);
+                $fjpg = fopen($namecover, 'w');
+                fwrite($fjpg, $imgDecode);
+                $_SESSION['test']=$filefolder . $namecover;
+                copy($namecover, $filefolder . $namecover);
+                fclose($fjpg);
+                unlink($namecover);
+            } else {
+                $binary_image_code = $atr->nodeValue;
+                $imgDecode = base64_decode($binary_image_code);
+                $fjpg = fopen($atrn, 'w');
+                fwrite($fjpg, $imgDecode);
+                copy($atrn, $filefolder . $atrn);
+                fclose($fjpg);
+                unlink($atrn);
+            }
+    }
+    }
+    static  function fb2Author($filename){
+        $fb2DOM = new DOMDocument();
+        $fb2DOM->load($filename);
+        $des=$fb2DOM->getElementsByTagName('description');
+        $authortag=$des[0]->getElementsByTagName('author');
+        $booknametag=$des[0]->getElementsByTagName('book-title');
+        $bookname=(string)$booknametag[0]->textContent;
+        $author='';
+        $text=$authortag[0]->getElementsByTagName('first-name');
+        if ($text->length!=0) $author=$author.(string)($text[0]->textContent).' ';
+        $text=$authortag[0]->getElementsByTagName('middle-name');
+        if ($text->length!=0) $author=$author.(string)($text[0]->textContent).' ';
+        $text=$authortag[0]->getElementsByTagName('last-name');
+        if ($text->length!=0) $author=$author.(string)($text[0]->textContent);
+        $author=$author.' - '.$bookname;
+        return $author;
     }
 }
 ?>

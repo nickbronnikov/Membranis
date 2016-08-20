@@ -36,7 +36,6 @@ function allCheck($login,$email,$password){
         $success=B::inBase($table_name,$fields,$data);
         if ($success) {
             if (!file_exists("../users_files/".$folder)) mkdir("../users_files/".$folder);
-            if (file_exists("../users_files/".$folder) && !file_exists("../users_files/".$folder."/covers")) mkdir("../users_files/".$folder."/covers");
             $res = B::selectFromBase($table_name, null, array('login'), array($login));
             $row = $res->fetchAll();
             $_SESSION['logged_user']=$row[0]['login'];

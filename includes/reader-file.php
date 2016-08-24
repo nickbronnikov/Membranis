@@ -44,6 +44,21 @@ switch ($_POST['function']) {
         }
         echo $chapter;
         break;
+    case 'progressPDF':
+        $pageProgress=round($_POST['page_progress']/$_POST['p']*100,0,PHP_ROUND_HALF_UP);
+        $newProgress=json_encode(array('pageProgress' => $_POST['page_progress'], 'progress' => $pageProgress, 'p' => $_POST['p']));
+        B::updateBase('users_files',array('progress'), array($newProgress), array('id'), array($_SESSION['id-book']));
+        break;
+    case 'toChapter':
+        $stmt = B::selectFromBase('users_files', null, array('id'), array($_SESSION['id-book']));
+        $data = $stmt->fetchAll();
+        $chapter='';
+        $progress = json_decode($data[0]['progress'],true);
+        $chapter = fb2('../' . $data[0]['path'], str_replace('cover.jpg', '', $data[0]['cover']), $_POST['chapter']);
+        $newProgress = json_encode(array('chapter' => $_POST['chapter'], 'page_progress' => 0, 'progress'=>progress($_POST['chapter'],0,$progress['p'],'../' . $data[0]['path']), 'p'=>$progress['p']));
+        B::updateBase('users_files', array('progress'), array($newProgress), array('id'), array($_SESSION['id-book']));
+        echo $chapter;
+        break;
 }
 function progress($chapter,$pageProgress,$strlen,$file_name){
     $fb2DOM = new DOMDocument();

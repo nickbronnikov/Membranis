@@ -210,6 +210,9 @@ footer {
     .li-nav {
         padding-top: 4%;
     }
+    .li-nav-read{
+        margin-right: 2%;
+    }
     .li-nav-progress {
         padding-top: 4%;
         margin-right: 10px;

@@ -23,12 +23,7 @@ if ($_SESSION['logged_user']==null)  echo '<META HTTP-EQUIV="Refresh" CONTENT="0
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
 </head>
 <body>
-<script>
-    $('body').show();
-    $('.version').text(NProgress.version);
-    NProgress.start();
-    setTimeout(function() { NProgress.done(); $('.fade').removeClass('out'); }, 1000);
-</script>
+<script>progressShow()</script>
 <div class="navbar navbar-default navbar-static-top" id="nav" role="navigation">
     <div class="container navel">
         <div class="navbar-header">
@@ -60,10 +55,10 @@ if ($_SESSION['logged_user']==null)  echo '<META HTTP-EQUIV="Refresh" CONTENT="0
                     </span>
                 </span></li>
                 <li class="dropdown maincolor li-nav">
-                    <button href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><?=$_SESSION['logged_user'];?>   <b class="caret"></b></button>
+                    <button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><?=$_SESSION['logged_user'];?>   <b class="caret"></b></button>
                     <ul class="dropdown-menu">
                         <li><a href="#">Действие</a></li>
-                        <li><a href="#" onclick="showBook(0)">Обновить список</a></li>
+                        <li><a onclick="showBook(0)">Обновить список</a></li>
                         <li><a href="#">Что-то еще</a></li>
                         <li class="divider"></li>
                         <li><a href="logout">Log out</a></li>

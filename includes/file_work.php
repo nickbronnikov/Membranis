@@ -98,6 +98,31 @@ function strlenFB2($path){
     $longstr=strlen($text[0]->textContent);
     return $longstr;
 }
+function chapterList($file_name){
+    $chap='';
+    $fb2DOM = new DOMDocument();
+    $fb2DOM->load($file_name);
+    $bodytag = $fb2DOM->getElementsByTagName('body');
+    $chapters=$bodytag[0]->getElementsByTagName('section');
+    for($i=0;$i<$chapters->length-1;$i++) {
+        $c=$chapters[$i]->getElementsByTagName('title');
+        $chap.=$c[0]->textContent;
+        $chap.='$$$$$';
+    }
+    $c=$chapters[$chapters->length-1]->getElementsByTagName('title');
+    $chap.=$c[0]->textContent;
+    $chapterList=explode('$$$$$',$chap);
+    $chapterHTML='';
+    $j=0;
+    foreach ($chapterList as $item){
+        if (trim($item)=='') $item='***';
+        $chapterHTML.='<li><a onclick="toChapter('.$j.')" href="#'.trim($item).'">'.trim($item).'</a></li>';
+        $j++;
+    }
+    $chapter='<button class="btn btn-success dropdown-toggle li-nav-read" data-toggle="dropdown">Chapters   <b class="caret"></b></button>
+                    <ul class="dropdown-menu">'.$chapterHTML.'</ul>';
+    return $chapter;
+}
 class Cover{
     static function pdfCover($filename,$filefolder,$namecover){
         //заготовка, есть проблемы с белым фоном

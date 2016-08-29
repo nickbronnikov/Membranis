@@ -10,11 +10,16 @@ function showBook(page) {
 
         },
         success: function (data) {
-            $('#book').html(data);
-            $('body').show();
-            $('.version').text(NProgress.version);
-            NProgress.start();
-            setTimeout(function() { NProgress.done(); $('.fade').removeClass('out'); }, 1000);
+            if (data!='') {
+                $('#book').html(data);
+                $('body').show();
+                $('.version').text(NProgress.version);
+                NProgress.start();
+                setTimeout(function () {
+                    NProgress.done();
+                    $('.fade').removeClass('out');
+                }, 1000);
+            }
         }
     });
 }

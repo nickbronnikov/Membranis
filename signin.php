@@ -44,7 +44,7 @@ if (isset($data['loginin'])) {
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right navel">
-                <a class="btn btn-success pull-right" href="signup.php">Sign up</a>
+                <a class="btn btn-success pull-right btn-rad" href="signup.php">Sign up</a>
             </ul>
         </div>
     </div>
@@ -63,7 +63,7 @@ if (isset($data['loginin'])) {
                             <input type="text" class="form-control" id="login" name="login" <?php if ($_SESSION['login']!=null) echo 'value="'.$_SESSION['login'].'"'?>><br>
                             <label for="password">Password</label><span class="pull-right"><a>Forgot password?</a></span>
                             <input type="password" class="form-control" id="password" name="password"><br>
-                            <button type="submit" class="btn btn-lg btn-success width-full" name="loginin"">Sign in</button>
+                            <button type="submit" class="btn btn-lg btn-success width-full btn-rad" name="loginin"">Sign in</button>
                         </form>
                     </div>
                 </div>

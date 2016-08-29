@@ -5,7 +5,7 @@ var waitb='<svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns=
 var step2='<div class="col-md-3 col-lg-3 col-md-offset-3 col-lg-offset-3 col-sm-6 col-xs-6 form-reg"> <div class="panel panel-default" style="width: 100%"> <div class="panel-heading"><h3><strong>Learner</strong></h3></div><div class="panel-body"><br><h1>FREE</h1><br><hr><p>By choosing this plan, you will have 100 MB of cloud storage. Also, you will be shown an advertisement.</p></div><div class="panel-footer"><button type="button" class="btn btn-success btn-lg button-plan center-block" href="signup.php" id="freeplan" onclick="showstep3()">Join Membranis</button></div> </div></div><div class="col-md-3 col-lg-3  col-sm-6 col-xs-6 form-reg"> <div class="panel panel-default" style="width: 100%"> <div class="panel-heading"><h3><strong>Sage</strong></h3></div> <div class="panel-body"> <br><h1>$8 <span class="info-plan">/  year</span></h1><br><hr> <p>For storage of your books you will have 25 gigabytes and no advertising.</p> </div> <div class="panel-footer"><button type="button" class="btn btn-success btn-lg  center-block" href="signup.php" id="payplan" disabled="disabled">Join Membranis</button></div> </div> </div>';
 var step3='<div class="col-md-offset-3 col-lg-offset-3 col-md-5 col-lg-5 col-sm-12 col-xs-12 regform"><div class="panel panel-default width-full"><div class="panel-body"><svg fill="#5cb85c" height="48" viewBox="0 0 24 24" width="48"  xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41L6 19l1.41-1.41L1.83 12 .41 13.41z"/></svg><span class="done">Done!</span><h4>Your account is created. Let\'s start working with your library.</h4><div><a href="index.php" class="btn btn-success btn-lg center-block width-full" id="start">Start</a></div></div></div></div>';
 $(document).ready(function () {
-    $('#loginreg').on('input',function () {
+    $('#loginreg').on('focusout',function () {
         $.ajax({
             type: "POST",
             url: "includes/reg.php",
@@ -15,8 +15,10 @@ $(document).ready(function () {
                 $('#loginregcheck').html(wait);
             },
             success: function (data) {
-                $('#loginregcheck').html(data);
-                if (data==clear) $('#loginregalert').html('<div class="alert alert-danger">Username is already taken</div>');
+                if ($('#loginreg').val()=='') $('#loginregcheck').html(clear); else {
+                    $('#loginregcheck').html(data);
+                    if (data == clear) $('#loginregalert').html('<div class="alert alert-danger">Username is already taken</div>');
+                }
             }
         });
     });
@@ -26,7 +28,7 @@ $(document).ready(function () {
             $('#loginregcheck').html(clear);
         }
     });
-    $('#emailreg').on('input',function () {
+    $('#emailreg').on('focusout',function () {
         $.ajax({
             type: "POST",
             url: "includes/reg.php",
@@ -36,8 +38,10 @@ $(document).ready(function () {
                 $('#emailregcheck').html(wait);
             },
             success: function (data) {
-                $('#emailregcheck').html(data);
-                if (data==clear) $('#emailregalert').html('<div class="alert alert-danger">Email is invalid or already taken</div>');
+                if ($('#loginreg').val()=='') $('#emailregcheck').html(clear); else {
+                    $('#emailregcheck').html(data);
+                    if (data == clear) $('#emailregalert').html('<div class="alert alert-danger">Email is invalid or already taken</div>');
+                }
             }
         });
     });
@@ -56,7 +60,7 @@ $(document).ready(function () {
             $('#passwordregallert').html('<p class="info-reg">Done.</p>');
         }
     });
-    $('#passwordreg').on('focusout',function () {
+    $('#passwordreg').on('input',function () {
         if ($('#passwordreg').val()=='') {
             $('#passwordregcheck').html(clear);
             $('#passwordregallert').html('<div class="alert alert-danger">Enter your password.</div>');

@@ -34,6 +34,7 @@ function allCheck($login,$email,$password){
         $fields=array('login', 'email', 'password', 'join_date','folder');
         $data=array($login, $email, $password,$time,$folder);
         $success=B::inBase($table_name,$fields,$data);
+        B::inBase('users_info',array('login'),array($login));
         if ($success) {
             if (!file_exists("../users_files/".$folder)) mkdir("../users_files/".$folder);
             $res = B::selectFromBase($table_name, null, array('login'), array($login));

@@ -1,6 +1,10 @@
 <?php 
 require 'includes/db.php';
 if ($_SESSION['logged_user']==null)  echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=index.php">';
+$stmt=B::selectFromBase('users',array('id'),array('login'),array($_SESSION['logged_user']));
+$data=$stmt->fetchAll();
+$stmt=B::selectFromBase('users_files',null,array('id_user'),array($data[0]['id']));
+$data=$stmt->fetchAll();
 ?>
 <!DOCTYPE html>
 <html>
@@ -24,6 +28,32 @@ if ($_SESSION['logged_user']==null)  echo '<META HTTP-EQUIV="Refresh" CONTENT="0
 </head>
 <body>
 <script>progressShow()</script>
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="errorExtension">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 class="modal-title" id="myLargeModalLabel"><strong>Wrong extension</strong></h3>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger alert-error">You are trying to download a file with an extension that does not support  by PolisBook. Available extensions: <strong>fb2, pdf</strong>.</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="errorStorage">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 class="modal-title" id="myLargeModalLabel"><strong>Not enough storage</strong></h3>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger alert-error">Not enough storage to download the file. Delete some files, or increase the amount of available storage.</div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="navbar navbar-default navbar-static-top" id="nav" role="navigation">
     <div class="container navel">
         <div class="navbar-header">
@@ -39,13 +69,13 @@ if ($_SESSION['logged_user']==null)  echo '<META HTTP-EQUIV="Refresh" CONTENT="0
             <ul class="nav navbar-nav navbar-right">
                 <li class="li-nav"><form id="upload" method="post" action="upload.php" enctype="multipart/form-data">
                     <div id="drop">
-                        <a class="btn btn-default" id="download">Download</a>
+                        <a class="btn btn-success btn-rad" id="download">Download</a>
                         <input type="file" name="upl" multiple />
                     </div>
                 </form></li>
                 <li class="li-nav-progress"><span class="progress-download" id="pd">
                     <span class="dropdown">
-                        <a class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" disabled="disabled" id="pd-btn"><b class="caret"></b>
+                        <a class="btn btn-default dropdown-toggle btn-rad" type="button" data-toggle="dropdown" disabled="disabled" id="pd-btn"><b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu download-info">
                             <span id="append"></span>
@@ -55,10 +85,10 @@ if ($_SESSION['logged_user']==null)  echo '<META HTTP-EQUIV="Refresh" CONTENT="0
                     </span>
                 </span></li>
                 <li class="dropdown maincolor li-nav">
-                    <button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><?=$_SESSION['logged_user'];?>   <b class="caret"></b></button>
+                    <button class="btn btn-default btn-rad dropdown-toggle" data-toggle="dropdown"><?=$_SESSION['logged_user'];?>   <b class="caret"></b></button>
                     <ul class="dropdown-menu">
                         <li><a href="#">Действие</a></li>
-                        <li><a onclick="showBook(0)">Обновить список</a></li>
+                        <li><a href="#" onclick="showBook(0)">Обновить список</a></li>
                         <li><a href="#">Что-то еще</a></li>
                         <li class="divider"></li>
                         <li><a href="logout">Log out</a></li>
@@ -68,10 +98,19 @@ if ($_SESSION['logged_user']==null)  echo '<META HTTP-EQUIV="Refresh" CONTENT="0
         </div>
     </div>
 </div>
+<div class="body">
 <div class="container lib-body">
     <div class="row" id="book">
-
+        <?php if (count($data)==0) echo '<div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+            <div class="well well-lg info-panel"><svg class="center-block" fill="#607d8b" height="48" viewBox="0 0 24 24" width="48" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
+                </svg>
+                </svg><span class="text-center"><h3 class="text-center maincolor"><strong>You have not uploaded any one book. <a href="library">Download it now!</a></strong></h3>
+            </div>
+        </div>';?>
     </div>
+</div>
 </div>
 </body>
 </html>

@@ -1,3 +1,4 @@
+var checkSpace;
 $(function(){
     var ul = $('#upload ul');
     $('#drop a').click(function(){
@@ -6,6 +7,16 @@ $(function(){
     $('#upload').fileupload({
         dropZone: $('#drop'),
         add: function (e, data) {
+            var fileUrl = data.files[0].name,
+                parts, ext = ( parts = fileUrl.split("/").pop().split(".") ).length > 1 ? parts.pop() : "";
+            if(ext!='fb2' && ext!='pdf'){
+                $('#errorExtension').modal('show');
+                return;
+            }
+            if (checkSizeInSpace(data.files[0].size)){
+                $('#errorStorage').modal('show');
+                return;
+            }
             var tpl = $('<li><div class="download-li width-full"><input class="progress-download" type="text" value="0" data-width="24" data-height="24" data-displayInput=false data-fgColor="#607d8b"'+
                 ' data-fgColor="#0788a5" data-readOnly="1" data-bgColor="#ffffff" /><span class="info-file"></span><div class="pull-right"><a class="info-progress"><svg fill="#a94442" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/><path d="M0 0h24v24H0z" fill="none"/></svg></a></div></div></li>');
             tpl.find('span').text(data.files[0].name).append('<i>' + formatFileSize(data.files[0].size) + '</i>');
@@ -60,3 +71,19 @@ $(document).ready(function () {
         $('#pd-btn').attr('disabled','disabled');
     });
 });
+function checkSizeInSpace(size) {
+    $.ajax({
+        type: "POST",
+        async: false,
+        url: "includes/reader-file.php",
+        data: {function: 'checkFreeSpace',size: size},
+        beforeSend: function () {
+
+        },
+        success: function (data) {
+            if (data=='true') checkSpace=true; else return checkSpace=false;
+        }
+    });
+    if (checkSpace==true) return false;
+    if (checkSpace==false) return true;
+}

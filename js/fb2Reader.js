@@ -1,10 +1,11 @@
 $(document).ready(function () {
     $(window).on('scroll',function () {
         var cont_top = window.pageYOffset ? window.pageYOffset : document.body.scrollTop;
-        pageProgress(cont_top,$(document).outerHeight(true));
+        pageProgress(cont_top,$(document).outerHeight(true),$(window).height());
     });
     $('#scrollDown').on('click',function () {
         var cont_top = window.pageYOffset ? window.pageYOffset : document.body.scrollTop;
+        console.log(Math.floor((cont_top+$(window).height())/$(document).outerHeight(true)*100));
         if (Math.floor((cont_top+$(window).height())/$(document).outerHeight(true)*100)==100){
             nextChapter();
         } else {
@@ -67,11 +68,11 @@ function progressPage(progress){
 function height(){
     return $(document).outerHeight(true);
 }
-function pageProgress(scroll,documentHeight) {
+function pageProgress(scroll,documentHeight,windowHeight) {
     $.ajax({
         type: "POST",
         url: "includes/reader-file.php",
-        data: {function: 'pageScroll',scroll: scroll,docHeight: documentHeight},
+        data: {function: 'pageScroll',scroll: scroll,docHeight: documentHeight, windowHeight: windowHeight},
         success: function (data) {
             
         }

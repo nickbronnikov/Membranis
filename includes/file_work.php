@@ -120,13 +120,12 @@ function chapterList($file_name){
         $j++;
     }
     $chapter='<button class="btn btn-success dropdown-toggle li-nav-read" data-toggle="dropdown">Chapters   <b class="caret"></b></button>
-                    <ul class="dropdown-menu">'.$chapterHTML.'</ul>';
+                    <ul class="dropdown-menu" id="scrollable-menu">'.$chapterHTML.'</ul>';
     return $chapter;
 }
 class Cover{
     static function pdfCover($filename,$filefolder,$namecover){
         //заготовка, есть проблемы с белым фоном
-        $_SESSION['test']=$_SERVER['DOCUMENT_ROOT'] .'/'.$filename.'\n'.$_SERVER['DOCUMENT_ROOT'] .'/'. $filefolder.$namecover;
         $imagick = new Imagick();
         $imagick->readImage($_SERVER['DOCUMENT_ROOT'] .'/'. $filename.'[0]');
         $imagick->writeImage($_SERVER['DOCUMENT_ROOT'] .'/'. $filefolder.$namecover);
@@ -147,7 +146,6 @@ class Cover{
                 $imgDecode = base64_decode($binary_image_code);
                 $fjpg = fopen($namecover, 'w');
                 fwrite($fjpg, $imgDecode);
-                $_SESSION['test']=$filefolder . $namecover;
                 copy($namecover, $filefolder . $namecover);
                 fclose($fjpg);
                 unlink($namecover);

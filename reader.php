@@ -5,35 +5,49 @@ $_SESSION[$_GET['id']]=0;
 $_SESSION['id-book']=$_GET['id'];
 $stmt=B::selectFromBase('users_files',null,array('id'),array($_GET['id']));
 $data=$stmt->fetchAll();
-$file_info=pathinfo($data[0]['path']);
-switch ($file_info['extension']){
-    case 'fb2':
-        $chapter=chapterList($data[0]['path']);
-        $progress=json_decode($data[0]['progress'],true);
-        $str=fb2($data[0]['path'],str_replace('cover.jpg', '', $data[0]['cover']),$progress['chapter']);
-        $function='<script>progressPage('.$progress['page_progress'].')</script>';
-        $reader='<div class="container">
+$db=B::selectFromBase('users',null,array('login'),array($_SESSION['logged_user']));
+$user=$db->fetchAll();
+if ($user[0]['id']==$data[0]['id_user']) {
+    $ui=B::selectFromBase('users_info',null,array('login'),array($_SESSION['logged_user']));
+    $ui_data=$ui->fetchAll();
+    $last_books=json_decode($ui_data[0]['last_books'],true);
+    for ($i=3;$i>0;$i--){
+        $last_books[$i]=$last_books[$i-1];
+    }
+    $last_books[0]=$_GET['id'];
+    B::updateBase('users_info',array('last_books'),array(json_encode($last_books)),array('login'),array($_SESSION['logged_user']));
+    $file_info = pathinfo($data[0]['path']);
+    switch ($file_info['extension']) {
+        case 'fb2':
+            $chapter = chapterList($data[0]['path']);
+            $progress = json_decode($data[0]['progress'], true);
+            $str = fb2($data[0]['path'], str_replace('cover.jpg', '', $data[0]['cover']), $progress['chapter']);
+            $function = '<script>progressPage(' . $progress['page_progress'] . ')</script>';
+            $reader = '<div class="container">
     <div class="row">
         <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">
             <button class="btn btn-success nav-btn" id="scrollUp">Up</button>
         </div>
         <div class="col-md-10 col-lg-10 col-sm-10 col-xs-10 well" id="fb2-reader">
-            '.$str.'
+            ' . $str . '
         </div>
         <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">
             <button class="btn btn-success nav-btn" id="scrollDown">Down</button>
         </div>
     </div>
-</div>'.$function;
-        break;
-    case 'pdf':
-        $progress=json_decode($data[0]['progress'],true);
-        $reader='<div class="row">
+</div>' . $function;
+            break;
+        case 'pdf':
+            $progress = json_decode($data[0]['progress'], true);
+            $reader = '<div class="row">
     <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12">
-        <iframe id="pdf" src="http://membranis.com/pdf/web/viewer.html?file=http://membranis.com/'.$data[0]['path'].'" width="100%" height="500px" onload="progressPage('.$progress['pageProgress'].')"/>
+        <iframe id="pdf" src="http://membranis.com/pdf/web/viewer.html?file=http://membranis.com/' . $data[0]['path'] . '" width="100%" height="500px" onload="progressPage(' . $progress['pageProgress'] . ')"/>
         </div></div>';
-        break;
+            break;
 
+    }
+} else {
+    $reader='<h2>You are trying to download the book that is not available to you.</h2>';
 }
 ?>
 <!DOCTYPE html>

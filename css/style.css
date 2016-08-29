@@ -183,6 +183,17 @@ li{
 body {
     height: 100%;
 }
+.btn-rad{
+    border-radius: 0px;!important;
+}
+.alert-error {
+    margin-bottom: 0px;!important;
+}
+#scrollable-menu {
+    height: auto;
+    max-height: 400px;
+    overflow-x: hidden;
+}
 .wrap {
     min-height: 100%;
     position: relative;}
@@ -221,4 +232,14 @@ footer {
 .nav-btn{
     position: fixed;
     top: 50%;
+}
+#li-nav {
+    padding-top: 8%;
+}
+.text-message{
+    font-size: 2em;
+}
+.info-panel{
+    padding-top: 80px;
+    padding-bottom: 80px;
 }

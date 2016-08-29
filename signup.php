@@ -26,7 +26,7 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right navel">
-                <a class="btn btn-success pull-left button-nav button-color" href="signin">Sign in</a>
+                <a class="btn btn-success pull-left button-nav button-color btn-rad" href="signin">Sign in</a>
             </ul>
         </div>
     </div>
@@ -87,7 +87,7 @@
                     <span class="input-group-addon" id="passwordregcheck"></span>
                 </div>
                 <span><p class="info-reg" id="passwordregallert">Password should be at least 5 characters.</p></span>
-                <button type="submit" class="btn btn-success btn-lg center-block" id="regbutton">Sign up</button>
+                <button type="submit" class="btn btn-success btn-lg center-block btn-rad" id="regbutton">Sign up</button>
             </div>
                 </div>
                 </div>

@@ -1,6 +1,7 @@
 <?php
 require 'db.php';
 require 'file_work.php';
+require 'EPUBandMOBI.php';
 switch ($_POST['function']) {
     case 'nextChapter':
         $stmt = B::selectFromBase('users_files', null, array('id'), array($_SESSION['id-book']));
@@ -70,6 +71,31 @@ switch ($_POST['function']) {
             echo 'false';
         } else {
             echo 'true';
+        }
+        break;
+    case 'nextChapterEPUB':
+        $stmt = B::selectFromBase('users_files', null, array('id'), array($_SESSION['id-book']));
+        $data = $stmt->fetchAll();
+        $chapter='';
+        $progress = json_decode($data[0]['progress'],true);
+        $s=explode("/",$data[0]['path']);
+        $file_path=str_replace("/".$s[count($s)-1], '', $data[0]['path']);
+        unlink($_SERVER['DOCUMENT_ROOT'].'/'.$file_path."/".$progress['chapter']);
+        $zip = new ZipArchive();
+        $zip->open('../'.$data[0]['path']);
+        $_SESSION['test']=$data[0]['path'];
+        if (($progress['chapter_id']+1)<=$progress['p']) {
+            $name = chapterName('../'.$file_path, $progress['chapter_id'] + 1);
+            $_SESSION['test']=$name;
+            $zip->extractTo('../' . $file_path, $name);
+            $file = file_get_contents('../' . $file_path . "/" . $name, FILE_USE_INCLUDE_PATH);
+            $file = str_replace('<a', '<p', $file);
+            $file = str_replace('a/>', 'p/>', $file);
+            $file = str_replace('src="', 'class="center-block" src="' . $file_path . "/", $file);
+            $pageProgress = round(($progress['chapter_id']/$progress['p']*100), 0, PHP_ROUND_HALF_UP);
+            $newProgress = json_encode(array('chapter_id' => $progress['chapter_id'] + 1, 'chapter' => $name, 'page_progress' => 0, 'cn' => $progress['cn'], 'progress' => $pageProgress, 'p' => $progress['p']));
+            B::updateBase('users_files', array('progress'), array($newProgress), array('id'), array($_SESSION['id-book']));
+            echo $file;
         }
         break;
 }

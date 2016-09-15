@@ -9,7 +9,7 @@ $(function(){
         add: function (e, data) {
             var fileUrl = data.files[0].name,
                 parts, ext = ( parts = fileUrl.split("/").pop().split(".") ).length > 1 ? parts.pop() : "";
-            if(ext!='fb2' && ext!='pdf'){
+            if(ext!='fb2' && ext!='pdf' && ext!='epub'){
                 $('#errorExtension').modal('show');
                 return;
             }
@@ -35,6 +35,7 @@ $(function(){
         progress: function(e, data){
             var progress = parseInt(data.loaded / data.total * 100, 10);
             data.context.find('input').val(progress).change();
+            if (data.loaded / data.total < 1) NProgress.set(data.loaded / data.total);
             if(progress == 100){
                 data.context.removeClass('working');
                 $('.info-progress').html('<svg fill="#5cb85c" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/> <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>');

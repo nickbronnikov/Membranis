@@ -10,11 +10,23 @@ $check=true;
 if (isset($data['loginin'])) {
     if (!checkField('users', array('login'), array($data['login']))) $check = false; else {
         $logpas = array($data['login'], $data['password']);
-        if (checkPassword($logpas)) $check = false;
+        if (checkPassword($logpas,'login')) $check = false;
     }
     if ($check) {
         $_SESSION['logged_user'] = $data['login'];
         echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=index.php">';
+    } else {
+        $check=true;
+        if (!checkField('users', array('email'), array($data['login']))) $check = false; else {
+            $logpas = array($data['login'], $data['password']);
+            if (checkPassword($logpas,'email')) $check = false;
+        }
+        if ($check) {
+            $stmt=B::selectFromBase('users',array('login'),array('email'),array($data['login']));
+            $login=$stmt->fetchAll();
+            $_SESSION['logged_user'] = $login[0]['login'];
+            echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=index.php">';
+        }
     }
 }
 ?>
@@ -26,8 +38,9 @@ if (isset($data['loginin'])) {
     <script src="js/jquery-3.1.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/signup.js"></script>
-    <link href="css/style.css" type="text/css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700&subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
     <link href="css/bootstrap.css" type="text/css" rel="stylesheet">
+    <link href="css/style.css" type="text/css" rel="stylesheet">
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
 </head>
 <body>
@@ -63,7 +76,7 @@ if (isset($data['loginin'])) {
                             <input type="text" class="form-control" id="login" name="login" <?php if ($_SESSION['login']!=null) echo 'value="'.$_SESSION['login'].'"'?>><br>
                             <label for="password">Password</label><span class="pull-right"><a>Forgot password?</a></span>
                             <input type="password" class="form-control" id="password" name="password"><br>
-                            <button type="submit" class="btn btn-lg btn-success width-full btn-rad" name="loginin"">Sign in</button>
+                            <button type="submit" class="btn btn-lg btn-success width-full" name="loginin"">Sign in</button>
                         </form>
                     </div>
                 </div>

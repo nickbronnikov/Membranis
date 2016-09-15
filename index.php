@@ -28,19 +28,32 @@ if ($_SESSION['logged_user']!=null) {
                     <path d="M0 0h24v24H0z" fill="none"/>
                     <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
                 </svg>
-                </svg><span class="text-center"><h3 class="text-center maincolor"><strong>You have not uploaded any one book. <a href="library">Download it now!</a></strong></h3>
+                </svg><span class="text-center"><h3 class="text-center maincolor"><strong>You have not uploaded any one book. <a href="library">Upload it now!</a></strong></h3>
             </div>
         </div>'; else {
             $j=1;
             for ($i=0;$i<count($books);$i++){
                 if ($j>4) break; else {
                     $progress=json_decode($books[$i]['progress'],true);
+                    $file_info=pathinfo($books[$i]['path']);
                     $body.='<div class="col-md-3 col-lg-3 col-sm-6 col-xs-12">
             <div class="panel panel-default">
             <div class="panel-heading"><h3 class="panel-title name-book">'.$books[$i]['author'].'</h3>
             </div>
             <div class="panel-body preview-book"><img  class="preview-book-cover" src="'.$books[$i]['cover'].'"/></div>
-            <div class="panel-footer"><a class="btn btn-success" href="reader?id='.$books[$i]['id'].'">Read</a><span>'.$progress['progress'].'%</span></div>
+            <div class="panel-footer"><div class="btn-group">
+    <a class="btn btn-success" href="reader?id='.$books[$i]['id'].'">Read</a>
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <b class="caret"></b>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+        <li><a href="'.$books[$i]['path'].'" download="'.$books[$i]['original_name'].'.'.$file_info['extension'].'">Download</a></li>
+        <li><a href="#">Другое действие</a></li>
+        <li><a href="#">Что-то иное</a></li>
+        <li class="divider"></li>
+        <li><a class="btn-delete" href="#">Delete</a></li>
+    </ul>
+</div><span class="progress-info pull-right">'.$progress['progress'].'%</span></div>
             </div>
             </div>';
                     $j++;
@@ -55,13 +68,26 @@ if ($_SESSION['logged_user']!=null) {
             if ($last_books[$i]!=0) {
                 $stmt = B::selectFromBase('users_files', null, array('id'), array($last_books[$i]));
                 $book = $stmt->fetchAll();
+                $file_info=pathinfo($book[0]['path']);
                 $progress=json_decode($book[0]['progress'],true);
                 $body.='<div class="col-md-3 col-lg-3 col-sm-6 col-xs-12">
             <div class="panel panel-default">
             <div class="panel-heading"><h3 class="panel-title name-book">'.$book[0]['author'].'</h3>
             </div>
             <div class="panel-body preview-book"><img  class="preview-book-cover" src="'.$book[0]['cover'].'"/></div>
-            <div class="panel-footer"><a class="btn btn-success" href="reader?id='.$book[0]['id'].'">Read</a><span>'.$progress['progress'].'%</span></div>
+            <div class="panel-footer"><div class="btn-group">
+    <a class="btn btn-success" href="reader?id='.$book[0]['id'].'">Read</a>
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <b class="caret"></b>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+        <li><a href="'.$book[0]['path'].'" download="'.$book[0]['original_name'].'.'.$file_info['extension'].'">Download</a></li>
+        <li><a href="#">Другое действие</a></li>
+        <li><a href="#">Что-то иное</a></li>
+        <li class="divider"></li>
+        <li><a class="btn-delete" href="#">Delete</a></li>
+    </ul>
+</div><span class="progress-info pull-right">'.$progress['progress'].'%</span></div>
             </div>
             </div>';
             }
@@ -80,13 +106,26 @@ if ($_SESSION['logged_user']!=null) {
         $books = $stmt->fetchAll();
         for ($i=0;$i<count($books);$i++){
             if ($j>4) break; else {
+                $file_info=pathinfo($books[$i]['path']);
                 $progress=json_decode($books[$i]['progress'],true);
                 $body.='<div class="col-md-3 col-lg-3 col-sm-6 col-xs-12">
             <div class="panel panel-default">
             <div class="panel-heading"><h3 class="panel-title name-book">'.$books[$i]['author'].'</h3>
             </div>
             <div class="panel-body preview-book"><img  class="preview-book-cover" src="'.$books[$i]['cover'].'"/></div>
-            <div class="panel-footer"><a class="btn btn-success" href="reader?id='.$books[$i]['id'].'">Read</a><span>'.$progress['progress'].'%</span></div>
+            <div class="panel-footer"><div class="btn-group">
+    <a class="btn btn-success" href="reader?id='.$books[$i]['id'].'">Read</a>
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <b class="caret"></b>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+        <li><a href="'.$books[$i]['path'].'" download="'.$books[$i]['original_name'].'.'.$file_info['extension'].'">Download</a></li>
+        <li><a href="#">Другое действие</a></li>
+        <li><a href="#">Что-то иное</a></li>
+        <li class="divider"></li>
+        <li><a class="btn-delete" href="#">Delete</a></li>
+    </ul>
+</div><span class="progress-info pull-right">'.$progress['progress'].'%</span></div>
             </div>
             </div>';
                 $j++;
@@ -102,6 +141,7 @@ if ($_SESSION['logged_user']!=null) {
     <title>Membranis</title>
     <script src="js/jquery-3.1.0.min.js"></script>
     <script src="js/dropzone.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700&subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
     <script src="js/bootstrap.min.js"></script>
     <script src="js/script.js"></script>
     <link href="css/bootstrap.css" type="text/css" rel="stylesheet">
@@ -148,8 +188,8 @@ if ($_SESSION['logged_user']!=null) {
             <div class="row">
                 <div class="col-md-7 col-md-offset-3 col-lg-7 col-lg-offset-3 col-sm-12 col-xs-12">
                     <div class="center-block reg main-jumbotron">
-                        <h1 class="maintext text-center">Облачная библиотека</h1>
-                        <h2 class="maintext text-center">Ваши книги. Всегда, везде, с вами.
+                        <h1 class="maintext text-center">Cloud Library</h1>
+                        <h2 class="maintext text-center">Your books. Always, everywhere, with you.
                         <div class="button-reg"><a href="signup" class="btn btn-success btn-lg center-block btn-rad" id="button-reg">Sign up</a>
                     </div>
                 </div>
@@ -157,23 +197,70 @@ if ($_SESSION['logged_user']!=null) {
         </div>
     </div>
 </div>
+<div class="body-info">
     <div class="container">
         <div class="row">
-            <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12"><h2 class="maincolor"><b>Синхронизация</b></h2>
-                <p>Синхронизация вашего прогресса. Всегда начинайте читать с того места, на котором закончили. На любом устройстве.</p>
-                <p><a class="btn btn-default" href="http://bootstrap-3.ru/examples/jumbotron/#" role="button">Узнать больше</a></p></div>
-            <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12"><h2 class="maincolor"><b>На любом устройстве</b></h2>
-                <p>Читайте свои любимые книги журналы на любом своем устройстве.</p>
-                <p><a class="btn btn-default" href="http://bootstrap-3.ru/examples/jumbotron/#" role="button">Узнать больше</a></p></div>
-            <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12"><h2 class="maincolor"><b>Облако</b></h2>
-                <p>Храните свои книги в облаке для беспрепятственного доступа к ним с любого устройства.</p>
-                <p><a class="btn btn-default" href="http://bootstrap-3.ru/examples/jumbotron/#" role="button">Узнать больше</a></p></div>
+            <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12 well">
+                <h1 class="text-center maincolor"><b>Welcome to your library.</b></h1>
+                <h3 class="text-center maincolor">You can keep your books in the cloud and read them whenever you feel like it.</h3>
+            </div>
         </div>
     </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12 well block"><div><img class="info-img" src="/img/Sync.png"></div><h3 class="maincolor text-center text-block"><b>Synchronization</b></h3>
+                <p class="text-center">Sync your progress. Always start reading from the place where finished.</p>
+                </div>
+            <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12 well block"><div><img class="info-img" src="/img/Devices.png"></div><h3 class="maincolor text-center text-block"><b>On all your devices</b></h3>
+                <p class="text-center">Read your favorite books and magazines on any of your device.</p>
+                </div>
+            <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12 well block"><div><img class="info-img" src="/img/Cloud.png"></div><h3 class="maincolor text-center text-block"><b>Cloud</b></h3>
+                <p class="text-center">Keep your books in the cloud for easy access to them.</p>
+                </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
+            <hr class="hr-info">
+        </div>
+        <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
+            <h3 class="maincolor"><b>Many formats</b></h3>
+            <h5 class="info-text">Read your books and magazines online in fb2, pdf, mobi, epub and txt formats.</h5>
+        </div>
+        <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
+            <h3 style="color: #5cb85c;"><b>Reader</b></h3>
+            <h5 class="info-text">Read your books and magazines in fb2, pdf, mobi, epub and txt formats.</h5>
+        </div>
+        <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
+            <h3 style="color: #fc0303"><b>Many formats</b></h3>
+            <h5 class="info-text">Read your books and magazines in fb2, pdf, mobi, epub and txt formats.</h5>
+        </div>
+        <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
+            <hr class="hr-info">
+        </div>
+    </div>
+</div>
 </div>';?>
 <div class="container">
     <div class="row">
         <?=$body?>
+    </div>
+</div>
+<div id="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5 col-lg-5 col-sm-12 col-xs-12">
+                <a>Help</a><a>Error</a>
+            </div>
+            <div class="col-md-2 col-lg-2  col-sm-12 col-xs-12">
+                <a><img class="img-footer center-block" src="img/Logo_s.png">
+            </div>
+            <div class="col-md-5 col-lg-5 col-sm-12 col-xs-12">
+
+            </div>
+        </div>
     </div>
 </div>
 </body>

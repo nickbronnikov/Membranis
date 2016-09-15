@@ -8,8 +8,9 @@
     <script src="js/jquery-3.1.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/signup.js"></script>
-    <link href="css/style.css" type="text/css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700&subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
     <link href="css/bootstrap.css" type="text/css" rel="stylesheet">
+    <link href="css/style.css" type="text/css" rel="stylesheet">
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
 </head>
 <body>
@@ -35,7 +36,7 @@
     <div class="container ">
         <div class="row">
             <div class="col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3 col-sm-12 col-xs-12" >
-                <h1 class="center-block" id="headinfo">Join Membranis</h1>
+                <h1 class="text-center" id="headinfo">Join Membranis</h1>
                 <h3>The best place to read</h3>
             </div>
             <div class="col-md-3 col-lg-3"></div>
@@ -87,7 +88,7 @@
                     <span class="input-group-addon" id="passwordregcheck"></span>
                 </div>
                 <span><p class="info-reg" id="passwordregallert">Password should be at least 5 characters.</p></span>
-                <button type="submit" class="btn btn-success btn-lg center-block btn-rad" id="regbutton">Sign up</button>
+                <button type="submit" class="btn btn-success btn-lg center-block" id="regbutton">Sign up</button>
             </div>
                 </div>
                 </div>

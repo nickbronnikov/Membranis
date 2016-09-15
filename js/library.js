@@ -5,7 +5,7 @@ function showBook(page) {
     $.ajax({
         type: "POST",
         url: "includes/lib.php",
-        data: {function: 'checkInput',key: $('#loginreg').val(),field: 'login'},
+        data: {function: 'showBooks',page: page},
         beforeSend: function () {
 
         },
@@ -20,6 +20,19 @@ function showBook(page) {
                     $('.fade').removeClass('out');
                 }, 1000);
             }
+        }
+    });
+}
+function deleteBook(id){
+    $.ajax({
+        type: "POST",
+        url: "includes/lib.php",
+        data: {function: 'deleteBook',id: id},
+        beforeSend: function () {
+
+        },
+        success: function (data) {
+                showBook(0);
         }
     });
 }

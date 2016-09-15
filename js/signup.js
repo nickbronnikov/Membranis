@@ -60,10 +60,10 @@ $(document).ready(function () {
             $('#passwordregallert').html('<p class="info-reg">Done.</p>');
         }
     });
-    $('#passwordreg').on('input',function () {
+    $('#passwordreg').on('focusout',function () {
         if ($('#passwordreg').val()=='') {
             $('#passwordregcheck').html(clear);
-            $('#passwordregallert').html('<div class="alert alert-danger">Enter your password.</div>');
+            $('#passwordregallert').html("<div class='alert alert-danger'>Enter your password.</div>");
         }
     });
     $('#regbutton').on('click',function () {

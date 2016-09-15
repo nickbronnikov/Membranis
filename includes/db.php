@@ -5,8 +5,8 @@ function checkField($table_name,$fild,$key){
     $resr=$res->fetchAll();
     if (count($resr)==0) return false; else return true;
 }
-function checkPassword($logpas){
-    $res=B::selectFromBase('users',null,array('login'),array($logpas[1]));
+function checkPassword($logpas,$field_name){
+    $res=B::selectFromBase('users',null,array($field_name),array($logpas[1]));
     $resr=$res->fetchAll();
     return password_verify($logpas[2],$resr[0]['password']);
 }
@@ -74,8 +74,22 @@ class B{
         }
         $stmt = $pdo->prepare($query);
         $stmt->execute($key);
-        return $stmt;
         $pdo=null;
+        return $stmt;
+    }
+    static function deleteFromBase($table_name,$conditions,$key){
+        $db=new B();
+        $dsn = "mysql:host=$db->db_host;dbname=$db->db_name;charset=$db->db_charset";
+        $opt=array(
+            PDO::ATTR_ERRMODE  =>PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+        );
+        $pdo=new PDO($dsn,$db->db_login,$db->db_password,$opt);
+        $query="DELETE FROM `$table_name`".B::pdoDelete($conditions,$key);
+        $stmt=$pdo->prepare($query);
+        $stmt->execute();
+        $pdo=null;
+        print_r($stmt);
     }
     function pdoSet($fields, &$values, $source = array()) {
         $query="";
@@ -106,6 +120,16 @@ class B{
             $last = count($conditions) - 1;
             $query = $query . "`$conditions[$last]`='" . $key[$last] . "'";
         }
+        return $query;
+    }
+    function pdoDelete($conditions,$key){
+        $query="";
+        $query=$query.' WHERE ';
+        for ($i = 0; $i < count($conditions) - 1; $i++) {
+            $query = $query . "`$conditions[$i]`='" . $key[$i] . "', ";
+        }
+        $last = count($conditions) - 1;
+        $query = $query . "`$conditions[$last]`='" . $key[$last] . "'";
         return $query;
     }
 }

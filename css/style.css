@@ -28,9 +28,54 @@
 }
 #footer{
 }
+.text-block{
+
+}
+.info-img{
+    display: block;
+    margin: 0 auto;
+    max-height: 70%;
+    max-width: 70%;
+}
+.mainfont{
+    font-family: 'Ubuntu', sans-serif;!important;
+}
+.jumbotron{
+    margin-bottom: 0px;!important;
+}
+html,body {
+    /*font-family: 'Ubuntu', sans-serif;!important;*/
+}
+@media (max-width: 991px) {
+    .info-block{
+        border: 1px solid #bfbfbf;
+    }
+    .info-block-center{
+        border: 1px solid #bfbfbf;
+        border-top: 0px;
+        border-bottom: 0px;
+    }
+}
+@media (min-width: 992px) {
+    .info-block {
+        border: 1px solid #bfbfbf;
+    }
+
+    .info-block-center {
+        border: 1px solid #bfbfbf;
+        border-left: 0px;
+        border-right: 0px;
+    }
+}
+.info-container{
+    background-color: #f5f5f5;
+}
 #mainpanel{
     background-color: #607d8b;
-    background-image: url(../img/library.jpg);
+    background-image: url(../img/jumbotron.jpg);
+    background-repeat: repeat-x;
+    background-position: bottom;
+    background-size: contain;
     min-height: 500px;
 }
 @font-face {
@@ -64,6 +109,18 @@
 .button-nav{
     margin: 0 10px 0 0;
 }
+.body-info{
+    background-color: #f5f5f5;
+}
+.block{
+    min-height: 400px;
+}
+.hr-info{
+    height: 1px;
+    margin: 40px 0;
+    clear: both;
+    background-image: linear-gradient(to right, #607d8b 33.3333%, #5cb85c 66.6666%, #fc0303 66.6666%);
+}
 .body{
     background-image: linear-gradient(180deg, #f5f5f5, #fff);
 }
@@ -71,8 +128,9 @@
     padding-top: 3%;
 }
 .preview-book{
-    min-width: 260px;
-    min-height: 380px;
+    width: 100%;
+    height: 300px;
+    padding:8px;
 }
 .name-book{
     overflow: hidden;
@@ -82,7 +140,13 @@
     display: block;
     margin: 0 auto;
     max-width: 100%;
-    max-height: 100%;
+    height: 100%;
+}
+.progress-info{
+    padding-right: 5px;
+    font-weight: 600;
+    color: #607d8b;
+    margin-top: 7px;
 }
 .navbar-default{
     background-color: #FFFFFF!important;
@@ -105,16 +169,27 @@
     width: 100%;
 }
 .main-jumbotron{
-    padding-top: 15%;
+    padding-top: 10%;
 }
-.footer{
-    padding-top: 5%;
+.img-footer{
+    max-height: 50%;
+    max-width: 50%;
+}
+#footer {
+    min-height: 80px;
+    padding-top: 20px;
+    width: 100%;
+    background-color: #f5f5f5;
+    margin-top: 5%;
 }
 .regform{
     padding-top: 3%;
 }
 .width-full {
     width: 100%;
+}
+.info-text{
+    color: #8c8c8c;
 }
 .table-reg{
     display: table;
@@ -242,4 +317,17 @@ footer {
 .info-panel{
     padding-top: 80px;
     padding-bottom: 80px;
+}
+.page{
+    height: 100%;
+    position: fixed;
+    top: 50%;
+    font-size: 64px;
+    color: #E2E2E2;
+    font-family: arial, sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+}
+.page:hover {
+    color: #777;
 }

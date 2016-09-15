@@ -66,14 +66,14 @@ $data=$stmt->fetchAll();
             <a class="navbar-brand" href="/"><img src="img/Logo_s.png"></a>
         </div>
         <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav navbar-right nav-pills">
                 <li class="li-nav"><form id="upload" method="post" action="upload.php" enctype="multipart/form-data">
                     <div id="drop">
-                        <a class="btn btn-success btn-rad" id="download">Download</a>
+                        <a class="btn btn-success btn-rad" id="download">Upload</a>
                         <input type="file" name="upl" multiple />
                     </div>
                 </form></li>
-                <li class="li-nav-progress"><span class="progress-download" id="pd">
+                <li class="li-nav-progress" style="margin-left: 0%"><span class="progress-download" id="pd">
                     <span class="dropdown">
                         <a class="btn btn-default dropdown-toggle btn-rad" type="button" data-toggle="dropdown" disabled="disabled" id="pd-btn"><b class="caret"></b>
                         </a>
@@ -106,7 +106,7 @@ $data=$stmt->fetchAll();
                     <path d="M0 0h24v24H0z" fill="none"/>
                     <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
                 </svg>
-                </svg><span class="text-center"><h3 class="text-center maincolor"><strong>You have not uploaded any one book. <a href="library">Download it now!</a></strong></h3>
+                </svg><span class="text-center"><h3 class="text-center maincolor"><strong>You have not uploaded any one book. <a href="library">Upload it now!</a></strong></h3>
             </div>
         </div>';?>
     </div>

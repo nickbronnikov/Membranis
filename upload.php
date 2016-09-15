@@ -50,7 +50,7 @@ if(isset($_FILES['upl']) && $_FILES['upl']['error'] == 0) {
                         $folder='./users_files/' . $data[0]['folder'] . "/" . $cryptname;
                         $_SESSION['test']=$folder;
                         $ret=cover($path,$folder);
-                        $progress = json_encode(array('chapter_id' => 3,'chapter' => $ret[1],'page_progress' => 0,'progress' => 0, 'p' => $ret[2]-3));
+                        $progress = json_encode(array('chapter_id' => 3,'chapter' => $ret[1],'page_progress' => 0,'progress' => 0, 'p' => $ret[2]));
                         B::inBase('users_files', array('id_user', 'path', 'original_name', 'author', 'cover', 'progress'), array($data[0]['id'], 'users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name, $file_info['filename'], $ret[3], 'users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $ret[0], $progress));
                     }
                 }

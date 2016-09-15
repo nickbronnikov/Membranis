@@ -52,17 +52,18 @@ if ($user[0]['id']==$data[0]['id_user']) {
             break;
         case 'epub':
             $progress = json_decode($data[0]['progress'], true);
+            $function = '<script>progressPage(' . $progress['page_progress'] . ')</script>';
             $str=EPUBChapter($data[0]['path'],$progress['chapter']);
             $reader = '<div class="container">
     <div class="row">
         <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">
-            <span class="page" id="scrollUp"><</span>
+            <div class="center-block"><span class="page" id="scrollUp"><</span></div>
         </div>
         <div class="col-md-10 col-lg-10 col-sm-10 col-xs-10 well" id="fb2-reader">
             ' . $str . '
         </div>
         <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 ">
-            <span class="page" id="scrollDown">></span>
+            <div class="center-block"><span class="page" id="scrollDown">></span></div>
         </div>
     </div>
 </div>' . $function;

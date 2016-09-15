@@ -30,8 +30,10 @@ function nextChapter() {
 
         },
         success: function (data) {
-            $('#fb2-reader').html(data);
-            $("body,html").animate({"scrollTop": 0}, 100);
+            if (data!='**/**/**') {
+                $('#fb2-reader').html(data);
+                $("body,html").animate({"scrollTop": 0}, 100);
+            }
         }
     });
 }
@@ -44,7 +46,9 @@ function previousChapter() {
 
         },
         success: function (data) {
-            $('#fb2-reader').html(data);
+            if (data!='**/**/**') {
+                $('#fb2-reader').html(data);
+            }
         }
     });
 }

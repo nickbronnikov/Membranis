@@ -48,10 +48,11 @@ if(isset($_FILES['upl']) && $_FILES['upl']['error'] == 0) {
                     } else {
                         $path='./users_files/' . $data[0]['folder'] . "/" . $cryptname . "/" . $name;
                         $folder='./users_files/' . $data[0]['folder'] . "/" . $cryptname;
-                        $_SESSION['test']=$folder;
                         $ret=cover($path,$folder);
-                        $progress = json_encode(array('chapter_id' => 3,'chapter' => $ret[1],'page_progress' => 0,'progress' => 0, 'p' => $ret[2]));
-                        B::inBase('users_files', array('id_user', 'path', 'original_name', 'author', 'cover', 'progress'), array($data[0]['id'], 'users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name, $file_info['filename'], $ret[3], 'users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $ret[0], $progress));
+                        $cover="";
+                        if (stripos($ret[0],'cover')===false) $cover="img/epub.png"; else $cover='users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $ret[0];
+                        $progress = json_encode(array('chapter_id' => 1,'chapter' => $ret[1],'page_progress' => 0,'progress' => 0, 'p' => $ret[2]));
+                        B::inBase('users_files', array('id_user', 'path', 'original_name', 'author', 'cover', 'progress'), array($data[0]['id'], 'users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name, $file_info['filename'], $ret[3], $cover, $progress));
                     }
                 }
                 break;

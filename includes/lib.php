@@ -38,15 +38,17 @@ switch ($_POST['function']){
         $_SESSION['test']=$_POST['id'];
         $stmt=B::selectFromBase('users_files',null,array('id'),array($_POST['id']));
         $data=$stmt->fetchAll();
-        $s=str_replace('/cover', '', $data[0]['cover']);
-        $s=str_replace('.jpg', '', $s);
-        $s=str_replace('.jpeg', '', $s);
-        $s=str_replace('.png', '', $s);
-        $path = $_SERVER['DOCUMENT_ROOT'].'/'.$s;
+        $s=explode("/",$data[0]['path']);
+        $file_path=str_replace("/".$s[count($s)-1], '', $data[0]['path']);
+        $path = $_SERVER['DOCUMENT_ROOT'].'/'.$file_path;
         $stmt=B::selectFromBase('users_info',null,array('login'),array($_SESSION['logged_user']));
         $info=$stmt->fetchAll();
         $size=$info[0]['files_disk_space']-filesize($_SERVER['DOCUMENT_ROOT'].'/'.$data[0]['path']);
-        B::updateBase('users_info',array('files_disk_space'),array($size),array('login'),array($_SESSION['logged_user']));
+        $last=json_decode($info[0]['last_books'],true);
+        for ($i=0;$i<count($last);$i++){
+            if ($last[$i]==$_POST['id']) $last[$i]=0;
+        }
+        B::updateBase('users_info',array('files_disk_space','last_books'),array($size,json_encode($last)),array('login'),array($_SESSION['logged_user']));
         removeDirectory($path);
         B::deleteFromBase('users_files',array('id'),array($data[0]['id']));
         break;

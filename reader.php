@@ -19,7 +19,6 @@ if ($user[0]['id']==$data[0]['id_user']) {
         for ($i=1;$i<count($last_books);$i++){
             if ($last_books[$i]==$_GET['id']) $last_books[$i]=0;
         }
-        $_SESSION['test']=$last_books[0];
     B::updateBase('users_info', array('last_books'), array(json_encode($last_books)), array('login'), array($_SESSION['logged_user']));
 }
     $file_info = pathinfo($data[0]['path']);
@@ -51,6 +50,7 @@ if ($user[0]['id']==$data[0]['id_user']) {
         </div></div>';
             break;
         case 'epub':
+            $chapter = chapterListEPUB($data[0]['path']);
             $progress = json_decode($data[0]['progress'], true);
             $function = '<script>progressPage(' . $progress['page_progress'] . ')</script>';
             $str=EPUBChapter($data[0]['path'],$progress['chapter']);
@@ -126,7 +126,7 @@ if ($user[0]['id']==$data[0]['id_user']) {
                             echo '<button class="btn btn-success btn-rad" id="continueReading">Continue</button>';
                             break;
                         case 'epub':
-                            echo '';
+                            echo $chapter;
                             break;
                     }?></li>
                 <li class="dropdown maincolor li-nav">

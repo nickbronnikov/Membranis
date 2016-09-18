@@ -3,11 +3,25 @@
     {
         $namecover = EPUBCover($path,$folder);
         content($path,$folder);
-        $length = array(chapterName($folder,2),EPUBLength($folder),EPUBAuthor($folder));
+        $length = array(chapterName($folder,1),EPUBLength($folder),EPUBAuthor($folder));
         EPUBimg($path,$folder);
+        EPUBChapters($folder);
         $ret=array($namecover, $length[0], $length[1], $length[2]);
         return $ret;
     }
+function EPUBChapters($filefolder){
+    $doc = new DOMDocument();
+    $doc->load($filefolder.'/book.ncx');
+    $nav_point=$doc->getElementsByTagName('navPoint');
+    $chapters="";
+    for ($i=0;$i<$nav_point->length;$i++){
+        $text=$nav_point[$i]->getElementsByTagName('text');
+        $chapters.=$text[0]->textContent.'$$$$$$';
+    }
+    $fp=fopen($filefolder.'/'.'chapters.txt','w+');
+    fwrite($fp,$chapters);
+    fclose($fp);
+}
 function EPUBCover($filename, $filefolder){
     $namecover='';
     $zip = new ZipArchive();
@@ -49,37 +63,18 @@ function EPUBimg($filename, $filefolder){
 }
 function chapterName($folder,$num){
     $doc = new DOMDocument();
-    $doc->load($folder.'/content.opf');
-    $list_files=$doc->getElementsByTagName('manifest');
-    $num_files=$doc->getElementsByTagName('spine');
-    $list_files=$list_files[0]->getElementsByTagName('item');
-    $num_files=$num_files[0]->getElementsByTagName('itemref');
-    $name='';
-    for ($j=0;$j<$list_files->length;$j++){
-        if ($list_files[$j]->getAttribute('id')==$num_files[$num]->getAttribute('idref')){
-            $name=$list_files[$j]->getAttribute('href');
-        }
-    }
-    return $name;
+    $doc->load($folder.'/book.ncx');
+    $navPoint=$doc->getElementsByTagName('navPoint');
+    $content=$navPoint[$num-1]->getElementsByTagName('content');
+    return $content[0]->getAttribute('src');
 }
 function EPUBLength($folder){
     $doc = new DOMDocument();
-    $doc->load($folder.'/content.opf');
-    $list_files=$doc->getElementsByTagName('manifest');
-    $num_files=$doc->getElementsByTagName('spine');
-    $list_files=$list_files[0]->getElementsByTagName('item');
-    $num_files=$num_files[0]->getElementsByTagName('itemref');
-    return $num_files->length;
+    $doc->load($folder.'/book.ncx');
+    $nav_point=$doc->getElementsByTagName('navPoint');
+    return $nav_point->length;
 }
 function EPUBAuthor ($folder){
-//    $doc = new DOMDocument();
-//    $doc->load($folder.'/content.opf');
-//    $author=$doc->getElementsByTagName('metadata');
-//    $newdoc = new DOMDocument();
-//    $el=$author[0];
-//    $cloned = $el->cloneNode(TRUE);
-//    $newdoc->appendChild($newdoc->importNode($cloned, TRUE));
-//    $str = $newdoc->saveXML();
     $str=$file = file_get_contents($folder.'/content.opf', FILE_USE_INCLUDE_PATH);
     $pos=stripos($str,'<dc:creator')+10;
     $j=$pos;
@@ -136,14 +131,29 @@ function content($path,$folder){
     for ($i=0; $i<$zip->numFiles; $i++) {
         $name = $zip->statIndex($i);
         $check=true;
-        if(stripos($name['name'],'content.opf')===false) $check=false;
+        if(stripos($name['name'],'.opf')===false) $check=false;
         if ($check){
             $zip->extractTo($folder,$name['name']);
             $s = explode("/", $name['name']);
             if (count($s) > 1) {
                 copy($folder.'/'.$name['name'],$folder.'/'.$s[count($s) - 1]);
                 removeDirectory($folder.'/'.$s[0]);
-            }
+                rename($folder.'/'.$s[count($s) - 1],$folder.'/'.'content.opf');
+            } else rename($folder.'/'.$s[count($s) - 1],$folder.'/'.'content.opf');
+        }
+    }
+    for ($i=0; $i<$zip->numFiles; $i++) {
+        $name = $zip->statIndex($i);
+        $check=true;
+        if(stripos($name['name'],'.ncx')===false) $check=false;
+        if ($check){
+            $zip->extractTo($folder,$name['name']);
+            $s = explode("/", $name['name']);
+            if (count($s) > 1) {
+                copy($folder.'/'.$name['name'],$folder.'/'.$s[count($s) - 1]);
+                removeDirectory($folder.'/'.$s[0]);
+                rename($folder.'/'.$s[count($s) - 1],$folder.'/'.'book.ncx');
+            } else rename($folder.'/'.$s[count($s) - 1],$folder.'/'.'book.ncx');
         }
     }
 }

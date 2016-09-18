@@ -56,7 +56,7 @@ function toChapter(chapter) {
     $.ajax({
         type: "POST",
         url: "includes/reader-file.php",
-        data: {function: 'toChapter', chapter: chapter},
+        data: {function: 'toChapterEPUB', chapter: chapter},
         beforeSend: function () {
 
         },

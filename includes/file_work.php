@@ -61,12 +61,7 @@ function EPUBChapter($filename,$name_path){
         }
     }
     $zip->extractTo($file_path,$or_name);
-    $s = explode("/", $or_name);
-    if (count($s) > 1) {
-        copy($file_path . '/' . $or_name, $file_path . '/' . $s[count($s) - 1]);
-        removeDir($file_path . '/' . $s[0]);
-    }
-    $file = file_get_contents('./'.$file_path."/".$name_path, FILE_USE_INCLUDE_PATH);
+    $file = file_get_contents('./'.$file_path."/".$or_name, FILE_USE_INCLUDE_PATH);
     $file = str_replace('<a', '<p', $file);
     $file = str_replace('a/>', 'p/>', $file);
     $file = str_replace('src="', 'class="center-block" src="'.$file_path."/", $file);
@@ -108,6 +103,20 @@ function chapterList($file_name){
         if (trim($item)=='') $item='***';
         $chapterHTML.='<li><a onclick="toChapter('.$j.')" href="#'.trim($item).'">'.trim($item).'</a></li>';
         $j++;
+    }
+    $chapter='<button class="btn btn-success dropdown-toggle li-nav-read btn-rad" data-toggle="dropdown">Chapters   <b class="caret"></b></button>
+                    <ul class="dropdown-menu" id="scrollable-menu">'.$chapterHTML.'</ul>';
+    return $chapter;
+}
+function chapterListEPUB($file_name){
+    $s=explode("/",$file_name);
+    $file_path=str_replace("/".$s[count($s)-1], '', $file_name);
+    $file=file_get_contents('./'.$file_path."/chapters.txt", FILE_USE_INCLUDE_PATH);
+    $list=explode("$$$$$$",$file);
+    $chapterHTML='';
+    for ($i=0;$i<count($list);$i++){
+        $j=$i+1;
+        if (trim($list[$i])!='')  $chapterHTML.='<li><a onclick="toChapter('.$j.')" href="#'.trim($list[$i]).'">'.trim($list[$i]).'</a></li>';
     }
     $chapter='<button class="btn btn-success dropdown-toggle li-nav-read btn-rad" data-toggle="dropdown">Chapters   <b class="caret"></b></button>
                     <ul class="dropdown-menu" id="scrollable-menu">'.$chapterHTML.'</ul>';

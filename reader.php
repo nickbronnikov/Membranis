@@ -134,7 +134,7 @@ if ($user[0]['id']==$data[0]['id_user']) {
                     <ul class="dropdown-menu">
                         <li><a href="library">Your library</a></li>
                         <li><a onclick="showBook(0)">Обновить список</a></li>
-                        <li><a >Что-то еще</a></li>
+                        <li><a href="settings">Settings</a></li>
                         <li class="divider"></li>
                         <li><a href="logout">Log out</a></li>
                     </ul>

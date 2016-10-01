@@ -81,7 +81,8 @@ switch ($_POST['function']) {
         if (($progress['chapter_id']+1)<=$progress['p']) {
             $s=explode("/",$data[0]['path']);
             $file_path=str_replace("/".$s[count($s)-1], '', $data[0]['path']);
-            unlink($_SERVER['DOCUMENT_ROOT'].'/'.$file_path."/".$progress['chapter']);
+            if (file_exists($_SERVER['DOCUMENT_ROOT'].'/'.$file_path."/".$progress['chapter']))
+                unlink($_SERVER['DOCUMENT_ROOT'].'/'.$file_path."/".$progress['chapter']);
             $zip = new ZipArchive();
             $zip->open('../'.$data[0]['path']);
             $name = chapterName('../'.$file_path, $progress['chapter_id'] + 1);
@@ -115,7 +116,8 @@ switch ($_POST['function']) {
         if (($progress['chapter_id']-1)>=1) {
             $s=explode("/",$data[0]['path']);
             $file_path=str_replace("/".$s[count($s)-1], '', $data[0]['path']);
-            unlink($_SERVER['DOCUMENT_ROOT'].'/'.$file_path."/".$progress['chapter']);
+            if (file_exists($_SERVER['DOCUMENT_ROOT'].'/'.$file_path."/".$progress['chapter']))
+                unlink($_SERVER['DOCUMENT_ROOT'].'/'.$file_path."/".$progress['chapter']);
             $zip = new ZipArchive();
             $zip->open('../'.$data[0]['path']);
             $name = chapterName('../'.$file_path, $progress['chapter_id'] - 1);
@@ -164,10 +166,12 @@ switch ($_POST['function']) {
         $file_path=str_replace("/".$s[count($s)-1], '', $data[0]['path']);
         $chapter='';
         $progress = json_decode($data[0]['progress'],true);
-        $pageProgress = round(($_POST['chapter'])/$progress['p']*100, 0, PHP_ROUND_HALF_UP);
+        $pageProgress = round($_POST['chapter']/$progress['p']*100, 0, PHP_ROUND_HALF_UP);
         $name=chapterName("../".$file_path,$_POST['chapter']);
         $or_name='';
-        unlink($_SERVER['DOCUMENT_ROOT'].'/'.$file_path."/".$progress['chapter']);
+        if (file_exists($_SERVER['DOCUMENT_ROOT'].'/'.$file_path."/".$progress['chapter'])) {
+            unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $file_path . "/" . $progress['chapter']);
+        }
         $zip = new ZipArchive();
         $zip->open('../'.$data[0]['path']);
         for ($i=0; $i<$zip->numFiles; $i++) {

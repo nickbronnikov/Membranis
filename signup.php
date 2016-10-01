@@ -87,7 +87,7 @@
                     <input type="password" class="form-control" id="passwordreg">
                     <span class="input-group-addon" id="passwordregcheck"></span>
                 </div>
-                <span><p class="info-reg" id="passwordregallert">Password should be at least 5 characters.</p></span>
+                <span id="passwordregallert"><p class="info-reg">Password should be at least 5 characters.</p></span>
                 <button type="submit" class="btn btn-success btn-lg center-block" id="regbutton">Sign up</button>
             </div>
                 </div>

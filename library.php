@@ -89,7 +89,7 @@ $data=$stmt->fetchAll();
                     <ul class="dropdown-menu">
                         <li><a href="#">Действие</a></li>
                         <li><a href="#" onclick="showBook(0)">Обновить список</a></li>
-                        <li><a href="#">Что-то еще</a></li>
+                        <li><a href="settings">Settings</a></li>
                         <li class="divider"></li>
                         <li><a href="logout">Log out</a></li>
                     </ul>

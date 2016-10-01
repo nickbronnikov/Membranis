@@ -172,7 +172,7 @@ if ($_SESSION['logged_user']!=null) {
                     <ul class="dropdown-menu">
                         <li><a href="#">Действие</a></li>
                         <li><a href="library">Your library</a></li>
-                        <li><a href="#">Что-то еще</a></li>
+                        <li><a href="settings">Settings</a></li>
                         <li class="divider"></li>
                         <li><a href="logout">Log out</a></li>
                     </ul>
@@ -255,7 +255,7 @@ if ($_SESSION['logged_user']!=null) {
                 <a>Help</a><a>Error</a>
             </div>
             <div class="col-md-2 col-lg-2  col-sm-12 col-xs-12">
-                <a><img class="img-footer center-block" src="img/Logo_s.png">
+                <img class="img-footer center-block" src="img/Logo_s.png">
             </div>
             <div class="col-md-5 col-lg-5 col-sm-12 col-xs-12">
 

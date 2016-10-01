@@ -121,6 +121,37 @@ html,body {
     clear: both;
     background-image: linear-gradient(to right, #607d8b 33.3333%, #5cb85c 66.6666%, #fc0303 66.6666%);
 }
+.s-panel{
+    margin-top: 5%;
+}
+.settingsAlert{
+    margin-top: 5px;
+    padding: 10px;
+    margin-bottom: 0px;
+}
+.settingsAlert button{
+    padding-right: 20px;
+}
+.li-setting{
+    border-bottom: 1px solid #EEEEEE;
+    padding: 5px;
+    padding-top: 8px;
+    margin-bottom: 0px;
+}
+.li-setting:hover{
+    cursor: pointer;
+    background-color: #EEEEEE;
+}
+.li-setting span{
+    color: #7294a2;
+    font-weight: bold;
+}
+.li-setting span{
+    padding-left: 5px;
+}
+.settings-head{
+    font-weight: bold;
+}
 .body{
     background-image: linear-gradient(180deg, #f5f5f5, #fff);
 }
@@ -131,6 +162,9 @@ html,body {
     width: 100%;
     height: 300px;
     padding:8px;
+}
+.settings{
+    padding-top: 5%;
 }
 .name-book{
     overflow: hidden;
@@ -172,8 +206,8 @@ html,body {
     padding-top: 10%;
 }
 .img-footer{
-    max-height: 50%;
-    max-width: 50%;
+    max-height: 25%;
+    max-width: 25%;
 }
 #footer {
     min-height: 80px;

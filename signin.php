@@ -1,7 +1,7 @@
 <?php
 $alert='<div class="alert alert-warning alert-dismissable width-full">
   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-  Incorrect username or password. 
+  Incorrect username (email) or password. 
 </div>';
 require 'includes/db.php';
 $data=$_POST;
@@ -10,7 +10,7 @@ $check=true;
 if (isset($data['loginin'])) {
     if (!checkField('users', array('login'), array($data['login']))) $check = false; else {
         $logpas = array($data['login'], $data['password']);
-        if (checkPassword($logpas,'login')) $check = false;
+        if (checkPassword($logpas,'login')) $check = true; else $check=false;
     }
     if ($check) {
         $_SESSION['logged_user'] = $data['login'];
@@ -19,7 +19,7 @@ if (isset($data['loginin'])) {
         $check=true;
         if (!checkField('users', array('email'), array($data['login']))) $check = false; else {
             $logpas = array($data['login'], $data['password']);
-            if (checkPassword($logpas,'email')) $check = false;
+            if (checkPassword($logpas,'email')) $check = true; else $check=false;
         }
         if ($check) {
             $stmt=B::selectFromBase('users',array('login'),array('email'),array($data['login']));

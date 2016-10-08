@@ -56,17 +56,15 @@ include "includes/db.php";
                         <div class="panel panel-default">
                             <div class="panel-heading settings-head">Settings</div>
                             <div class="">
-                                <p class="li-setting" id="s-account"><span>Account</span></p>
-                                <p class="li-setting" id="s-pasword"><span>Password</span></p>
+                                <p class="li-setting active-set" id="s-account"><span>Account</span></p>
+                                <p class="li-setting" id="s-password"><span>Password</span></p>
                                 <p class="li-setting" id="s-reader"><span>Reader</span></p>
                                 <p class="li-setting" id="s-storage"><span>Storage</span></p>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-12 col-xs-12 col-md-9 col-lg-9">
-                        <div class="panel panel-default">
-                            <div class="panel-heading settings-head" id="ns">Account</div>
-                            <div class="panel-body" id="bs">
+                            <div id="bs">
                                 <div class="panel panel-default">
                                     <div class="panel-heading"><strong>Update login</strong></div>
                                     <div class="panel-body">
@@ -79,8 +77,7 @@ include "includes/db.php";
                                         <button class="btn btn-success" id="btn-newlogin">Update login</button>
                                         <span id="infologin"></span>
                                     </div>
-                                </div>
-                                <div class="panel panel-default">
+                                </div><div class="panel panel-default">
                                     <div class="panel-heading"><strong>Update email</strong></div>
                                     <div class="panel-body">
                                         <label for="oldemail">Old email</label>
@@ -100,7 +97,6 @@ include "includes/db.php";
                                     </div>
                                 </div>
                             </div>
-                        </div>
                     </div>
                 </div>
             </div>

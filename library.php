@@ -87,9 +87,9 @@ $data=$stmt->fetchAll();
                 <li class="dropdown maincolor li-nav">
                     <button class="btn btn-default btn-rad dropdown-toggle" data-toggle="dropdown"><?=$_SESSION['logged_user'];?>   <b class="caret"></b></button>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Действие</a></li>
-                        <li><a href="#" onclick="showBook(0)">Обновить список</a></li>
+                        <li><a onclick="showBook(0)">Update list</a></li>
                         <li><a href="settings">Settings</a></li>
+                        <li><a href="#">Recycle bin</a></li>
                         <li class="divider"></li>
                         <li><a href="logout">Log out</a></li>
                     </ul>

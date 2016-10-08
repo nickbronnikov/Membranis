@@ -124,6 +124,11 @@ html,body {
 .s-panel{
     margin-top: 5%;
 }
+.set-span{
+    margin-left: 30%;
+    color: #607d8b;
+    font-weight: bold;
+}
 .settingsAlert{
     margin-top: 5px;
     padding: 10px;
@@ -138,6 +143,9 @@ html,body {
     padding-top: 8px;
     margin-bottom: 0px;
 }
+.active-set{
+    background-color: #EEEEEE;
+}
 .li-setting:hover{
     cursor: pointer;
     background-color: #EEEEEE;
@@ -151,6 +159,38 @@ html,body {
 }
 .settings-head{
     font-weight: bold;
+}
+.set-btn{
+    float: right;
+}
+.set-list{
+    padding: 3px;
+}
+.progress{
+    margin-bottom: 0px;!important;
+}
+.st-info{
+    width: 100%;
+}
+.st{
+    margin-top: 2px;
+    min-height: 16px;
+    font-size: 12px;
+    color: #8c8c8c;
+    float: right;
+ }
+.set-hr{
+    height: 2px;
+    margin: 40px 0;
+    margin-bottom: 15px;
+    clear: both;
+    color: #000;
+}
+.set-pr{
+    background-color: #607d8b;
+}
+.btn-plan{
+
 }
 .body{
     background-image: linear-gradient(180deg, #f5f5f5, #fff);
@@ -170,6 +210,7 @@ html,body {
     overflow: hidden;
     white-space: nowrap;
 }
+
 .preview-book-cover{
     display: block;
     margin: 0 auto;

@@ -6,9 +6,9 @@ function checkField($table_name,$fild,$key){
     if (count($resr)==0) return false; else return true;
 }
 function checkPassword($logpas,$field_name){
-    $res=B::selectFromBase('users',null,array($field_name),array($logpas[1]));
+    $res=B::selectFromBase('users',null,array($field_name),array($logpas[0]));
     $resr=$res->fetchAll();
-    return password_verify($logpas[2],$resr[0]['password']);
+    return password_verify($logpas[1],$resr[0]['password']);
 }
 class B{
     public $db_login="mysql";

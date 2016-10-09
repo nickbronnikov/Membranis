@@ -1,7 +1,12 @@
 <?php
 require 'includes/db.php';
-if ($_SESSION['logged_user']!=null) {
-    $stmt = B::selectFromBase('users_info', null, array('login'), array($_SESSION['logged_user']));
+if ($_COOKIE['logged_user']!=null && !checkKey($_COOKIE['key'])) {
+    delCookies('logged_user');
+    delCookies('key');
+    echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/">';
+}
+if ($_COOKIE['logged_user']!=null) {
+    $stmt = B::selectFromBase('users_info', null, array('login'), array($_COOKIE['logged_user']));
     $data = $stmt->fetchAll();
     $last_books = json_decode($data[0]['last_books'], true);
     $s = 0;
@@ -20,7 +25,7 @@ if ($_SESSION['logged_user']!=null) {
         </div>
         <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
             <h3 class="maincolor"><strong>Your books:</strong></h3>';
-        $stmt=B::selectFromBase('users',array('id'),array('login'),array($_SESSION['logged_user']));
+        $stmt=B::selectFromBase('users',array('id'),array('login'),array($_COOKIE['logged_user']));
         $user=$stmt->fetchAll();
         $stmt = B::selectFromBase('users_files', null, array('id_user'), array($user[0]['id']));
         $books = $stmt->fetchAll();
@@ -100,7 +105,7 @@ if ($_SESSION['logged_user']!=null) {
         $body.='<div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
             <h3 class="maincolor"><strong>Your books:</strong></h3></div>';
         $j=1;
-        $stmt=B::selectFromBase('users',array('id'),array('login'),array($_SESSION['logged_user']));
+        $stmt=B::selectFromBase('users',array('id'),array('login'),array($_COOKIE['logged_user']));
         $user=$stmt->fetchAll();
         $stmt = B::selectFromBase('users_files', null, array('id_user'), array($user[0]['id']));
         $books = $stmt->fetchAll();
@@ -160,7 +165,7 @@ if ($_SESSION['logged_user']!=null) {
             </button>
             <a class="navbar-brand" href="/"><img src="img/Logo_s.png"></a>
         </div>
-        <?php if ($_SESSION['logged_user']==null) echo '<div class="navbar-collapse collapse" id="mainnav">
+        <?php if ($_COOKIE['logged_user']==null) echo '<div class="navbar-collapse collapse" id="mainnav">
             <ul class="nav navbar-nav navbar-right navel">
                 <a class="btn btn-success pull-left button-nav button-color btn-rad" href="signin">Sign in</a>
                 <a class="btn btn-success pull-right btn-rad" href="signup">Sign up</a>
@@ -168,7 +173,7 @@ if ($_SESSION['logged_user']!=null) {
         </div>'; else echo '<div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right" >
                 <li class="dropdown maincolor li-nav" id="li-nav">
-                    <button class="btn btn-default btn-rad dropdown-toggle" data-toggle="dropdown">'.$_SESSION['logged_user'].'   <b class="caret"></b></button>
+                    <button class="btn btn-default btn-rad dropdown-toggle" data-toggle="dropdown">'.$_COOKIE['logged_user'].'   <b class="caret"></b></button>
                     <ul class="dropdown-menu">
                         <li><a href="#">Действие</a></li>
                         <li><a href="library">Your library</a></li>
@@ -182,7 +187,7 @@ if ($_SESSION['logged_user']!=null) {
         ?>
     </div>
 </div>
-<?php if ($_SESSION['logged_user']==null) echo '<div id="mainbody">
+<?php if ($_COOKIE['logged_user']==null) echo '<div id="mainbody">
     <div class="jumbotron" id="mainpanel">
         <div class="container">
             <div class="row">

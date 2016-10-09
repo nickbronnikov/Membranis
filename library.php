@@ -1,7 +1,12 @@
 <?php 
 require 'includes/db.php';
-if ($_SESSION['logged_user']==null)  echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=index.php">';
-$stmt=B::selectFromBase('users',array('id'),array('login'),array($_SESSION['logged_user']));
+if ($_COOKIE['logged_user']==null)  echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/">'; else
+    if (!checkKey($_COOKIE['key'])) {
+        delCookies('logged_user');
+        delCookies('key');
+        echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/">';
+    }
+$stmt=B::selectFromBase('users',array('id'),array('login'),array($_COOKIE['logged_user']));
 $data=$stmt->fetchAll();
 $stmt=B::selectFromBase('users_files',null,array('id_user'),array($data[0]['id']));
 $data=$stmt->fetchAll();
@@ -85,7 +90,7 @@ $data=$stmt->fetchAll();
                     </span>
                 </span></li>
                 <li class="dropdown maincolor li-nav">
-                    <button class="btn btn-default btn-rad dropdown-toggle" data-toggle="dropdown"><?=$_SESSION['logged_user'];?>   <b class="caret"></b></button>
+                    <button class="btn btn-default btn-rad dropdown-toggle" data-toggle="dropdown"><?=$_COOKIE['logged_user'];?>   <b class="caret"></b></button>
                     <ul class="dropdown-menu">
                         <li><a onclick="showBook(0)">Update list</a></li>
                         <li><a href="settings">Settings</a></li>

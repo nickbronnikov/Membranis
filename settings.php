@@ -1,5 +1,11 @@
 <?php
 include "includes/db.php";
+if ($_COOKIE['logged_user']==null)  echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/">'; else 
+if (!checkKey($_COOKIE['key'])) {
+    delCookies('logged_user');
+    delCookies('key');
+    echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/">';
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -35,7 +41,7 @@ include "includes/db.php";
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown maincolor li-nav">
-                        <button class="btn btn-default dropdown-toggle btn-rad" data-toggle="dropdown" id="user_name"><?=$_SESSION['logged_user'];?>   <b class="caret"></b></button>
+                        <button class="btn btn-default dropdown-toggle btn-rad" data-toggle="dropdown" id="user_name"><?=$_COOKIE['logged_user'];?>   <b class="caret"></b></button>
                         <ul class="dropdown-menu">
                             <li><a href="library">Your library</a></li>
                             <li><a onclick="showBook(0)">Обновить список</a></li>

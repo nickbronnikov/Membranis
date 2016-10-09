@@ -1,14 +1,20 @@
 <?php
 require 'includes/db.php';
 require 'includes/file_work.php';
+if ($_COOKIE['logged_user']==null)  echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/">'; else
+    if (!checkKey($_COOKIE['key'])) {
+    delCookies('logged_user');
+        delCookies('key');
+    echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/">';
+}
 $_SESSION[$_GET['id']]=0;
 $_SESSION['id-book']=$_GET['id'];
 $stmt=B::selectFromBase('users_files',null,array('id'),array($_GET['id']));
 $data=$stmt->fetchAll();
-$db=B::selectFromBase('users',null,array('login'),array($_SESSION['logged_user']));
+$db=B::selectFromBase('users',null,array('login'),array($_COOKIE['logged_user']));
 $user=$db->fetchAll();
 if ($user[0]['id']==$data[0]['id_user']) {
-    $ui = B::selectFromBase('users_info', null, array('login'), array($_SESSION['logged_user']));
+    $ui = B::selectFromBase('users_info', null, array('login'), array($_COOKIE['logged_user']));
     $ui_data = $ui->fetchAll();
     $last_books = json_decode($ui_data[0]['last_books'], true);
     if ($last_books[0]!=$_GET['id']){
@@ -19,7 +25,7 @@ if ($user[0]['id']==$data[0]['id_user']) {
         for ($i=1;$i<count($last_books);$i++){
             if ($last_books[$i]==$_GET['id']) $last_books[$i]=0;
         }
-    B::updateBase('users_info', array('last_books'), array(json_encode($last_books)), array('login'), array($_SESSION['logged_user']));
+    B::updateBase('users_info', array('last_books'), array(json_encode($last_books)), array('login'), array($_COOKIE['logged_user']));
 }
     $file_info = pathinfo($data[0]['path']);
     switch ($file_info['extension']) {
@@ -130,7 +136,7 @@ if ($user[0]['id']==$data[0]['id_user']) {
                             break;
                     }?></li>
                 <li class="dropdown maincolor li-nav">
-                    <button class="btn btn-default dropdown-toggle btn-rad" data-toggle="dropdown"><?=$_SESSION['logged_user'];?>   <b class="caret"></b></button>
+                    <button class="btn btn-default dropdown-toggle btn-rad" data-toggle="dropdown"><?=$_COOKIE['logged_user'];?>   <b class="caret"></b></button>
                     <ul class="dropdown-menu">
                         <li><a href="library">Your library</a></li>
                         <li><a onclick="showBook(0)">Обновить список</a></li>

@@ -1,6 +1,7 @@
 <?php
 require 'includes/db.php';
-echo 'Log out...';
-$_SESSION['logged_user']=null;
-echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=index">';
+delCookies('logged_user');
+delCookies('key');
+echo 'Log out...';  
+echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/">';
 ?>

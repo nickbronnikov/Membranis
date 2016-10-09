@@ -65,7 +65,7 @@ switch ($_POST['function']) {
         echo $chapter;
         break;
     case 'checkFreeSpace':
-        $stmt = B::selectFromBase('users_info', null, array('login'), array($_SESSION['logged_user']));
+        $stmt = B::selectFromBase('users_info', null, array('login'), array($_COOKIE['logged_user']));
         $data = $stmt->fetchAll();
         if (($data[0]['disk_space']-($data[0]['files_disc_space']+$_POST['size']))<0){
             echo 'false';
@@ -152,9 +152,7 @@ switch ($_POST['function']) {
             $deltaPosition=$_POST['scroll']-$pxPosition;
             $deltaPerPosition=round($deltaPosition/$_POST['docHeight']*100,0,PHP_ROUND_HALF_DOWN);
             $_SESSION[$_SESSION[$_GET['id']]]=$_SESSION[$_SESSION[$_GET['id']]]+$deltaPerPosition;
-            if ($progress['progress']!=100) {
-                $newProgress = json_encode(array('chapter_id' => $progress['chapter_id'], 'chapter' => $progress['chapter'], 'page_progress' => $_SESSION[$_SESSION[$_GET['id']]], 'progress' => $progress['progress'], 'p' => $progress['p']));
-            }
+            $newProgress = json_encode(array('chapter_id' => $progress['chapter_id'], 'chapter' => $progress['chapter'], 'page_progress' => $_SESSION[$_SESSION[$_GET['id']]], 'progress' => $progress['progress'], 'p' => $progress['p']));
             B::updateBase('users_files', array('progress'), array($newProgress), array('id'), array($_SESSION['id-book']));
         }
         break;

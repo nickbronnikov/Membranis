@@ -5,7 +5,7 @@ require 'includes/EPUBandMOBI.php';
 $allowed = array('fb2','pdf','epub');
 if(isset($_FILES['upl']) && $_FILES['upl']['error'] == 0) {
     $extension = pathinfo($_FILES['upl']['name'], PATHINFO_EXTENSION);
-    $stmt = B::selectFromBase('users', array('id', 'folder'), array('login'), array($_SESSION['logged_user']));
+    $stmt = B::selectFromBase('users', array('id', 'folder'), array('login'), array($_COOKIE['logged_user']));
     $data = $stmt->fetchAll();
     $file_info = pathinfo($_FILES['upl']['name']);
     $cryptname = preg_replace("/[^a-zA-ZА-Яа-я0-9\s]/", "", crypt(rus2translit($file_info['filename'])));
@@ -60,12 +60,12 @@ if(isset($_FILES['upl']) && $_FILES['upl']['error'] == 0) {
 }
 }
 function checkFreeSpace($size){
-    $stmt = B::selectFromBase('users_info', null, array('login'), array($_SESSION['logged_user']));
+    $stmt = B::selectFromBase('users_info', null, array('login'), array($_COOKIE['logged_user']));
     $data = $stmt->fetchAll();
     if (($data[0]['disk_space']-($data[0]['files_disk_space']+$size))<0){
         return false;
     } else {
-        B::updateBase('users_info',array('files_disk_space'),array($data[0]['files_disk_space']+$size),array('login'),array($_SESSION['logged_user']));
+        B::updateBase('users_info',array('files_disk_space'),array($data[0]['files_disk_space']+$size),array('login'),array($_COOKIE['logged_user']));
         return true;
     }
 }

@@ -10,6 +10,25 @@ function checkPassword($logpas,$field_name){
     $resr=$res->fetchAll();
     return password_verify($logpas[1],$resr[0]['password']);
 }
+function setCookies($name,$value){
+    setcookie($name,$value,strtotime('+30 days'),'/');
+}
+function delCookies($name){
+    setcookie($name,"",1);
+}
+function checkKey($key){
+    $check=true;
+    if ($key!=null) {
+        if (checkField('users', array('login'), array($_COOKIE['logged_user']))) {
+            if ($_COOKIE['logged_user'] != null && $_COOKIE['key'] != null) {
+                $stmt = B::selectFromBase('users', null, array('login'), array($_COOKIE['logged_user']));
+                $data = $stmt->fetchAll();
+                if ($_COOKIE['key'] == $data[0]['id_key']) $check = true; else $check = false;
+            } else $check = false;
+        } else $check = false;
+    } else $check=false;
+    return $check;
+}
 class B{
     public $db_login="mysql";
     public $db_password="mysql";

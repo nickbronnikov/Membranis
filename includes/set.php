@@ -42,15 +42,16 @@ switch ($_POST['function']){
         break;
     case 'doNewlogin':
         if(!checkField('users',array('login'),array(trim($_POST['keyNew'])))){
-            B::updateBase('users',array('login'),array(htmlspecialchars(trim($_POST['keyNew']))),array('login'),array($_SESSION['logged_user']));
-            B::updateBase('users_info',array('login'),array(htmlspecialchars(trim($_POST['keyNew']))),array('login'),array($_SESSION['logged_user']));
-            $_SESSION['logged_user']=trim($_POST['keyNew']);
+            B::updateBase('users',array('login'),array(htmlspecialchars(trim($_POST['keyNew']))),array('login'),array($_COOKIE['logged_user']));
+            B::updateBase('users_info',array('login'),array(htmlspecialchars(trim($_POST['keyNew']))),array('login'),array($_COOKIE['logged_user']));
+            setCookies("logged_user",trim($_POST['keyNew']));
             echo 'true';
         } else echo 'false';
         break;
     case 'oldemail':
-        $stmt=B::selectFromBase('users',null,array('login'),array($_SESSION['logged_user']));
+        $stmt=B::selectFromBase('users',null,array('login'),array($_COOKIE['logged_user']));
         $data=$stmt->fetchAll();
+        $_SESSION['test']=$_COOKIE['logged_user'];
         if($data[0]['email']==trim($_POST['key'])){
             echo $done;
         } else echo $clear;
@@ -61,30 +62,30 @@ switch ($_POST['function']){
         } else echo $clear;
         break;
     case 'doNewemail':
-        $stmt=B::selectFromBase('users',null,array('login'),array($_SESSION['logged_user']));
+        $stmt=B::selectFromBase('users',null,array('login'),array($_COOKIE['logged_user']));
         $data=$stmt->fetchAll();
         if($data[0]['email']==trim($_POST['keyOld']) && !checkField('users',array('email'),array(trim($_POST['keyNew']))) && checkEmail(trim($_POST['keyNew']))){
-            B::updateBase('users',array('email'),array(htmlspecialchars(trim($_POST['keyNew']))),array('login'),array($_SESSION['logged_user']));
+            B::updateBase('users',array('email'),array(htmlspecialchars(trim($_POST['keyNew']))),array('login'),array($_COOKIE['logged_user']));
             echo 'true';
         } else echo 'false';
         break;
     case 'doNewpassword':
         $_SESSION['test']=$_POST;
-        $stmt=B::selectFromBase('users',null,array('login'),array($_SESSION['logged_user']));
+        $stmt=B::selectFromBase('users',null,array('login'),array($_COOKIE['logged_user']));
         $data=$stmt->fetchAll();
         if (password_verify($_POST['keyOld'],$data[0]['password'])) {
-            B::updateBase('users',array('password'),array(password_hash(htmlspecialchars($_POST['key']),PASSWORD_DEFAULT)),array('login'),array($_SESSION['logged_user']));
+            B::updateBase('users',array('password'),array(password_hash(htmlspecialchars($_POST['key']),PASSWORD_DEFAULT)),array('login'),array($_COOKIE['logged_user']));
             echo 'true';
         } else echo 'false';
         break;
     case 'storage':
-        $stmt=B::selectFromBase('users_info',null,array('login'),array($_SESSION['logged_user']));
+        $stmt=B::selectFromBase('users_info',null,array('login'),array($_COOKIE['logged_user']));
         $data=$stmt->fetchAll();
         $bp='';
         if ($data[0]['plan']==0) {
             $plan='Standard';
             $price=0;
-            $bp='<a href="plan" class="btn btn-success btn-sm set-btn">New plan</a>';
+            $bp='<a href="plan" class="btn btn-success btn-sm set-btn" disabled="disabled">New plan</a>';
         } else {
             $plan='Premium';
             $price=3;

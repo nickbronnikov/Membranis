@@ -13,8 +13,11 @@ if (isset($data['loginin'])) {
         if (checkPassword($logpas,'login')) $check = true; else $check=false;
     }
     if ($check) {
-        $_SESSION['logged_user'] = $data['login'];
-        echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=index.php">';
+        setCookies("logged_user",$data['login']);
+        $stmt=B::selectFromBase('users',null,array('login'),array($data['login']));
+        $login=$stmt->fetchAll();
+        setCookies("key",$login[0]['id_key']);
+        echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/">';
     } else {
         $check=true;
         if (!checkField('users', array('email'), array($data['login']))) $check = false; else {
@@ -22,10 +25,11 @@ if (isset($data['loginin'])) {
             if (checkPassword($logpas,'email')) $check = true; else $check=false;
         }
         if ($check) {
-            $stmt=B::selectFromBase('users',array('login'),array('email'),array($data['login']));
+            $stmt=B::selectFromBase('users',null,array('email'),array($data['login']));
             $login=$stmt->fetchAll();
-            $_SESSION['logged_user'] = $login[0]['login'];
-            echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=index.php">';
+            setCookies("logged_user",$login[0]['login']);
+            setCookies("key",$login[0]['id_key']);
+            echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/">';
         }
     }
 }
@@ -82,7 +86,7 @@ if (isset($data['loginin'])) {
                 </div>
                     <div class="panel panel-default width-full">
                         <div class="panel-body center-block">
-                            <h4 class="text-center">Don't have an account? <a href="signup.php">Create it!</a></h4>
+                            <h4 class="text-center">Don't have an account? <a href="signup">Create it!</a></h4>
                         </div>
                     </div>
                 </div>

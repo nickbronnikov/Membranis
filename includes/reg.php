@@ -31,15 +31,17 @@ function allCheck($login,$email,$password){
         $time=time();
         $password=password_hash($password,PASSWORD_DEFAULT);
         $folder=preg_replace ("/[^a-zA-ZА-Яа-я0-9\s]/","",crypt(rus2translit($login)));
-        $fields=array('login', 'email', 'password', 'join_date','folder');
-        $data=array($login, $email, $password,$time,$folder);
+        $idkey=preg_replace ("/[^a-zA-ZА-Яа-я0-9\s]/","",crypt(rus2translit($login)));
+        $fields=array('login', 'email', 'password', 'join_date','folder','id_key');
+        $data=array($login, $email, $password,$time,$folder,$idkey);
         $success=B::inBase($table_name,$fields,$data);
         B::inBase('users_info',array('login'),array($login));
         if ($success) {
             if (!file_exists("../users_files/".$folder)) mkdir("../users_files/".$folder);
             $res = B::selectFromBase($table_name, null, array('login'), array($login));
             $row = $res->fetchAll();
-            $_SESSION['logged_user']=$row[0]['login'];
+            setCookies("logged_user",$row[0]['login']);
+            setCookies("key",$row[0]['id_key']);
             $json['error']='false';
             $json['test']='true';
         }

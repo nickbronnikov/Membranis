@@ -1,6 +1,6 @@
 <?php
 require 'db.php';
-$stmt=B::selectFromBase('users',array('id'),array('login'),array($_SESSION['logged_user']));
+$stmt=B::selectFromBase('users',array('id'),array('login'),array($_COOKIE['logged_user']));
 $data=$stmt->fetchAll();
 $stmt=B::selectFromBase('users_files',null,array('id_user'),array($data[0]['id']));
 $data=$stmt->fetchAll();
@@ -41,14 +41,14 @@ switch ($_POST['function']){
         $s=explode("/",$data[0]['path']);
         $file_path=str_replace("/".$s[count($s)-1], '', $data[0]['path']);
         $path = $_SERVER['DOCUMENT_ROOT'].'/'.$file_path;
-        $stmt=B::selectFromBase('users_info',null,array('login'),array($_SESSION['logged_user']));
+        $stmt=B::selectFromBase('users_info',null,array('login'),array($_COOKIE['logged_user']));
         $info=$stmt->fetchAll();
         $size=$info[0]['files_disk_space']-filesize($_SERVER['DOCUMENT_ROOT'].'/'.$data[0]['path']);
         $last=json_decode($info[0]['last_books'],true);
         for ($i=0;$i<count($last);$i++){
             if ($last[$i]==$_POST['id']) $last[$i]=0;
         }
-        B::updateBase('users_info',array('files_disk_space','last_books'),array($size,json_encode($last)),array('login'),array($_SESSION['logged_user']));
+        B::updateBase('users_info',array('files_disk_space','last_books'),array($size,json_encode($last)),array('login'),array($_COOKIE['logged_user']));
         removeDirectory($path);
         B::deleteFromBase('users_files',array('id'),array($data[0]['id']));
         break;

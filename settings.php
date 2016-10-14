@@ -18,11 +18,14 @@ if (!checkKey($_COOKIE['key'])) {
     <link href="css/progress.css" type="text/css" rel="stylesheet"/>
     <script src="js/js-download/jquery.knob.js"></script>
     <script src="js/progress-bar/progress.js"></script>
-    <script src="js/settings.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jqueryScrollTo.js"></script>
     <script src="js/progress-bar/progress.js"></script>
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" media="screen" type="text/css" href="css/colorpicker.css" />
+    <script type="text/javascript" src="js/colorpicker.js"></script>
+    <script src="js/style.js"></script>
+    <script src="js/settings.js"></script>
 </head>
 <body>
 <script>progressShow()</script>
@@ -102,14 +105,13 @@ if (!checkKey($_COOKIE['key'])) {
                                         <span id="infoemail"></span>
                                     </div>
                                 </div>
-                            </div>
-                    </div>
                 </div>
             </div>
             <div class="col-md-1 col-lg-1">
             </div>
         </div>
     </div>
+</div>
 </div>
 </body>
 </html>

@@ -1,5 +1,6 @@
 var progPage=null;
 $(document).ready(function () {
+    setInterval(pdfProgress, 2500);
     $('#continueReading').on('click',function () {
         putProgress();
     });

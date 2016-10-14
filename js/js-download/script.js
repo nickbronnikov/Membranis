@@ -9,7 +9,8 @@ $(function(){
         add: function (e, data) {
             var fileUrl = data.files[0].name,
                 parts, ext = ( parts = fileUrl.split("/").pop().split(".") ).length > 1 ? parts.pop() : "";
-            if(ext!='fb2' && ext!='pdf' && ext!='epub'){
+            var extensions='fb2 pdf epub txt html';
+            if(extensions.indexOf(ext)==-1){
                 $('#errorExtension').modal('show');
                 return;
             }
@@ -79,7 +80,6 @@ function checkSizeInSpace(size) {
         url: "includes/reader-file.php",
         data: {function: 'checkFreeSpace',size: size},
         beforeSend: function () {
-
         },
         success: function (data) {
             if (data=='true') checkSpace=true; else return checkSpace=false;

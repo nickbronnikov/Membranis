@@ -65,8 +65,10 @@ switch ($_POST['function']) {
         echo $chapter;
         break;
     case 'checkFreeSpace':
+        $_SESSION['test1']="Yes";
         $stmt = B::selectFromBase('users_info', null, array('login'), array($_COOKIE['logged_user']));
         $data = $stmt->fetchAll();
+        $_SESSION['test']=array($_POST['size'],$data[0]['disk_space']-($data[0]['files_disc_space']+$_POST['size']),$data[0]['disk_space'],$data[0]['files_disc_space']);
         if (($data[0]['disk_space']-($data[0]['files_disc_space']+$_POST['size']))<0){
             echo 'false';
         } else {
@@ -153,6 +155,19 @@ switch ($_POST['function']) {
             $deltaPerPosition=round($deltaPosition/$_POST['docHeight']*100,0,PHP_ROUND_HALF_DOWN);
             $_SESSION[$_SESSION[$_GET['id']]]=$_SESSION[$_SESSION[$_GET['id']]]+$deltaPerPosition;
             $newProgress = json_encode(array('chapter_id' => $progress['chapter_id'], 'chapter' => $progress['chapter'], 'page_progress' => $_SESSION[$_SESSION[$_GET['id']]], 'progress' => $progress['progress'], 'p' => $progress['p']));
+            B::updateBase('users_files', array('progress'), array($newProgress), array('id'), array($_SESSION['id-book']));
+        }
+        break;
+    case 'pageScrollSimple':
+        $pxPosition=round($_SESSION[$_GET['id']]/100*$_POST['docHeight']);
+        if (abs($pxPosition-$_POST['scroll'])>=200){
+            $stmt = B::selectFromBase('users_files', null, array('id'), array($_SESSION['id-book']));
+            $data = $stmt->fetchAll();
+            $progress = json_decode($data[0]['progress'],true);
+            $deltaPosition=$_POST['scroll']-$pxPosition;
+            $deltaPerPosition=round($deltaPosition/$_POST['docHeight']*100,0,PHP_ROUND_HALF_DOWN);
+            $_SESSION[$_SESSION[$_GET['id']]]=$_SESSION[$_SESSION[$_GET['id']]]+$deltaPerPosition;
+            $newProgress = json_encode(array('progress' => $_SESSION[$_SESSION[$_GET['id']]]));
             B::updateBase('users_files', array('progress'), array($newProgress), array('id'), array($_SESSION['id-book']));
         }
         break;

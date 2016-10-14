@@ -41,7 +41,7 @@ $data=$stmt->fetchAll();
                 <h3 class="modal-title" id="myLargeModalLabel"><strong>Wrong extension</strong></h3>
             </div>
             <div class="modal-body">
-                <div class="alert alert-danger alert-error">You are trying to download a file with an extension that does not support  by PolisBook. Available extensions: <strong>fb2, pdf</strong>.</div>
+                <div class="alert alert-danger alert-error">You are trying to download a file with an extension that does not support  by PolisBook. Available extensions: <strong>fb2, pdf, epub, txt, html</strong>.</div>
             </div>
         </div>
     </div>

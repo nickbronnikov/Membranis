@@ -66,7 +66,12 @@ function chapterName($folder,$num){
     $doc->load($folder.'/book.ncx');
     $navPoint=$doc->getElementsByTagName('navPoint');
     $content=$navPoint[$num-1]->getElementsByTagName('content');
-    return $content[0]->getAttribute('src');
+    $name=$content[0]->getAttribute('src');
+    $ln='';
+    for ($i=0;$i<stripos($name,'html')+4;$i++){
+        $ln.=$name[$i];
+    }
+    return $ln;
 }
 function EPUBLength($folder){
     $doc = new DOMDocument();

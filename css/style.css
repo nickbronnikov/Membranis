@@ -8,6 +8,14 @@
     font-weight: 400;
     src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v17/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
 }
+#colorpickerText, #colorpickerBackground{
+    padding-bottom: 4px;
+}
+#save{
+    padding-top: 6px;
+    padding-bottom: 6px;
+    min-width: 100%;
+}
 .material-icons {
     font-family: 'Material Icons';
     font-weight: normal;
@@ -26,7 +34,8 @@
 .maincolor{
     color: #607d8b;
 }
-#footer{
+#leftl,#justifyl,#centerl,#bfont,#sfont{
+    padding-bottom: 4px;
 }
 .text-block{
 

@@ -65,7 +65,7 @@ function EPUBChapter($filename,$name_path){
     $file = str_replace('<a', '<p', $file);
     $file = str_replace('a/>', 'p/>', $file);
     $file = str_replace('src="', 'class="center-block" src="'.$file_path."/", $file);
-    $file = str_replace('<title/>', '<title></title>'.$file_path."/", $file);
+    $file = str_replace('<title/>', '<title></title>', $file);
     return $file;
 }
 function removeDir($dir) {
@@ -124,18 +124,24 @@ function chapterListEPUB($file_name){
 }
 class Cover{
     static function pdfCover($filename,$filefolder,$namecover){
-        //заготовка, есть проблемы с белым фоном
         $imagick = new Imagick();
         $imagick->readImage($_SERVER['DOCUMENT_ROOT'] .'/'. $filename.'[0]');
         $imagick->writeImage($_SERVER['DOCUMENT_ROOT'] .'/'. $filefolder.$namecover);
     }
-    static function fb2Cover($filename,$filefolder,$namecover)
-    {
+    static function checkCover($filename){
         $fb2DOM = new DOMDocument();
         $fb2DOM->load($filename);
-        $coverDom=$fb2DOM->getElementsByTagName('coverpage');
+        if ($fb2DOM->getElementsByTagName('coverpage')->length==0) return false; else
+            return true;
+    }
+    static function fb2Cover($filename,$filefolder,$namecover)
+    {
+            $fb2DOM = new DOMDocument();
+            $fb2DOM->load($filename);
+            $coverDom=$fb2DOM->getElementsByTagName('coverpage');
         $coveratr=$coverDom[0]->getElementsByTagName('image');
         $namecoverid=str_replace('#','',$coveratr[0]->getAttribute('l:href'));
+        $_SESSION['test']=$coveratr[0]->getAttribute('l:href');
         $test = $fb2DOM->getElementsByTagName('image');
         $binary_image_code = '';
         foreach ($binary = $fb2DOM->getElementsByTagName('binary') as $atr) {
@@ -177,4 +183,5 @@ class Cover{
         return $author;
     }
 }
+
 ?>

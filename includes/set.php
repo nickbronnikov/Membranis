@@ -34,6 +34,8 @@ $account='<div class="panel panel-default">
 $password='<div class="panel panel-default"> <div class="panel-heading"><strong>Change password</strong></div> <div class="panel-body"> <label for="oldpassword">Old password</label> <div class="input-group"> <input type="password" class="form-control" id="oldpassword"> <span class="input-group-addon" id="oldpasswordcheck"></span> </div> <span id="oldpasswordalert"><p class="info-reg">This is your old password</p></span> <label for="newpassword">New password</label> <div class="input-group"> <input type="password" class="form-control" id="newpassword"> <span class="input-group-addon" id="newpasswordcheck"></span> </div> <span id="newpasswordalert"><p class="info-reg">This is your new password</p></span> <label for="newlogin">Confirm new password</label> <div class="input-group"> <input type="password" class="form-control" id="newpasswordr"> <span class="input-group-addon" id="newpasswordrcheck"></span> </div> <span id="newpasswordralert"><p class="info-reg">Confirm your new password</p></span> <button class="btn btn-success" id="btn-newpassword">Change password</button> <span id="infopassword"></span> </div> </div>';
 $done='<svg fill="#5cb85c" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/> <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>';
 $clear='<svg fill="#a94442" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/><path d="M0 0h24v24H0z" fill="none"/></svg>';
+$readerStyle='style="font-family: \'Arial\'; font-size: 14px; color: #000000; background-color: #f5f5f5"';
+$readerText='<h1>CHAPTER I</h1><p>Towards the end of November, during a thaw, at nine o\'clock one morning, a train on the Warsaw and Petersburg railway was approaching the latter city at full speed. The morning was so damp and misty that it was only with great difficulty that the day succeeded in breaking; and it was impossible to distinguish anything more than a few yards away from the carriage windows.</p> <p>Some of the passengers by this particular train were returning from abroad; but the third-class carriages were the best filled, chiefly with insignificant persons of various occupations and degrees, picked up at the different stations nearer town. All of them seemed weary, and most of them had sleepy eyes and a shivering expression, while their complexions generally appeared to have taken on the colour of the fog outside.</p> <p>When day dawned, two passengers in one of the third-class carriages found themselves opposite each other. Both were young fellows, both were rather poorly dressed, both had remarkable faces, and both were evidently anxious to start a conversation. If they had but known why, at this particular moment, they were both remarkable persons, they would undoubtedly have wondered at the strange chance which had set them down opposite to one another in a third-class carriage of the Warsaw Railway Company.</p> <p>One of them was a young fellow of about twenty-seven, not tall, with black curling hair, and small, grey, fiery eyes. His nose was broad and flat, and he had high cheek bones; his thin lips were constantly compressed into an impudent, ironical--it might almost be called a malicious--smile; but his forehead was high and well formed, and atoned for a good deal of the ugliness of the lower part of his face. A special feature of this physiognomy was its death-like pallor, which gave to the whole man an indescribably emaciated appearance in spite of his hard look, and at the same time a sort of passionate and suffering expression which did not harmonize with his impudent, sarcastic smile and keen, self-satisfied bearing. He wore a large fur--or rather astrachan--overcoat, which had kept him warm all night, while his neighbour had been obliged to bear the full severity of a Russian November night entirely unprepared. His wide sleeveless mantle with a large cape to it--the sort of cloak one sees upon travellers during the winter months in Switzerland or North Italy--was by no means adapted to the long cold journey through Russia, from Eydkuhnen to St. Petersburg.</p> ';
 switch ($_POST['function']){
     case 'newlogin':
         if(!checkField('users',array('login'),array(trim($_POST['key'])))){
@@ -106,7 +108,7 @@ switch ($_POST['function']){
                                                     <div class="progress-bar set-pr" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: '.$per.'%;">
                                                     </div>
                                                 </div>
-                                                <span class="st">'.$st[0].'/'.$st[1].'</span>
+                                                <span class="st">'.$st[0].'/'.$st[1].' MB</span>
                                             </div>
                                             </div>
                                             <hr class="set-hr">
@@ -123,7 +125,14 @@ switch ($_POST['function']){
                                 </div>';
         echo $storage;
         break;
-
+    case 'textstyle':
+        B::updateBase('users_info',array('style'),array($_POST['css']),array('login'),array($_COOKIE['logged_user']));
+        break;
+    case 'style':
+        $stmt=B::selectFromBase('users_info',null,array('login'),array($_COOKIE['logged_user']));
+        $data=$stmt->fetchAll();
+        echo $data[0]['style'];
+        break;
 }
 function checkEmail($email){
     $check=true;

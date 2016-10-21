@@ -87,6 +87,25 @@ html,body {
     background-size: contain;
     min-height: 500px;
 }
+#jumbotron-formats, #jumbotron-reader{
+    background-color: #607d8b;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-size: contain;
+    min-height: 500px;
+}
+#jumbotron-formats{
+    background-image: url(../img/Formats.png);
+}
+#jumbotron-reader{
+    background-image: url(../img/Reader.png);
+}
+#reader::-webkit-scrollbar {
+    display: none;
+}
+#reader{
+    overflow-x: hidden;
+}
 @font-face {
     font-family: Cuprum;
     src: url(../font/Cuprum-Bold.ttf);

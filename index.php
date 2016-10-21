@@ -36,8 +36,13 @@ if ($_COOKIE['logged_user']!=null) {
                 </svg><span class="text-center"><h3 class="text-center maincolor"><strong>You have not uploaded any one book. <a href="library">Upload it now!</a></strong></h3>
             </div>
         </div>'; else {
+            $data_key=array();
+            foreach ($books as $key=>$arr){
+                $data_key[$key]=$arr['id'];
+            }
+            array_multisort($books, SORT_NUMERIC, $data_key);
             $j=1;
-            for ($i=0;$i<count($books);$i++){
+            for ($i=count($books)-1;$i>=0;$i--){
                 if ($j>4) break; else {
                     $progress=json_decode($books[$i]['progress'],true);
                     $file_info=pathinfo($books[$i]['path']);
@@ -109,7 +114,12 @@ if ($_COOKIE['logged_user']!=null) {
         $user=$stmt->fetchAll();
         $stmt = B::selectFromBase('users_files', null, array('id_user'), array($user[0]['id']));
         $books = $stmt->fetchAll();
-        for ($i=0;$i<count($books);$i++){
+        $data_key=array();
+        foreach ($books as $key=>$arr){
+            $data_key[$key]=$arr['id'];
+        }
+        array_multisort($books, SORT_NUMERIC, $data_key);
+        for ($i=count($books)-1;$i>=0;$i--){
             if ($j>4) break; else {
                 $file_info=pathinfo($books[$i]['path']);
                 $progress=json_decode($books[$i]['progress'],true);
@@ -225,6 +235,7 @@ if ($_COOKIE['logged_user']!=null) {
         </div>
     </div>
 </div>
+<div id="jumbotron-formats"></div>
 <div class="container">
     <div class="row">
         <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
@@ -247,6 +258,7 @@ if ($_COOKIE['logged_user']!=null) {
         </div>
     </div>
 </div>
+<div id="jumbotron-reader"></div>
 </div>';?>
 <div class="container">
     <div class="row">

@@ -1,18 +1,34 @@
+var pageprogress;
+function progressPage(progress){
+    pageprogress=progress;
+}
 $(document).ready(function () {
-    $(window).on('scroll',function () {
-        var cont_top = window.pageYOffset ? window.pageYOffset : document.body.scrollTop;
-        pageProgress(cont_top,$(document).outerHeight(true),$(window).height());
+    $('#reader').css('max-height', $(window).height());
+    toprogressPage(pageprogress);
+    $(window).resize(function () {
+        $('#reader').css('max-height', $(window).height());
+    });
+    $('#reader').on('scroll',function () {
+        var r=document.getElementById('reader');
+        var cont_top = r.pageYOffset ? r.pageYOffset : r.scrollTop;
+        pageProgress(cont_top,$('#reader')[0].scrollHeight,$(window).height());
     });
     $('#scrollDown').on('click',function () {
-        var cont_top = window.pageYOffset ? window.pageYOffset : document.body.scrollTop;
-        if (Math.floor((cont_top+$(window).height())/$(document).outerHeight(true)*100)!=100) {
-            $("body,html").animate({"scrollTop": cont_top + $(window).height()}, 300);
+        var r=document.getElementById('reader');
+        var cont_top = r.pageYOffset ? r.pageYOffset : r.scrollTop;
+        if (Math.floor((cont_top+$(window).height())/$('#reader')[0].scrollHeight*100)==100){
+            nextChapter();
+        } else {
+            $('#reader').animate({"scrollTop": cont_top + $('#reader').height()}, 300);
         }
     });
     $('#scrollUp').on('click',function () {
-        var cont_top = window.pageYOffset ? window.pageYOffset : document.body.scrollTop;
-        if (cont_top!=0){
-            $("body,html").animate({"scrollTop": cont_top - $(window).height()}, 300);
+        var r=document.getElementById('reader');
+        var cont_top = r.pageYOffset ? r.pageYOffset : r.scrollTop;
+        if (cont_top==0){
+            previousChapter();
+        } else {
+            $('#reader').animate({"scrollTop": cont_top - $('#reader').height()}, 300);
         }
     });
 });
@@ -25,11 +41,10 @@ function pageProgress(scroll,documentHeight,windowHeight) {
         url: "includes/reader-file.php",
         data: {function: 'pageScrollSimple',scroll: scroll,docHeight: documentHeight, windowHeight: windowHeight},
         success: function (data) {
-
         }
     });
 }
-function progressPage(progress){
-    var pagePoint=Math.round(progress/100*$(document).outerHeight(true));
-    $("body,html").animate({"scrollTop": pagePoint});
+function toprogressPage(progress){
+    var pagePoint=Math.round(progress/100*$('#reader')[0].scrollHeight);
+    $('#reader').animate({"scrollTop": pagePoint});
 }

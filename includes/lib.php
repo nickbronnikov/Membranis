@@ -7,6 +7,11 @@ $data=$stmt->fetchAll();
 $show='';
 switch ($_POST['function']){
     case 'showBooks':
+        $data_key=array();
+        foreach ($data as $key=>$arr){
+            $data_key[$key]=$arr['id'];
+        }
+        array_multisort($data, SORT_NUMERIC, $data_key);
         for ($i=count($data)-1;$i>=0;$i--){
             $item=$data[$i];
             $file_info=pathinfo($item['path']);

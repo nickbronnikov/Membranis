@@ -39,8 +39,10 @@ if ($user[0]['id']==$data[0]['id_user']) {
         <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">
             <span class="page" id="scrollUp"><</span>
         </div>
+        <div id="#pr">
         <div class="col-md-10 col-lg-10 col-sm-10 col-xs-10 well" id="reader">
             ' . $str . '
+        </div>
         </div>
         <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 ">
             <span class="page" id="scrollDown">></span>
@@ -58,7 +60,7 @@ if ($user[0]['id']==$data[0]['id_user']) {
         case 'epub':
             $chapter = chapterListEPUB($data[0]['path']);
             $progress = json_decode($data[0]['progress'], true);
-            $function = '<script>progressPage(' . $progress['page_progress'] . ')</script><script>styleReader(\'' . $ui_data[0]['style'] . ')</script>';
+            $function = '<script>progressPage(' . $progress['page_progress'] . ')</script><script>styleReader(\'' . $ui_data[0]['style'] . '\')</script>';
             $str='';
             $str=EPUBChapter($data[0]['path'],$progress['chapter']);
             $reader = '<div class="container">
@@ -66,8 +68,10 @@ if ($user[0]['id']==$data[0]['id_user']) {
         <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">
             <div class="center-block"><span class="page" id="scrollUp"><</span></div>
         </div>
+        <div id="#pr">
         <div class="col-md-10 col-lg-10 col-sm-10 col-xs-10 well" id="reader">
             ' . $str . '
+        </div>
         </div>
         <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 ">
             <div class="center-block"><span class="page" id="scrollDown">></span></div>
@@ -76,15 +80,18 @@ if ($user[0]['id']==$data[0]['id_user']) {
 </div>' . $function;
             break;
         case 'txt':
-        $function='<script>progressPage(' . $progress['progress'] . ')</script><script>';
-        $str=file_get_contents($data[0]['path']);
-        $reader = '<div class="container">
+            $progress=json_decode($data[0]['progress'],true);
+            $function='<script>progressPage(' . $progress['progress'] . ')</script><script>styleReader(\'' . $ui_data[0]['style'] . '\')</script>';
+            $str=file_get_contents($data[0]['path']);
+            $reader = '<div class="container">
     <div class="row">
         <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">
             <div class="center-block"><span class="page" id="scrollUp"><</span></div>
         </div>
+        <div id="#pr">
         <div class="col-md-10 col-lg-10 col-sm-10 col-xs-10 well" id="reader">
             ' . $str . '
+        </div>
         </div>
         <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 ">
             <div class="center-block"><span class="page" id="scrollDown">></span></div>
@@ -93,15 +100,18 @@ if ($user[0]['id']==$data[0]['id_user']) {
 </div>' . $function;
         break;
         case 'html':
-            $function='<script>progressPage(' . $progress['progress'] . ')</script><script>';
+            $progress=json_decode($data[0]['progress'],true);
+            $function='<script>progressPage(' . $progress['progress'] . ')</script><script>styleReader(\'' . $ui_data[0]['style'] . '\')</script>';
             $str=file_get_contents($data[0]['path']);
             $reader = '<div class="container">
     <div class="row">
         <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">
             <div class="center-block"><span class="page" id="scrollUp"><</span></div>
         </div>
+        <div id="#pr">
         <div class="col-md-10 col-lg-10 col-sm-10 col-xs-10 well" id="reader">
             ' . $str . '
+        </div>
         </div>
         <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 ">
             <div class="center-block"><span class="page" id="scrollDown">></span></div>
@@ -140,9 +150,11 @@ if ($user[0]['id']==$data[0]['id_user']) {
             break;
         case 'txt':
             echo '<script src="js/htmltxtReader.js"></script>';
+            echo '<script src="js/style.js"></script>';
             break;
         case 'html':
             echo '<script src="js/htmltxtReader.js"></script>';
+            echo '<script src="js/style.js"></script>';
             break;
     }?>
     <script src="js/bootstrap.min.js"></script>

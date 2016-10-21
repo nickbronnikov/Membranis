@@ -26,9 +26,7 @@ switch ($_POST['function']) {
             $stmt = B::selectFromBase('users_files', null, array('id'), array($_SESSION['id-book']));
             $data = $stmt->fetchAll();
             $progress = json_decode($data[0]['progress'],true);
-            $deltaPosition=$_POST['scroll']-$pxPosition;
-            $deltaPerPosition=round($deltaPosition/$_POST['docHeight']*100,0,PHP_ROUND_HALF_DOWN);
-            $_SESSION[$_SESSION[$_GET['id']]]=$_SESSION[$_SESSION[$_GET['id']]]+$deltaPerPosition;
+            $_SESSION[$_SESSION[$_GET['id']]]=round($_POST['scroll']/$_POST['docHeight']*100);
             if ($progress['progress']!=100) {
                 $newProgress = json_encode(array('chapter' => $progress['chapter'], 'page_progress' => $_SESSION[$_SESSION[$_GET['id']]], 'progress' => progress($progress['chapter'], $_SESSION[$_SESSION[$_GET['id']]] + $_POST['windowHeight'], $progress['p'], '../' . $data[0]['path']), 'p' => $progress['p']));
             } else {
@@ -143,7 +141,7 @@ switch ($_POST['function']) {
             $newProgress = json_encode(array('chapter_id' => $progress['chapter_id'] - 1, 'chapter' => $name, 'page_progress' => 0, 'progress' => $pageProgress, 'p' => $progress['p']));
             B::updateBase('users_files', array('progress'), array($newProgress), array('id'), array($_SESSION['id-book']));
             echo $file;
-        } else echo '**/**/**';
+        } else echo '**/**/roll**';
         break;
     case 'pageScrollEPUB':
         $pxPosition=round($_SESSION[$_GET['id']]/100*$_POST['docHeight']);
@@ -151,9 +149,7 @@ switch ($_POST['function']) {
             $stmt = B::selectFromBase('users_files', null, array('id'), array($_SESSION['id-book']));
             $data = $stmt->fetchAll();
             $progress = json_decode($data[0]['progress'],true);
-            $deltaPosition=$_POST['scroll']-$pxPosition;
-            $deltaPerPosition=round($deltaPosition/$_POST['docHeight']*100,0,PHP_ROUND_HALF_DOWN);
-            $_SESSION[$_SESSION[$_GET['id']]]=$_SESSION[$_SESSION[$_GET['id']]]+$deltaPerPosition;
+            $_SESSION[$_SESSION[$_GET['id']]]=round($_POST['scroll']/$_POST['docHeight']*100);
             $newProgress = json_encode(array('chapter_id' => $progress['chapter_id'], 'chapter' => $progress['chapter'], 'page_progress' => $_SESSION[$_SESSION[$_GET['id']]], 'progress' => $progress['progress'], 'p' => $progress['p']));
             B::updateBase('users_files', array('progress'), array($newProgress), array('id'), array($_SESSION['id-book']));
         }
@@ -164,9 +160,7 @@ switch ($_POST['function']) {
             $stmt = B::selectFromBase('users_files', null, array('id'), array($_SESSION['id-book']));
             $data = $stmt->fetchAll();
             $progress = json_decode($data[0]['progress'],true);
-            $deltaPosition=$_POST['scroll']-$pxPosition;
-            $deltaPerPosition=round($deltaPosition/$_POST['docHeight']*100,0,PHP_ROUND_HALF_DOWN);
-            $_SESSION[$_SESSION[$_GET['id']]]=$_SESSION[$_SESSION[$_GET['id']]]+$deltaPerPosition;
+            $_SESSION[$_SESSION[$_GET['id']]]=round($_POST['scroll']/$_POST['docHeight']*100);
             $newProgress = json_encode(array('progress' => $_SESSION[$_SESSION[$_GET['id']]]));
             B::updateBase('users_files', array('progress'), array($newProgress), array('id'), array($_SESSION['id-book']));
         }

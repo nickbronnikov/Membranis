@@ -82,19 +82,20 @@ $data=$stmt->fetchAll();
                     <span class="dropdown">
                         <a class="btn btn-default dropdown-toggle btn-rad" type="button" data-toggle="dropdown" disabled="disabled" id="pd-btn"><b class="caret"></b>
                         </a>
-                        <ul class="dropdown-menu download-info">
+                        <ul class="dropdown-menu download-info btn-rad">
                             <span id="append"></span>
                             <li class="divider"></li>
-                            <li><a  class="width-full btn btn-default" id="clearprogressbar">Clear downloads list</a></li>
+                            <li><a  class="width-full btn btn-default btn-rad" id="clearprogressbar">Clear downloads list</a></li>
                         </ul>
                     </span>
                 </span></li>
                 <li class="dropdown maincolor li-nav">
                     <button class="btn btn-default btn-rad dropdown-toggle" data-toggle="dropdown"><?=$_COOKIE['logged_user'];?>   <b class="caret"></b></button>
                     <ul class="dropdown-menu">
-                        <li><a onclick="showBook(0)">Update list</a></li>
+                        <li><a href="" onclick="showBook(0)">Update list</a></li>
                         <li><a href="settings">Settings</a></li>
                         <li><a href="#">Recycle bin</a></li>
+                        <li><a href="help">Help</a></li>
                         <li class="divider"></li>
                         <li><a href="logout">Log out</a></li>
                     </ul>

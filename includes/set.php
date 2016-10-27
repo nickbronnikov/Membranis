@@ -133,6 +133,22 @@ switch ($_POST['function']){
         $data=$stmt->fetchAll();
         echo $data[0]['style'];
         break;
+    case 'help':
+        if ($_COOKIE['logged_user']!=null && checkKey($_COOKIE['key'])) {
+            $stmt = B::selectFromBase('users', null, array('login'), array($_COOKIE['logged_user']));
+            $data = $stmt->fetchAll();
+            if (strlen(htmlspecialchars($_POST['subject'])) > 0 && strlen(htmlspecialchars($_POST['problem'])) > 0) {
+                B::inBase('requests', array('subject','email','text'), array(htmlspecialchars($_POST['subject']),$data[0]['email'],htmlspecialchars($_POST['problem'])));
+                echo 'true';
+            } else {
+                echo 'false';
+            }
+
+        } else {
+            delCookies('logged_user');
+            delCookies('key');
+        }
+        break;
 }
 function checkEmail($email){
     $check=true;

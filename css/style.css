@@ -87,12 +87,30 @@ html,body {
     background-size: contain;
     min-height: 500px;
 }
-#jumbotron-formats, #jumbotron-reader{
+#subject, #email-help{
+    margin-bottom: 5%;
+    width: 50%;
+}
+#email-help{
+    border-color: #ccc;
+}
+#send{
+    width: 100px;
+    margin-top: 2%;
+    float: right;
+}
+#jumbotron-formats, #jumbotron-reader, #jumbotron-help{
     background-color: #607d8b;
     background-repeat: no-repeat;
     background-position: bottom;
     background-size: contain;
     min-height: 500px;
+}
+#problem{
+    max-width: 100%;
+}
+#jumbotron-help{
+    background-image: url(../img/Formats.png);
 }
 #jumbotron-formats{
     background-image: url(../img/Formats.png);
@@ -105,6 +123,9 @@ html,body {
 }
 #reader{
     overflow-x: hidden;
+}
+.copyright{
+    padding-top: 10px;
 }
 @font-face {
     font-family: Cuprum;

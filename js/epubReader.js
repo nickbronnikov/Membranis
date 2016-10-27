@@ -1,4 +1,5 @@
 var pageprogress;
+var lastScrollTop = 0;
 function progressPage(progress){
     pageprogress=progress;
 }
@@ -9,6 +10,13 @@ $(document).ready(function () {
         $('#reader').css('max-height', $(window).height());
     });
     $('#reader').on('scroll',function () {
+        var st = $(this).scrollTop();
+        if (st > lastScrollTop) {
+            $("html, body").animate({ scrollTop: $(document).height() }, 10);
+        } else {
+            $("html, body").animate({ scrollTop: 0 }, 10);
+        }
+        lastScrollTop = st;
         var r=document.getElementById('reader');
         var cont_top = r.pageYOffset ? r.pageYOffset : r.scrollTop;
         pageProgress(cont_top,$('#reader')[0].scrollHeight,$(window).height());
@@ -16,10 +24,10 @@ $(document).ready(function () {
     $('#scrollDown').on('click',function () {
         var r=document.getElementById('reader');
         var cont_top = r.pageYOffset ? r.pageYOffset : r.scrollTop;
-        if (Math.floor((cont_top+$(window).height())/$('#reader')[0].scrollHeight*100)==100){
+        if (Math.floor((cont_top+$(window).height())/$('#reader')[0].scrollHeight*100)==100 || $('#reader')[0].scrollHeight<=$(window).height()){
             nextChapter();
         } else {
-            $('#reader').animate({"scrollTop": cont_top + $('#reader').height()}, 300);
+            $('#reader').animate({"scrollTop": cont_top + $(window).height()}, 300);
         }
     });
     $('#scrollUp').on('click',function () {
@@ -28,7 +36,7 @@ $(document).ready(function () {
         if (cont_top==0){
             previousChapter();
         } else {
-            $('#reader').animate({"scrollTop": cont_top - $('#reader').height()}, 300);
+            $('#reader').animate({"scrollTop": cont_top - $(window).height()}, 300);
         }
     });
 });

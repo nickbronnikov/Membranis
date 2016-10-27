@@ -11,7 +11,7 @@ if (!checkKey($_COOKIE['key'])) {
 <html>
 <head>
     <meta charset="utf-8">
-    <title>CloudReader</title>
+    <title>Settings</title>
     <script src="js/jquery-3.1.0.min.js"></script>
     <link href="css/bootstrap.css" type="text/css" rel="stylesheet"/>
     <link href="css/style.css" type="text/css" rel="stylesheet"/>
@@ -47,8 +47,7 @@ if (!checkKey($_COOKIE['key'])) {
                         <button class="btn btn-default dropdown-toggle btn-rad" data-toggle="dropdown" id="user_name"><?=$_COOKIE['logged_user'];?>   <b class="caret"></b></button>
                         <ul class="dropdown-menu">
                             <li><a href="library">Your library</a></li>
-                            <li><a onclick="showBook(0)">Обновить список</a></li>
-                            <li><a >Что-то еще</a></li>
+                            <li><a href="help">Help</a></li>
                             <li class="divider"></li>
                             <li><a href="logout">Log out</a></li>
                         </ul>

@@ -28,8 +28,6 @@ switch ($_POST['function']){
     </button>
     <ul class="dropdown-menu" role="menu">
         <li><a href="'.$item['path'].'" download="'.$item['original_name'].'.'.$file_info['extension'].'">Download</a></li>
-        <li><a href="#">Другое действие</a></li>
-        <li><a href="#">Что-то иное</a></li>
         <li class="divider"></li>
         <li><a href="" onClick="deleteBook('.$item['id'].')">Delete</a></li>
     </ul>
@@ -40,22 +38,28 @@ switch ($_POST['function']){
         echo $show;
         break;
     case 'deleteBook':
-        $_SESSION['test']=$_POST['id'];
-        $stmt=B::selectFromBase('users_files',null,array('id'),array($_POST['id']));
-        $data=$stmt->fetchAll();
-        $s=explode("/",$data[0]['path']);
-        $file_path=str_replace("/".$s[count($s)-1], '', $data[0]['path']);
-        $path = $_SERVER['DOCUMENT_ROOT'].'/'.$file_path;
-        $stmt=B::selectFromBase('users_info',null,array('login'),array($_COOKIE['logged_user']));
-        $info=$stmt->fetchAll();
-        $size=$info[0]['files_disk_space']-filesize($_SERVER['DOCUMENT_ROOT'].'/'.$data[0]['path']);
-        $last=json_decode($info[0]['last_books'],true);
-        for ($i=0;$i<count($last);$i++){
-            if ($last[$i]==$_POST['id']) $last[$i]=0;
+        if ($_COOKIE['logged_user']!=null && checkKey($_COOKIE['key'])) {
+            delCookies('logged_user');
+            delCookies('key');
+            $stmt = B::selectFromBase('users_files', null, array('id'), array($_POST['id']));
+            $data = $stmt->fetchAll();
+            $s = explode("/", $data[0]['path']);
+            $file_path = str_replace("/" . $s[count($s) - 1], '', $data[0]['path']);
+            $path = $_SERVER['DOCUMENT_ROOT'] . '/' . $file_path;
+            $stmt = B::selectFromBase('users_info', null, array('login'), array($_COOKIE['logged_user']));
+            $info = $stmt->fetchAll();
+            $size = $info[0]['files_disk_space'] - filesize($_SERVER['DOCUMENT_ROOT'] . '/' . $data[0]['path']);
+            $last = json_decode($info[0]['last_books'], true);
+            for ($i = 0; $i < count($last); $i++) {
+                if ($last[$i] == $_POST['id']) $last[$i] = 0;
+            }
+            B::updateBase('users_info', array('files_disk_space', 'last_books'), array($size, json_encode($last)), array('login'), array($_COOKIE['logged_user']));
+            removeDirectory($path);
+            B::deleteFromBase('users_files', array('id'), array($data[0]['id']));
+        } else {
+            delCookies('logged_user');
+            delCookies('key');
         }
-        B::updateBase('users_info',array('files_disk_space','last_books'),array($size,json_encode($last)),array('login'),array($_COOKIE['logged_user']));
-        removeDirectory($path);
-        B::deleteFromBase('users_files',array('id'),array($data[0]['id']));
         break;
 }
 function removeDirectory($dir) {

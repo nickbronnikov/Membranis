@@ -92,10 +92,6 @@ if ($_COOKIE['logged_user']!=null) {
     </button>
     <ul class="dropdown-menu" role="menu">
         <li><a href="'.$book[0]['path'].'" download="'.$book[0]['original_name'].'.'.$file_info['extension'].'">Download</a></li>
-        <li><a href="#">Другое действие</a></li>
-        <li><a href="#">Что-то иное</a></li>
-        <li class="divider"></li>
-        <li><a class="btn-delete" href="#">Delete</a></li>
     </ul>
 </div><span class="progress-info pull-right">'.$progress['progress'].'%</span></div>
             </div>
@@ -135,10 +131,6 @@ if ($_COOKIE['logged_user']!=null) {
     </button>
     <ul class="dropdown-menu" role="menu">
         <li><a href="'.$books[$i]['path'].'" download="'.$books[$i]['original_name'].'.'.$file_info['extension'].'">Download</a></li>
-        <li><a href="#">Другое действие</a></li>
-        <li><a href="#">Что-то иное</a></li>
-        <li class="divider"></li>
-        <li><a class="btn-delete" href="#">Delete</a></li>
     </ul>
 </div><span class="progress-info pull-right">'.$progress['progress'].'%</span></div>
             </div>
@@ -153,12 +145,12 @@ if ($_COOKIE['logged_user']!=null) {
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Membranis</title>
+    <?php if ($_COOKIE['logged_user']!=null) echo '<title>CloudLibrary</title>'; else
+    echo '<title>PolisBook || Read fb2, epub, pdf and other books online</title>';?>
     <script src="js/jquery-3.1.0.min.js"></script>
     <script src="js/dropzone.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700&subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/script.js"></script>
     <link href="css/bootstrap.css" type="text/css" rel="stylesheet">
     <link href="css/style.css" type="text/css" rel="stylesheet">
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
@@ -185,9 +177,9 @@ if ($_COOKIE['logged_user']!=null) {
                 <li class="dropdown maincolor li-nav" id="li-nav">
                     <button class="btn btn-default btn-rad dropdown-toggle" data-toggle="dropdown">'.$_COOKIE['logged_user'].'   <b class="caret"></b></button>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Действие</a></li>
                         <li><a href="library">Your library</a></li>
                         <li><a href="settings">Settings</a></li>
+                        <li><a href="help">Help</a></li>
                         <li class="divider"></li>
                         <li><a href="logout">Log out</a></li>
                     </ul>
@@ -224,13 +216,13 @@ if ($_COOKIE['logged_user']!=null) {
     <div class="container">
         <div class="row">
             <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12 well block"><div><img class="info-img" src="/img/Sync.png"></div><h3 class="maincolor text-center text-block"><b>Synchronization</b></h3>
-                <p class="text-center">Sync your progress. Always start reading from the place where finished.</p>
+                <h4 class="maincolor text-center">Sync your progress. Always start reading from the place where finished.</h4>
                 </div>
             <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12 well block"><div><img class="info-img" src="/img/Devices.png"></div><h3 class="maincolor text-center text-block"><b>On all your devices</b></h3>
-                <p class="text-center">Read your favorite books and magazines on any of your device.</p>
+                <h4 class="maincolor text-center">Read your favorite books and magazines on any of your device.</h4>
                 </div>
             <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12 well block"><div><img class="info-img" src="/img/Cloud.png"></div><h3 class="maincolor text-center text-block"><b>Cloud</b></h3>
-                <p class="text-center">Keep your books in the cloud for easy access to them.</p>
+                <h4 class="maincolor text-center">Keep your books in the cloud for easy access to them.</h4>
                 </div>
         </div>
     </div>
@@ -241,17 +233,9 @@ if ($_COOKIE['logged_user']!=null) {
         <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
             <hr class="hr-info">
         </div>
-        <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
-            <h3 class="maincolor"><b>Many formats</b></h3>
-            <h5 class="info-text">Read your books and magazines online in fb2, pdf, mobi, epub and txt formats.</h5>
-        </div>
-        <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
-            <h3 style="color: #5cb85c;"><b>Reader</b></h3>
-            <h5 class="info-text">Read your books and magazines in fb2, pdf, mobi, epub and txt formats.</h5>
-        </div>
-        <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
-            <h3 style="color: #fc0303"><b>Many formats</b></h3>
-            <h5 class="info-text">Read your books and magazines in fb2, pdf, mobi, epub and txt formats.</h5>
+        <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
+            <h1 class="maincolor text-center"><b>Read your books in all popular formats</b></h1>
+            <h3 class="maincolor text-center">Read your books and magazines online in fb2, pdf, mobi, epub and txt formats.</h3>
         </div>
         <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
             <hr class="hr-info">
@@ -259,6 +243,20 @@ if ($_COOKIE['logged_user']!=null) {
     </div>
 </div>
 <div id="jumbotron-reader"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
+            <hr class="hr-info">
+        </div>
+        <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
+            <h1 class="maincolor text-center"><b>Reader</b></h1>
+            <h3 class="maincolor text-center">Simple and easy reader. Customize it the way you want it.</h3>
+        </div>
+        <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
+            <hr class="hr-info">
+        </div>
+    </div>
+</div>
 </div>';?>
 <div class="container">
     <div class="row">
@@ -268,14 +266,13 @@ if ($_COOKIE['logged_user']!=null) {
 <div id="footer">
     <div class="container">
         <div class="row">
-            <div class="col-md-5 col-lg-5 col-sm-12 col-xs-12">
-                <a>Help</a><a>Error</a>
+            <div class="col-md-5 col-lg-5 col-sm-4 col-xs-4 copyright">
+                <b class="maincolor">© 2016 PolisBook</b>
             </div>
-            <div class="col-md-2 col-lg-2  col-sm-12 col-xs-12">
+            <div class="col-md-2 col-lg-2  col-sm-4 col-xs-4">
                 <img class="img-footer center-block" src="img/Logo_s.png">
             </div>
-            <div class="col-md-5 col-lg-5 col-sm-12 col-xs-12">
-
+            <div class="col-md-5 col-lg-5 col-sm-4 col-xs-4">
             </div>
         </div>
     </div>

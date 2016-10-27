@@ -199,8 +199,8 @@ if ($user[0]['id']==$data[0]['id_user']) {
                     <button class="btn btn-default dropdown-toggle btn-rad" data-toggle="dropdown"><?=$_COOKIE['logged_user'];?>   <b class="caret"></b></button>
                     <ul class="dropdown-menu">
                         <li><a href="library">Your library</a></li>
-                        <li><a onclick="showBook(0)">Обновить список</a></li>
                         <li><a href="settings">Settings</a></li>
+                        <li><a href="help">Help</a></li>
                         <li class="divider"></li>
                         <li><a href="logout">Log out</a></li>
                     </ul>

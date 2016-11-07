@@ -1,12 +1,15 @@
 <?php
 require 'db.php';
-$stmt=B::selectFromBase('users',array('id'),array('login'),array($_COOKIE['logged_user']));
-$data=$stmt->fetchAll();
-$stmt=B::selectFromBase('users_files',null,array('id_user'),array($data[0]['id']));
-$data=$stmt->fetchAll();
-$show='';
 switch ($_POST['function']){
     case 'showBooks':
+        $stmt=B::selectFromBase('users',array('id'),array('login'),array($_COOKIE['logged_user']));
+        $data=$stmt->fetchAll();
+//        $from=1;
+//        $stmt=B::selectFromBaseSet('users_files',null,array('id_user'),array($data[0]['id'],$from,16),'LIMIT ?, ?');
+//        $data=$stmt->fetchAll();
+        $stmt=B::selectFromBase('users_files',null,array('id_user'),array($data[0]['id']));
+        $data=$stmt->fetchAll();
+        $show='';
         $data_key=array();
         foreach ($data as $key=>$arr){
             $data_key[$key]=$arr['id'];
@@ -35,12 +38,10 @@ switch ($_POST['function']){
             </div>
             </div>';
         }
-        echo $show;
+        if ($show=='') echo '$$$$'; else echo $show;
         break;
     case 'deleteBook':
         if ($_COOKIE['logged_user']!=null && checkKey($_COOKIE['key'])) {
-            delCookies('logged_user');
-            delCookies('key');
             $stmt = B::selectFromBase('users_files', null, array('id'), array($_POST['id']));
             $data = $stmt->fetchAll();
             $s = explode("/", $data[0]['path']);
@@ -56,6 +57,7 @@ switch ($_POST['function']){
             B::updateBase('users_info', array('files_disk_space', 'last_books'), array($size, json_encode($last)), array('login'), array($_COOKIE['logged_user']));
             removeDirectory($path);
             B::deleteFromBase('users_files', array('id'), array($data[0]['id']));
+            B::deleteFromBase('bookmarks',array('id_book'),array($data[0]['id']));
         } else {
             delCookies('logged_user');
             delCookies('key');

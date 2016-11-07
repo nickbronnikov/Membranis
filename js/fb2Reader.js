@@ -4,6 +4,23 @@ function progressPage(progress){
     pageprogress=progress;
 }
 $(document).ready(function () {
+    $('#bookmarks').on('click',function () {
+        $('#bookmarks-list').modal('show');
+    });
+    $('#addbookmark').on('click',function () {
+        $.ajax({
+            type: "POST",
+            url: "includes/reader-file.php",
+            data: {function: 'addBookmark'},
+            beforeSend: function () {
+                $('#addbookmark').attr('disabled','disabled');
+            },
+            success: function (data) {
+                $('#addbookmark').removeAttr('disabled');
+                $('#lb').append(data);
+            }
+        });
+    });
     $('#reader').css('max-height', $(window).height());
     toprogressPage(pageprogress);
     $(window).resize(function () {
@@ -71,6 +88,7 @@ function toChapter(chapter) {
     $.ajax({
         type: "POST",
         url: "includes/reader-file.php",
+        async: false,
         data: {function: 'toChapter', chapter: chapter},
         beforeSend: function () {
 

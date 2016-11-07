@@ -37,8 +37,28 @@
 #leftl,#justifyl,#centerl,#bfont,#sfont{
     padding-bottom: 4px;
 }
-.text-block{
-
+.description-info{
+    max-width: 80%;
+    white-space: nowrap;
+    overflow-x: hidden;
+}
+.list{
+    max-height: 500px;
+    overflow-x: hidden;
+}
+@media (min-height: 600px) {
+    .lib-body{
+        min-height: 500px;
+    }
+}
+.btn-bookmark{
+    float: right;
+}
+.bookmark-body{
+    padding: 10px;
+}
+.bmp{
+    margin-bottom: 5px;
 }
 .info-img{
     display: block;
@@ -53,6 +73,7 @@
     margin-bottom: 0px;!important;
 }
 html,body {
+    overflow-x: hidden;
     /*font-family: 'Ubuntu', sans-serif;!important;*/
 }
 @media (max-width: 991px) {
@@ -87,7 +108,7 @@ html,body {
     background-size: contain;
     min-height: 500px;
 }
-#subject, #email-help{
+#subject, #email-help, #email{
     margin-bottom: 5%;
     width: 50%;
 }
@@ -110,7 +131,7 @@ html,body {
     max-width: 100%;
 }
 #jumbotron-help{
-    background-image: url(../img/Formats.png);
+    background-image: url(../img/help.png);
 }
 #jumbotron-formats{
     background-image: url(../img/Formats.png);
@@ -304,7 +325,7 @@ html,body {
     padding-top: 20px;
     width: 100%;
     background-color: #f5f5f5;
-    margin-top: 5%;
+    margin-top: 50px;
 }
 .regform{
     padding-top: 3%;
@@ -385,6 +406,12 @@ body {
 .btn-rad{
     border-radius: 0px;!important;
 }
+#bookmarks{
+    padding-bottom: 3px;
+}
+.bookmarks-list-body{
+    max-width: 60%;!important;
+}
 .alert-error {
     margin-bottom: 0px;!important;
 }
@@ -443,15 +470,36 @@ footer {
     padding-bottom: 80px;
 }
 .page{
+    width: 8.3333%;
     height: 100%;
     position: fixed;
-    top: 50%;
     font-size: 64px;
     color: #E2E2E2;
     font-family: arial, sans-serif;
     font-weight: bold;
     cursor: pointer;
+    margin-top: -70px;
 }
 .page:hover {
-    color: #777;
+    background-color: #f3f3f3;
+}
+.btn-page{
+    position: relative;
+    top: 50%;
+    margin-top: -12px;
+}
+.rp{
+    padding: 0px;!important;
+}
+.view-all{
+    height: 395px;
+}
+.view-all:hover{
+    background-color: #EEEEEE;
+}
+.viewdiv{
+    padding-top: 150px;
+}
+.a-all:hover{
+    text-decoration: none;
 }

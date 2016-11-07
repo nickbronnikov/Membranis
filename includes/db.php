@@ -96,6 +96,38 @@ class B{
         $pdo=null;
         return $stmt;
     }
+    static function selectFromBaseSet($table_name,$fields,$conditions,$key,$set){
+        $db=new B();
+        $dsn = "mysql:host=$db->db_host;dbname=$db->db_name;charset=$db->db_charset";
+        $opt=array(
+            PDO::ATTR_ERRMODE  =>PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+        );
+        $pdo=new PDO($dsn,$db->db_login,$db->db_password,$opt);
+        if ($fields==null){
+            $query="SELECT * FROM `$db->db_name`.`$table_name`";
+        } else {
+            $query="SELECT ";
+            for ($i=0;$i<count($fields)-1;$i++){
+                $query=$query."$fields[$i]".", ";
+            }
+            $last=count($fields)-1;
+            $query=$query."$fields[$last]"." FROM `$db->db_name`.`$table_name`";
+        }
+        if ($conditions!=null){
+            $query .=" WHERE ";
+            for ($i=0;$i<count($conditions)-1;$i++){
+                $query=$query."$conditions[$i]"." = ? AND ";
+            }
+            $last=count($conditions)-1;
+            $query=$query."$conditions[$last]"." = ?";
+        }
+        $query=$query.' '.$set;
+        $stmt = $pdo->prepare($query.' '.$set);
+        $stmt->execute($key);
+        $pdo=null;
+        return $stmt;
+    }
     static function deleteFromBase($table_name,$conditions,$key){
         $db=new B();
         $dsn = "mysql:host=$db->db_host;dbname=$db->db_name;charset=$db->db_charset";

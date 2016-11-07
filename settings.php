@@ -112,5 +112,20 @@ if (!checkKey($_COOKIE['key'])) {
     </div>
 </div>
 </div>
+    </div>
+    <div id="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5 col-lg-5 col-sm-4 col-xs-4 copyright">
+                    <b class="maincolor">© 2016 PolisBook</b>
+                </div>
+                <div class="col-md-2 col-lg-2  col-sm-4 col-xs-4">
+                    <img class="img-footer center-block" src="img/Logo_s.png">
+                </div>
+                <div class="col-md-5 col-lg-5 col-sm-4 col-xs-4">
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

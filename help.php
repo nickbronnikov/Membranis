@@ -1,15 +1,9 @@
 <?php
 require 'includes/db.php';
-if ($_COOKIE['logged_user']==null){
-    echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/">';
-} else
-if (!checkKey($_COOKIE['key'])) {
-    delCookies('logged_user');
-    delCookies('key');
-    echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/">';
+if ($_COOKIE['logged_user']!=null && checkKey($_COOKIE['key'])) {
+    $stmt = B::selectFromBase('users', null, array('login'), array($_COOKIE['logged_user']));
+    $data = $stmt->fetchAll();
 }
-$stmt=B::selectFromBase('users',null,array('login'),array($_COOKIE['logged_user']));
-$data=$stmt->fetchAll();
 ?>
 <html>
 <head>
@@ -47,6 +41,10 @@ $data=$stmt->fetchAll();
                     </ul>
                 </li>
             </ul>
+        </div>'; else echo '<div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right navel">
+                <a class="btn btn-success pull-left button-nav button-color btn-rad" href="signin">Sign in</a>
+            </ul>
         </div>';
         ?>
     </div>
@@ -68,13 +66,14 @@ $data=$stmt->fetchAll();
             <div class="panel panel-default">
                 <div class="panel-body">
                     <label for="email-help">Email</label>
-                    <div class="panel panel-default" id="email-help">
+                    <?php if ($_COOKIE['logged_user']!=null && checkKey($_COOKIE['key'])) echo '<div class="panel panel-default" id="email-help">
                         <div class="panel-body" style="padding: 6px 12px">
-                            <span><?=$data[0]['email']?></span>
+                            <span>'.$data[0]['email'].'</span>
                         </div>
-                    </div>
+                    </div>'; else echo '<input class="form-control" type="text" id="email" maxlength="50">';
+                    ?>
                     <label for="subject">Subject</label>
-                    <input class="form-control" id="subject" maxlength="250">
+                    <input class="form-control" type="text" id="subject" maxlength="250">
                     <label for="problem">Your problem</label>
                     <textarea class="form-control" rows="5" id="problem" placeholder="Please describe in detail your problem." maxlength="3000"></textarea>
                     <span id="check"></span>

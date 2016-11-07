@@ -28,33 +28,75 @@ if ($user[0]['id']==$data[0]['id_user']) {
     B::updateBase('users_info', array('last_books'), array(json_encode($last_books)), array('login'), array($_COOKIE['logged_user']));
 }
     $file_info = pathinfo($data[0]['path']);
+    $stmt=B::selectFromBase('bookmarks',null,array('id_book'),array($_GET['id']));
+    $bm=$stmt->fetchAll();
+    if (count($bm)==0){
+        $modalbody='<div class="panel panel-default">
+  <div class="panel-body">
+    <svg class="center-block" fill="#5cb85c" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+    <path d="M0 0h24v24H0z" fill="none"/>
+        <h3 class="text-center"><strong>You have not added any one bookmark.</strong></h3>
+</svg>
+  </div>
+</div>';
+    }else {
+        $modalbody='';
+        foreach ($bm as $item){
+            $pr=json_decode($item['progress'],true);
+            $progress = json_decode($data[0]['progress'], true);
+            $toProgress='';
+            switch ($file_info['extension']){
+                case 'epub':
+                    $toProgress='toChapter('.$pr['chapter_id'].');'.'toprogressPage('.$pr['page_progress'].');$(\'#bookmarks-list\').modal(\'hide\')';
+                    break;
+                case 'fb2':
+                    $toProgress='toChapter('.$pr['chapter'].');'.'toprogressPage('.$pr['page_progress'].');$(\'#bookmarks-list\').modal(\'hide\')';
+                    break;
+                case 'txt':
+                    $toProgress='toprogressPage('.$pr['progress'].');$(\'#bookmarks-list\').modal(\'hide\')';
+                    break;
+                case 'html':
+                    $toProgress='toprogressPage('.$pr['progress'].');$(\'#bookmarks-list\').modal(\'hide\')';
+                    break;
+            }
+            $modalbody.='<div class="panel panel-default bmp">
+  <div class="panel-body bookmark-body">
+  <div><button class="btn btn-success btn-bookmark btn-sm btn-rad" onclick="'.$toProgress.'">Go</button></div>
+    <div class="description-info">'.$item['description'].'</div>
+  </div>
+</div>';
+        }
+    }
     switch ($file_info['extension']) {
         case 'fb2':
             $chapter = chapterList($data[0]['path']);
             $progress = json_decode($data[0]['progress'], true);
             $str = fb2($data[0]['path'], str_replace('cover.jpg', '', $data[0]['cover']), $progress['chapter']);
             $function = '<script>progressPage(' . $progress['page_progress'] . ')</script><script>styleReader(\'' . $ui_data[0]['style'] . '\')</script>';
-            $reader = '<div class="container">
-    <div class="row">
-        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">
-            <span class="page" id="scrollUp"><</span>
+            $reader ='<div class="row">
+        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 rp">
+            <div class="page" id="scrollUp"><svg class="btn-page center-block" fill="#000000" height="48" viewBox="0 0 24 24" width="48" xmlns="http://www.w3.org/2000/svg">
+    <path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/>
+    <path d="M0-.5h24v24H0z" fill="none"/>
+</svg></div>
         </div>
-        <div id="#pr">
         <div class="col-md-10 col-lg-10 col-sm-10 col-xs-10 well" id="reader">
             ' . $str . '
         </div>
+        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 rp">
+            <div class="page" id="scrollDown"><svg class="btn-page center-block" fill="#000000" height="48" viewBox="0 0 24 24" width="48" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/>
+    <path d="M0-.25h24v24H0z" fill="none"/>
+</svg></div>
         </div>
-        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 ">
-            <span class="page" id="scrollDown">></span>
-        </div>
-    </div>
-</div>' . $function;
+    </div>' . $function;
             break;
         case 'pdf':
             $progress = json_decode($data[0]['progress'], true);
             $reader = '<div class="row">
     <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12">
-        <iframe id="pdf" src="http://membranis.com/pdf/web/viewer.html?file=http://membranis.com/' . $data[0]['path'] . '" width="100%" height="500px" onload="progressPage(' . $progress['pageProgress'] . ')"/>
+        <iframe id="pdf" src="http://polisbook.com/pdf/web/viewer.html?file=http://polisbook.com/' . $data[0]['path'] . '" width="100%" height="500px" onload="progressPage(' . $progress['pageProgress'] . ')"/>
         </div></div>';
             break;
         case 'epub':
@@ -63,65 +105,71 @@ if ($user[0]['id']==$data[0]['id_user']) {
             $function = '<script>progressPage(' . $progress['page_progress'] . ')</script><script>styleReader(\'' . $ui_data[0]['style'] . '\')</script>';
             $str='';
             $str=EPUBChapter($data[0]['path'],$progress['chapter']);
-            $reader = '<div class="container">
-    <div class="row">
-        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">
-            <div class="center-block"><span class="page" id="scrollUp"><</span></div>
+            $reader ='<div class="row">
+        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 rp">
+            <div class="page" id="scrollUp"><svg class="btn-page center-block" fill="#000000" height="48" viewBox="0 0 24 24" width="48" xmlns="http://www.w3.org/2000/svg">
+    <path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/>
+    <path d="M0-.5h24v24H0z" fill="none"/>
+</svg></div>
         </div>
-        <div id="#pr">
         <div class="col-md-10 col-lg-10 col-sm-10 col-xs-10 well" id="reader">
             ' . $str . '
         </div>
+        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 rp">
+            <div class="page" id="scrollDown"><svg class="btn-page center-block" fill="#000000" height="48" viewBox="0 0 24 24" width="48" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/>
+    <path d="M0-.25h24v24H0z" fill="none"/>
+</svg></div>
         </div>
-        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 ">
-            <div class="center-block"><span class="page" id="scrollDown">></span></div>
-        </div>
-    </div>
-</div>' . $function;
+    </div>' . $function;
             break;
         case 'txt':
             $progress=json_decode($data[0]['progress'],true);
             $function='<script>progressPage(' . $progress['progress'] . ')</script><script>styleReader(\'' . $ui_data[0]['style'] . '\')</script>';
             $str=file_get_contents($data[0]['path']);
-            $reader = '<div class="container">
-    <div class="row">
-        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">
-            <div class="center-block"><span class="page" id="scrollUp"><</span></div>
+            $reader ='<div class="row">
+        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 rp">
+            <div class="page" id="scrollUp"><svg class="btn-page center-block" fill="#000000" height="48" viewBox="0 0 24 24" width="48" xmlns="http://www.w3.org/2000/svg">
+    <path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/>
+    <path d="M0-.5h24v24H0z" fill="none"/>
+</svg></div>
         </div>
-        <div id="#pr">
         <div class="col-md-10 col-lg-10 col-sm-10 col-xs-10 well" id="reader">
             ' . $str . '
         </div>
+        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 rp">
+            <div class="page" id="scrollDown"><svg class="btn-page center-block" fill="#000000" height="48" viewBox="0 0 24 24" width="48" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/>
+    <path d="M0-.25h24v24H0z" fill="none"/>
+</svg></div>
         </div>
-        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 ">
-            <div class="center-block"><span class="page" id="scrollDown">></span></div>
-        </div>
-    </div>
-</div>' . $function;
+    </div>' . $function;
         break;
         case 'html':
             $progress=json_decode($data[0]['progress'],true);
             $function='<script>progressPage(' . $progress['progress'] . ')</script><script>styleReader(\'' . $ui_data[0]['style'] . '\')</script>';
             $str=file_get_contents($data[0]['path']);
-            $reader = '<div class="container">
-    <div class="row">
-        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">
-            <div class="center-block"><span class="page" id="scrollUp"><</span></div>
+            $reader ='<div class="row">
+        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 rp">
+            <div class="page" id="scrollUp"><svg class="btn-page center-block" fill="#000000" height="48" viewBox="0 0 24 24" width="48" xmlns="http://www.w3.org/2000/svg">
+    <path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/>
+    <path d="M0-.5h24v24H0z" fill="none"/>
+</svg></div>
         </div>
-        <div id="#pr">
         <div class="col-md-10 col-lg-10 col-sm-10 col-xs-10 well" id="reader">
             ' . $str . '
         </div>
+        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 rp">
+            <div class="page" id="scrollDown"><svg class="btn-page center-block" fill="#000000" height="48" viewBox="0 0 24 24" width="48" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/>
+    <path d="M0-.25h24v24H0z" fill="none"/>
+</svg></div>
         </div>
-        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 ">
-            <div class="center-block"><span class="page" id="scrollDown">></span></div>
-        </div>
-    </div>
-</div>' . $function;
+    </div>' . $function;
             break;
     }
 } else {
-    $reader='<h2>You are trying to download the book that is not available to you.</h2>';
+    $reader='<h2>You are trying to read the book that is not available to you.</h2>';
 }
 ?>
 <!DOCTYPE html>
@@ -136,6 +184,7 @@ if ($user[0]['id']==$data[0]['id_user']) {
     <link href="css/progress.css" type="text/css" rel="stylesheet"/>
     <script src="js/js-download/jquery.knob.js"></script>
     <script src="js/progress-bar/progress.js"></script>
+    <script src="js/bootstrap.min.js"></script>
     <?php switch ($file_info['extension']){
         case 'fb2':
             echo '<script src="js/fb2Reader.js"></script>';
@@ -157,7 +206,6 @@ if ($user[0]['id']==$data[0]['id_user']) {
             echo '<script src="js/style.js"></script>';
             break;
     }?>
-    <script src="js/bootstrap.min.js"></script>
     <script src="js/jqueryScrollTo.js"></script>
     <script src="js/progress-bar/progress.js"></script>
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
@@ -178,6 +226,13 @@ if ($user[0]['id']==$data[0]['id_user']) {
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right nav-pills">
+                <?php if ($file_info['extension']!='pdf') echo '<li class="dropdown maincolor li-nav">
+                    <button class="btn btn-success dropdown-toggle li-nav-read btn-rad" id="bookmarks"><svg fill="#FFFFFF" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+                            <path d="M0 0h24v24H0z" fill="none"/>
+                        </svg></button>
+                </li>';
+                ?>
                 <li class="dropdown maincolor li-nav"><?php switch ($file_info['extension']){
                         case 'fb2':
                             echo $chapter;
@@ -206,6 +261,22 @@ if ($user[0]['id']==$data[0]['id_user']) {
                     </ul>
                 </li>
             </ul>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog"  aria-hidden="true" id="bookmarks-list">
+        <div class="modal-dialog">
+            <div class="modal-content btn-rad">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="modal-title" id="myLargeModalLabel"><strong>Bookmarks</strong></h3>
+                </div>
+                <div class="modal-body list" id="lb">
+                    <?=$modalbody?>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success btn-rad center-block" id="addbookmark">Add new bookmark</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

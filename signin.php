@@ -77,8 +77,8 @@ if (isset($data['loginin'])) {
                     <div class="panel-body">
                         <form action="/signin.php" method="post">
                             <label for="login">Username or email address</label>
-                            <input type="text" class="form-control" id="login" name="login" <?php if ($_SESSION['login']!=null) echo 'value="'.$_SESSION['login'].'"'?>><br>
-                            <label for="password">Password</label><span class="pull-right"><a>Forgot password?</a></span>
+                            <input type="text" class="form-control" id="login" name="login"><br>
+                            <label for="password">Password</label><span class="pull-right"><a href="recovery">Forgot password?</a></span>
                             <input type="password" class="form-control" id="password" name="password"><br>
                             <button type="submit" class="btn btn-lg btn-success width-full" name="loginin"">Sign in</button>
                         </form>

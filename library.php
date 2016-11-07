@@ -8,8 +8,6 @@ if ($_COOKIE['logged_user']==null)  echo '<META HTTP-EQUIV="Refresh" CONTENT="0;
     }
 $stmt=B::selectFromBase('users',array('id'),array('login'),array($_COOKIE['logged_user']));
 $data=$stmt->fetchAll();
-$stmt=B::selectFromBase('users_files',null,array('id_user'),array($data[0]['id']));
-$data=$stmt->fetchAll();
 ?>
 <!DOCTYPE html>
 <html>
@@ -33,12 +31,12 @@ $data=$stmt->fetchAll();
 </head>
 <body>
 <script>progressShow()</script>
-<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="errorExtension">
+<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="errorExtension">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+        <div class="modal-content btn-rad">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h3 class="modal-title" id="myLargeModalLabel"><strong>Wrong extension</strong></h3>
+                <h3 class="modal-title"><strong>Wrong extension</strong></h3>
             </div>
             <div class="modal-body">
                 <div class="alert alert-danger alert-error">You are trying to download a file with an extension that does not support  by PolisBook. Available extensions: <strong>fb2, pdf, epub, txt, html</strong>.</div>
@@ -46,15 +44,15 @@ $data=$stmt->fetchAll();
         </div>
     </div>
 </div>
-<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="errorStorage">
+<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="errorStorage">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">
+        <div class="modal-content btn-rad">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h3 class="modal-title" id="myLargeModalLabel"><strong>Not enough storage</strong></h3>
+                <h3 class="modal-title"><strong>Not enough storage</strong></h3>
             </div>
             <div class="modal-body">
-                <div class="alert alert-danger alert-error">Not enough storage to download the file. Delete some files, or increase the amount of available storage.</div>
+                <div class="alert alert-danger alert-error">Not enough storage to download the file. Delete some files, clear your recycle bin, or increase the amount of available storage.</div>
             </div>
         </div>
     </div>
@@ -75,7 +73,7 @@ $data=$stmt->fetchAll();
                 <li class="li-nav"><form id="upload" method="post" action="upload.php" enctype="multipart/form-data">
                     <div id="drop">
                         <a class="btn btn-success btn-rad" id="download">Upload</a>
-                        <input type="file" name="upl" multiple />
+                        <input type="file" name="upl" multiple/>
                     </div>
                 </form></li>
                 <li class="li-nav-progress" style="margin-left: 0%"><span class="progress-download" id="pd">
@@ -104,19 +102,25 @@ $data=$stmt->fetchAll();
         </div>
     </div>
 </div>
-<div class="body">
+<div>
 <div class="container lib-body">
     <div class="row" id="book">
-        <?php if (count($data)==0) echo '<div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
-            <div class="well well-lg info-panel"><svg class="center-block" fill="#607d8b" height="48" viewBox="0 0 24 24" width="48" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
-                </svg>
-                </svg><span class="text-center"><h3 class="text-center maincolor"><strong>You have not uploaded any one book. <a href="library">Upload it now!</a></strong></h3>
-            </div>
-        </div>';?>
     </div>
 </div>
+</div>
+<div id="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5 col-lg-5 col-sm-4 col-xs-4 copyright">
+                <b class="maincolor">© 2016 PolisBook</b>
+            </div>
+            <div class="col-md-2 col-lg-2  col-sm-4 col-xs-4">
+                <img class="img-footer center-block" src="img/Logo_s.png">
+            </div>
+            <div class="col-md-5 col-lg-5 col-sm-4 col-xs-4">
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

@@ -141,7 +141,6 @@ class Cover{
             $coverDom=$fb2DOM->getElementsByTagName('coverpage');
         $coveratr=$coverDom[0]->getElementsByTagName('image');
         $namecoverid=str_replace('#','',$coveratr[0]->getAttribute('l:href'));
-        $_SESSION['test']=$coveratr[0]->getAttribute('l:href');
         $test = $fb2DOM->getElementsByTagName('image');
         $binary_image_code = '';
         foreach ($binary = $fb2DOM->getElementsByTagName('binary') as $atr) {

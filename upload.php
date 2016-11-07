@@ -37,7 +37,7 @@ if(isset($_FILES['upl']) && $_FILES['upl']['error'] == 0) {
                         if (Cover::checkCover('users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name)){
                             Cover::fb2Cover('users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name, 'users_files/' . $data[0]['folder'] . '/' . $cryptname . '/', 'cover.jpg');
                             $covername='users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . 'cover.jpg';
-                        } else $covername='img/fb2.jpg';
+                        } else $covername='img/fb2.png';
                         B::inBase('users_files', array('id_user', 'path', 'original_name', 'author', 'cover', 'progress'), array($data[0]['id'], 'users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name, $file_info['filename'], Cover::fb2Author('users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name), $covername, $progress));
                     }
                 }

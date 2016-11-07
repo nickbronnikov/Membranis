@@ -31,12 +31,12 @@
         </div>
     </div>
 </div>
-<div class="body">
+<div class="body center-block">
     <div class="container ">
         <div class="row">
             <div class="col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3 col-sm-12 col-xs-12" >
-                <h1 class="text-center" id="headinfo">Join Membranis</h1>
-                <h3>The best place to read</h3>
+                <h1 class="text-center maincolor" id="headinfo"><b>Join Membranis</b></h1>
+                <h3 class="text-center maincolor">The best place to read</h3>
             </div>
             <div class="col-md-3 col-lg-3"></div>
             <div id="reg-form">
@@ -91,6 +91,21 @@
             </div>
                 </div>
                 </div>
+        </div>
+    </div>
+</div>
+<div id="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5 col-lg-5 col-sm-4 col-xs-4 copyright">
+                <b class="maincolor">© 2016 PolisBook</b>
+            </div>
+            <div class="col-md-2 col-lg-2  col-sm-4 col-xs-4">
+                <img class="img-footer center-block" src="img/Logo_s.png">
+            </div>
+            <div class="col-md-4 col-lg-4 col-sm-2 col-xs-2">
+            </div>
+            <div class="col-md-1 col-lg-1 col-sm-2 col-xs-2 copyright"><b><a href="help">Help</a></b></div>
         </div>
     </div>
 </div>

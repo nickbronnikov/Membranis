@@ -43,7 +43,7 @@ switch ($_POST['function']){
         } else echo $clear;
         break;
     case 'doNewlogin':
-        if(!checkField('users',array('login'),array(trim($_POST['keyNew'])))){
+        if(!checkField('users',array('login'),array(trim($_POST['keyNew']))) && $_POST['keyNew']!=''){
             B::updateBase('users',array('login'),array(htmlspecialchars(trim($_POST['keyNew']))),array('login'),array($_COOKIE['logged_user']));
             B::updateBase('users_info',array('login'),array(htmlspecialchars(trim($_POST['keyNew']))),array('login'),array($_COOKIE['logged_user']));
             setCookies("logged_user",trim($_POST['keyNew']));
@@ -134,20 +134,29 @@ switch ($_POST['function']){
         echo $data[0]['style'];
         break;
     case 'help':
-        if ($_COOKIE['logged_user']!=null && checkKey($_COOKIE['key'])) {
+        if ($_COOKIE['logged_user']!=null) {
+            if (checkKey($_COOKIE['key'])){
             $stmt = B::selectFromBase('users', null, array('login'), array($_COOKIE['logged_user']));
             $data = $stmt->fetchAll();
             if (strlen(htmlspecialchars($_POST['subject'])) > 0 && strlen(htmlspecialchars($_POST['problem'])) > 0) {
-                B::inBase('requests', array('subject','email','text'), array(htmlspecialchars($_POST['subject']),$data[0]['email'],htmlspecialchars($_POST['problem'])));
+                B::inBase('requests', array('subject', 'email', 'text'), array(htmlspecialchars($_POST['subject']), $data[0]['email'], htmlspecialchars($_POST['problem'])));
                 echo 'true';
             } else {
                 echo 'false';
             }
-
         } else {
-            delCookies('logged_user');
-            delCookies('key');
-        }
+                delCookies('logged_user');
+                delCookies('key');
+            }
+        } else {
+            $_SESSION['test']='email';
+            if (strlen(htmlspecialchars($_POST['subject'])) > 0 && strlen(htmlspecialchars($_POST['problem'])) > 0 && checkEmail(htmlspecialchars($_POST['email']))) {
+                B::inBase('requests', array('subject','email','text'), array(htmlspecialchars($_POST['subject']),htmlspecialchars(trim($_POST['email'])),htmlspecialchars($_POST['problem'])));
+                echo 'true';
+            } else {
+                echo 'false';
+            }
+            }
         break;
 }
 function checkEmail($email){

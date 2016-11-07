@@ -58,8 +58,6 @@ if ($_COOKIE['logged_user']!=null) {
     </button>
     <ul class="dropdown-menu" role="menu">
         <li><a href="'.$books[$i]['path'].'" download="'.$books[$i]['original_name'].'.'.$file_info['extension'].'">Download</a></li>
-        <li><a href="#">Другое действие</a></li>
-        <li><a href="#">Что-то иное</a></li>
         <li class="divider"></li>
         <li><a class="btn-delete" href="#">Delete</a></li>
     </ul>
@@ -116,7 +114,7 @@ if ($_COOKIE['logged_user']!=null) {
         }
         array_multisort($books, SORT_NUMERIC, $data_key);
         for ($i=count($books)-1;$i>=0;$i--){
-            if ($j>4) break; else {
+            if ($j>3) break; else {
                 $file_info=pathinfo($books[$i]['path']);
                 $progress=json_decode($books[$i]['progress'],true);
                 $body.='<div class="col-md-3 col-lg-3 col-sm-6 col-xs-12">
@@ -137,6 +135,12 @@ if ($_COOKIE['logged_user']!=null) {
             </div>';
                 $j++;
             }
+        }
+        if (count($books)>3){
+            $body.='<div class="col-md-3 col-lg-3 col-sm-6 col-xs-12"><a class="a-all" href="library"><div class="panel panel-default view-all"><div class="panel-body viewdiv"><p><svg class="center-block" fill="#607d8b" height="48" viewBox="0 0 24 24" width="48" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 0h24v24H0z" fill="none"/>
+    <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
+</svg></p><h1 class="maincolor text-center"><b>View all</b></h1></div></div></a></div>';
         }
     }
 }

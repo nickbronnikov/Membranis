@@ -66,7 +66,6 @@ switch ($_POST['function']) {
         $_SESSION['test1']="Yes";
         $stmt = B::selectFromBase('users_info', null, array('login'), array($_COOKIE['logged_user']));
         $data = $stmt->fetchAll();
-        $_SESSION['test']=array($_POST['size'],$data[0]['disk_space']-($data[0]['files_disc_space']+$_POST['size']),$data[0]['disk_space'],$data[0]['files_disc_space']);
         if (($data[0]['disk_space']-($data[0]['files_disc_space']+$_POST['size']))<0){
             echo 'false';
         } else {
@@ -141,7 +140,7 @@ switch ($_POST['function']) {
             $newProgress = json_encode(array('chapter_id' => $progress['chapter_id'] - 1, 'chapter' => $name, 'page_progress' => 0, 'progress' => $pageProgress, 'p' => $progress['p']));
             B::updateBase('users_files', array('progress'), array($newProgress), array('id'), array($_SESSION['id-book']));
             echo $file;
-        } else echo '**/**/roll**';
+        } else echo '**/**/**';
         break;
     case 'pageScrollEPUB':
         $pxPosition=round($_SESSION[$_GET['id']]/100*$_POST['docHeight']);
@@ -200,6 +199,76 @@ switch ($_POST['function']) {
         B::updateBase('users_files', array('progress'), array($newProgress), array('id'), array($_SESSION['id-book']));
         echo $file;
         break;
+    case 'addBookmark':
+        $stmt=B::selectFromBase('users_files', null, array('id'), array($_SESSION['id-book']));
+        $data=$stmt->fetchAll();
+        $file_info = pathinfo($data[0]['path']);
+        $description='';
+        switch ($file_info['extension']){
+            case 'epub':
+                $progress=json_decode($data[0]['progress'],true);
+                $s=explode("/",$data[0]['path']);
+                $file_path=str_replace("/".$s[count($s)-1], '', $data[0]['path']);
+                $file=file_get_contents('../'.$file_path."/chapters.txt", FILE_USE_INCLUDE_PATH);
+                $list=explode("$$$$$$",$file);
+                $description.=$list[$progress['chapter_id']-1].' - '.$progress['page_progress'].'%';
+                B::inBase('bookmarks',array('id_book','description','progress'),array($_SESSION['id-book'],$description,$data[0]['progress']));
+                $toProgress='toChapter('.$progress['chapter_id'].');'.'toprogressPage('.$progress['page_progress'].');$(\'#bookmarks-list\').modal(\'hide\')';
+                $bookmark='<div class="panel panel-default bmp">
+  <div class="panel-body bookmark-body">
+  <div><button class="btn btn-success btn-bookmark btn-sm btn-rad" onclick="'.$toProgress.'">Go</button></div>
+    <div class="description-info">'.$description.'</div>
+  </div>
+</div>';
+                echo $bookmark;
+                break;
+            case 'fb2':
+                $progress=json_decode($data[0]['progress'],true);
+                $fb2DOM = new DOMDocument();
+                $fb2DOM->load('../'.$data[0]['path']);
+                $bodytag = $fb2DOM->getElementsByTagName('body');
+                $chapters=$bodytag[0]->getElementsByTagName('section');
+                $c=$chapters[$progress['chapter']]->getElementsByTagName('title');
+                $chap=$c[0]->textContent;
+                $description.=str_replace(array("\r\n", "\r", "\n"),'',trim($chap)).' - '.$progress['page_progress'].'%';
+                B::inBase('bookmarks',array('id_book','description','progress'),array($_SESSION['id-book'],$description,$data[0]['progress']));
+                $toProgress='toChapter('.$progress['chapter'].');'.'toprogressPage('.$progress['page_progress'].');$(\'#bookmarks-list\').modal(\'hide\')';
+                $bookmark='<div class="panel panel-default bmp">
+  <div class="panel-body bookmark-body">
+  <div><button class="btn btn-success btn-bookmark btn-sm btn-rad" onclick="'.$toProgress.'">Go</button></div>
+    <div class="description-info">'.$description.'</div>
+  </div>
+</div>';
+                echo $bookmark;
+                break;
+            case 'txt':
+                $progress=json_decode($data[0]['progress'],true);
+                $description=$data[0]['author'].' - '.$progress['progress'].'%';
+                B::inBase('bookmarks',array('id_book','description','progress'),array($_SESSION['id-book'],$description,$data[0]['progress']));
+                $toProgress='toprogressPage('.$progress['progress'].');$(\'#bookmarks-list\').modal(\'hide\')';
+                $bookmark='<div class="panel panel-default bmp">
+  <div class="panel-body bookmark-body">
+  <div><button class="btn btn-success btn-bookmark btn-sm btn-rad" onclick="'.$toProgress.'">Go</button></div>
+    <div class="description-info">'.$description.'</div>
+  </div>
+</div>';
+                echo $bookmark;
+                break;
+            case 'html':
+                $progress=json_decode($data[0]['progress'],true);
+                $description=$data[0]['author'].' - '.$progress['progress'].'%';
+                B::inBase('bookmarks',array('id_book','description','progress'),array($_SESSION['id-book'],$description,$data[0]['progress']));
+                $toProgress='toprogressPage('.$progress['progress'].');$(\'#bookmarks-list\').modal(\'hide\')';
+                $bookmark='<div class="panel panel-default bmp">
+  <div class="panel-body bookmark-body">
+  <div><button class="btn btn-success btn-bookmark btn-sm btn-rad" onclick="'.$toProgress.'">Go</button></div>
+    <div class="description-info">'.$description.'</div>
+  </div>
+</div>';
+                echo $bookmark;
+                break;
+        }
+        break;
 }
 function progress($chapter,$pageProgress,$strlen,$file_name){
     $fb2DOM = new DOMDocument();
@@ -214,5 +283,8 @@ function progress($chapter,$pageProgress,$strlen,$file_name){
     $progress=round($progress/$strlen*100);
     if ($progress>98) $progress=100;
     return $progress;
+}
+function checkDescription($description){
+
 }
 ?>

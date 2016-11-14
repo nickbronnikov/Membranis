@@ -30,7 +30,6 @@ $data=$stmt->fetchAll();
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
 </head>
 <body>
-<script>progressShow()</script>
 <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="errorExtension">
     <div class="modal-dialog modal-lg">
         <div class="modal-content btn-rad">
@@ -40,6 +39,23 @@ $data=$stmt->fetchAll();
             </div>
             <div class="modal-body">
                 <div class="alert alert-danger alert-error">You are trying to download a file with an extension that does not support  by PolisBook. Available extensions: <strong>fb2, pdf, epub, txt, html</strong>.</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="deleteBookModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content btn-rad center-block" style="width:70%">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 class="modal-title"><strong>Delete</strong></h3>
+            </div>
+            <div class="modal-body" id="infoDelete">
+                
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default btn-rad pull-left" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-danger btn-rad pull-right" id="btnDelete">Delete</button>
             </div>
         </div>
     </div>
@@ -80,7 +96,7 @@ $data=$stmt->fetchAll();
                     <span class="dropdown">
                         <a class="btn btn-default dropdown-toggle btn-rad" type="button" data-toggle="dropdown" disabled="disabled" id="pd-btn"><b class="caret"></b>
                         </a>
-                        <ul class="dropdown-menu download-info btn-rad">
+                        <ul class="dropdown-menu download-info btn-rad" id="download-list">
                             <span id="append"></span>
                             <li class="divider"></li>
                             <li><a  class="width-full btn btn-default btn-rad" id="clearprogressbar">Clear downloads list</a></li>
@@ -92,7 +108,6 @@ $data=$stmt->fetchAll();
                     <ul class="dropdown-menu">
                         <li><a href="" onclick="showBook(0)">Update list</a></li>
                         <li><a href="settings">Settings</a></li>
-                        <li><a href="#">Recycle bin</a></li>
                         <li><a href="help">Help</a></li>
                         <li class="divider"></li>
                         <li><a href="logout">Log out</a></li>

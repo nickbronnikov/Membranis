@@ -1,14 +1,12 @@
 <?php
 require 'includes/db.php';
 require 'includes/file_work.php';
-if ($_COOKIE['logged_user']==null)  echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/">'; else
+if ($_COOKIE['logged_user']==null || $_COOKIE['key']==null)  echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/">'; else
     if (!checkKey($_COOKIE['key'])) {
     delCookies('logged_user');
         delCookies('key');
     echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/">';
 }
-$_SESSION[$_GET['id']]=0;
-$_SESSION['id-book']=$_GET['id'];
 $stmt=B::selectFromBase('users_files',null,array('id'),array($_GET['id']));
 $data=$stmt->fetchAll();
 $db=B::selectFromBase('users',null,array('login'),array($_COOKIE['logged_user']));
@@ -32,7 +30,7 @@ if ($user[0]['id']==$data[0]['id_user']) {
     $bm=$stmt->fetchAll();
     if (count($bm)==0){
         $modalbody='<div class="panel panel-default">
-  <div class="panel-body">
+  <div class="panel-body" id="noOneBookmark">
     <svg class="center-block" fill="#5cb85c" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
     <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
     <path d="M0 0h24v24H0z" fill="none"/>
@@ -59,10 +57,13 @@ if ($user[0]['id']==$data[0]['id_user']) {
                 case 'html':
                     $toProgress='toprogressPage('.$pr['progress'].');$(\'#bookmarks-list\').modal(\'hide\')';
                     break;
+                case 'pdf':
+                    $toProgress='toProgress('.$pr['pageProgress'].');$(\'#bookmarks-list\').modal(\'hide\')';
+                    break;
             }
-            $modalbody.='<div class="panel panel-default bmp">
+            $modalbody.='<div class="panel panel-default bmp" id="bookmarkID'.$item['id'].'">
   <div class="panel-body bookmark-body">
-  <div><button class="btn btn-success btn-bookmark btn-sm btn-rad" onclick="'.$toProgress.'">Go</button></div>
+  <div><button class="btn btn-danger btn-bookmark btn-sm btn-rad" id="btnDelBookmark'.$item['id'].'" onclick="deleteBookmark('.$item['id'].')">Delete</button><button class="btn btn-success btn-bookmark btn-sm btn-rad" id="btnGoBookmark'.$item['id'].'" onclick="'.$toProgress.'">Go</button></div>
     <div class="description-info">'.$item['description'].'</div>
   </div>
 </div>';
@@ -72,7 +73,8 @@ if ($user[0]['id']==$data[0]['id_user']) {
         case 'fb2':
             $chapter = chapterList($data[0]['path']);
             $progress = json_decode($data[0]['progress'], true);
-            $str = fb2($data[0]['path'], str_replace('cover.jpg', '', $data[0]['cover']), $progress['chapter']);
+            $path=explode('/',$data[0]['path']);
+            $str = fb2($data[0]['path'], str_replace($path[count($path)-1], '', $data[0]['path']), $progress['chapter']);
             $function = '<script>progressPage(' . $progress['page_progress'] . ')</script><script>styleReader(\'' . $ui_data[0]['style'] . '\')</script>';
             $reader ='<div class="row">
         <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 rp">
@@ -226,7 +228,7 @@ if ($user[0]['id']==$data[0]['id_user']) {
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right nav-pills">
-                <?php if ($file_info['extension']!='pdf') echo '<li class="dropdown maincolor li-nav">
+                <?='<li class="dropdown maincolor li-nav">
                     <button class="btn btn-success dropdown-toggle li-nav-read btn-rad" id="bookmarks"><svg fill="#FFFFFF" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
                             <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
                             <path d="M0 0h24v24H0z" fill="none"/>

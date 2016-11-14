@@ -1,14 +1,14 @@
 <?php
-    function cover($path,$folder)
-    {
-        $namecover = EPUBCover($path,$folder);
-        content($path,$folder);
-        $length = array(chapterName($folder,1),EPUBLength($folder),EPUBAuthor($folder));
-        EPUBimg($path,$folder);
-        EPUBChapters($folder);
-        $ret=array($namecover, $length[0], $length[1], $length[2]);
-        return $ret;
-    }
+function cover($path,$folder,$cryptname)
+{
+    $namecover = EPUBCover($path,$folder,$cryptname);
+    content($path,$folder);
+    $length = array(chapterName($folder,1),EPUBLength($folder),EPUBAuthor($folder));
+    EPUBimg($path,$folder);
+    EPUBChapters($folder);
+    $ret=array($namecover, $length[0], $length[1], $length[2]);
+    return $ret;
+}
 function EPUBChapters($filefolder){
     $doc = new DOMDocument();
     $doc->load($filefolder.'/book.ncx');
@@ -22,7 +22,7 @@ function EPUBChapters($filefolder){
     fwrite($fp,$chapters);
     fclose($fp);
 }
-function EPUBCover($filename, $filefolder){
+function EPUBCover($filename, $filefolder, $cryptname){
     $namecover='';
     $zip = new ZipArchive();
     $zip->open($filename);
@@ -36,6 +36,7 @@ function EPUBCover($filename, $filefolder){
                 $zip->extractTo($filefolder,array($name['name']));
                 $s = explode("/", $name['name']);
                 $namecover=$s[count($s) - 1];
+                $ex=explode('.',$namecover);
                 if (count($s)>1) {
                     copy($filefolder.'/'.$name['name'], $filefolder.'/'.$s[count($s) - 1]);
                     removeDirectory($filefolder.'/'.$s[0]);
@@ -52,13 +53,13 @@ function EPUBimg($filename, $filefolder){
     for ($i=0; $i<$zip->numFiles; $i++) {
         $name = $zip->statIndex($i);
         if (stripos($name['name'],'.jpg') || stripos($name['name'],'.jpeg') || stripos($name['name'],'.png')) {
-                $zip->extractTo($filefolder, array($name['name']));
-                $s = explode("/", $name['name']);
-                if (count($s) > 1) {
-                    copy($filefolder . '/' . $name['name'], $filefolder . '/' . $s[count($s) - 1]);
-                    removeDirectory($filefolder . '/' . $s[0]);
-                }
+            $zip->extractTo($filefolder, array($name['name']));
+            $s = explode("/", $name['name']);
+            if (count($s) > 1) {
+                copy($filefolder . '/' . $name['name'], $filefolder . '/' . $s[count($s) - 1]);
+                removeDirectory($filefolder . '/' . $s[0]);
             }
+        }
     }
 }
 function chapterName($folder,$num){
@@ -161,5 +162,8 @@ function content($path,$folder){
             } else rename($folder.'/'.$s[count($s) - 1],$folder.'/'.'book.ncx');
         }
     }
+}
+function setCookies1($name,$value){
+    setcookie($name,$value,strtotime('+30 days'),'/');
 }
 ?>

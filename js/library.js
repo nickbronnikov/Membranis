@@ -22,14 +22,19 @@ function showBook(page) {
                     $('.fade').removeClass('out');
                 }, 1000);
             } else $('#book').html(eb);
-            console.log(($(window).height()-$('#nav').height())+'     '+$('#book').height());
             if ($('#book').height()<($(window).height()-$('#nav').height())){
-                console.log('Change height');
                 $('#book').css('min-height',$(window).height()-$('#nav').height()-+'px');
             }
             sb++;
         }
     });
+}
+function modalDelete(id){
+    var idBook='#nameBook'+id.toString();
+    var name=$(idBook).html();
+    $('#infoDelete').html('Are you sure you want to delete "'+name+'"?');
+    $('#btnDelete').attr('onclick','deleteBook('+id+')');
+    $('#deleteBookModal').modal('show');
 }
 function deleteBook(id){
     $.ajax({
@@ -40,7 +45,8 @@ function deleteBook(id){
 
         },
         success: function (data) {
-                showBook(0);
+            $('#deleteBookModal').modal('hide');
+            showBook(0);
         }
     });
 }

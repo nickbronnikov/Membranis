@@ -42,7 +42,7 @@ function fb2($file_name,$path,$chapter){
     $str = str_replace('</title>', '</h2>', $str);
     $str = str_replace('<empty-line/>', '<br/>', $str);
     $str = str_replace('<image', '<img', $str);
-    $str = str_replace('l:href="#', 'src="'.$path, $str);
+    $str = str_replace('l:href="#', 'style="display: block; margin: 0 auto;" src="'.$path, $str);
     return $str;
 }
 function EPUBChapter($filename,$name_path){
@@ -107,6 +107,13 @@ function chapterList($file_name){
     $chapter='<button class="btn btn-success dropdown-toggle li-nav-read btn-rad" data-toggle="dropdown">Chapters   <b class="caret"></b></button>
                     <ul class="dropdown-menu" id="scrollable-menu">'.$chapterHTML.'</ul>';
     return $chapter;
+}
+function chapterCount($file_name){
+    $fb2DOM = new DOMDocument();
+    $fb2DOM->load($file_name);
+    $bodytag = $fb2DOM->getElementsByTagName('body');
+    $chapters = $bodytag[0]->getElementsByTagName('section');
+    return $chapters->length-1;
 }
 function chapterListEPUB($file_name){
     $s=explode("/",$file_name);

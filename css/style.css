@@ -503,3 +503,11 @@ footer {
 .a-all:hover{
     text-decoration: none;
 }
+.btn-del:hover{
+   cursor: pointer;
+}
+#download-list{
+    height: auto;
+    max-height: 400px;
+    overflow-x: hidden;
+}

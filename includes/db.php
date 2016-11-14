@@ -50,6 +50,21 @@ class B{
         $pdo=null;
         return $values;
     }
+    static function countId($table_name){
+        $db=new B();
+        $dsn = "mysql:host=$db->db_host;dbname=$db->db_name;charset=$db->db_charset";
+        $opt=array(
+            PDO::ATTR_ERRMODE  =>PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+        );
+        $pdo=new PDO($dsn,$db->db_login,$db->db_password,$opt);
+        $sql ="SELECT MAX(id) FROM `$db->db_name`.`$table_name`";
+        $stm = $pdo->prepare($sql);
+        $stm->execute();
+        $ret=$stm->fetchAll();
+        $pdo=null;
+        return $ret[0]['MAX(id)'];
+    }
     static function updateBase($table_name,$fields,$values,$conditions,$key){
         $db=new B();
         $query="UPDATE `$db->db_name`.`$table_name` SET ";
@@ -140,7 +155,6 @@ class B{
         $stmt=$pdo->prepare($query);
         $stmt->execute();
         $pdo=null;
-        print_r($stmt);
     }
     function pdoSet($fields, &$values, $source = array()) {
         $query="";

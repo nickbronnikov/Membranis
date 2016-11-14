@@ -57,7 +57,7 @@ if ($_COOKIE['logged_user']!=null) {
         <b class="caret"></b>
     </button>
     <ul class="dropdown-menu" role="menu">
-        <li><a href="'.$books[$i]['path'].'" download="'.$books[$i]['original_name'].'.'.$file_info['extension'].'">Download</a></li>
+        <li><a href="download?id='.$books[$i]['id'].'">Download</a></li>
         <li class="divider"></li>
         <li><a class="btn-delete" href="#">Delete</a></li>
     </ul>
@@ -89,7 +89,7 @@ if ($_COOKIE['logged_user']!=null) {
         <b class="caret"></b>
     </button>
     <ul class="dropdown-menu" role="menu">
-        <li><a href="'.$book[0]['path'].'" download="'.$book[0]['original_name'].'.'.$file_info['extension'].'">Download</a></li>
+        <li><a href="download?id='.$book[0]['id'].'">Download</a></li>
     </ul>
 </div><span class="progress-info pull-right">'.$progress['progress'].'%</span></div>
             </div>
@@ -128,7 +128,7 @@ if ($_COOKIE['logged_user']!=null) {
         <b class="caret"></b>
     </button>
     <ul class="dropdown-menu" role="menu">
-        <li><a href="'.$books[$i]['path'].'" download="'.$books[$i]['original_name'].'.'.$file_info['extension'].'">Download</a></li>
+        <li><a href="download?id='.$books[$i]['id'].'">Download</a></li>
     </ul>
 </div><span class="progress-info pull-right">'.$progress['progress'].'%</span></div>
             </div>
@@ -199,7 +199,7 @@ if ($_COOKIE['logged_user']!=null) {
             <div class="row">
                 <div class="col-md-7 col-md-offset-3 col-lg-7 col-lg-offset-3 col-sm-12 col-xs-12">
                     <div class="center-block reg main-jumbotron">
-                        <h1 class="maintext text-center">Cloud Library</h1>
+                        <h1 class="maintext text-center">Polisbook</h1>
                         <h2 class="maintext text-center">Your books. Always, everywhere, with you.
                         <div class="button-reg"><a href="signup" class="btn btn-success btn-lg center-block btn-rad" id="button-reg">Sign up</a>
                     </div>

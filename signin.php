@@ -70,7 +70,7 @@ if (isset($data['loginin'])) {
     <div class="container">
         <div class="row">
             <div class="col-md-offset-4 col-lg-offset-4 col-md-4 col-lg-4 col-xs-12 col-sm-12" id="login-div">
-                <h1 class="text-center">Sign in to Membranis</h1>
+                <h1 class="text-center">Sign in to Polisbook</h1>
                 <?php if ($check==false) echo $alert;?>
                 <div id="login-form">
                 <div class="panel panel-default width-full">

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require 'includes/db.php';
 require 'includes/file_work.php';
 if ($_COOKIE['logged_user']==null || $_COOKIE['key']==null)  echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/">'; else
@@ -98,7 +98,7 @@ if ($user[0]['id']==$data[0]['id_user']) {
             $progress = json_decode($data[0]['progress'], true);
             $reader = '<div class="row">
     <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12">
-        <iframe id="pdf" src="http://polisbook.com/pdf/web/viewer.html?file=http://polisbook.com/' . $data[0]['path'] . '" width="100%" height="500px" onload="progressPage(' . $progress['pageProgress'] . ')"/>
+        <iframe id="pdf" src="https://polisbook.com/pdf/web/viewer.html?file=https://polisbook.com/' . $data[0]['path'] . '" width="100%" height="500px" onload="progressPage(' . $progress['pageProgress'] . ')"/>
         </div></div>';
             break;
         case 'epub':

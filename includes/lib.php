@@ -1,12 +1,16 @@
 <?php
 require 'db.php';
+if ($_COOKIE['logged_user']!= null && $_COOKIE['key']!=null)
+    if (checkKey($_COOKIE['key']))
 switch ($_POST['function']){
+    case 'checkUpload':
+        $stmt=B::selectFromBase('users_files',null,array('original_name'),array($_POST['filename']));
+        $data=$stmt->fetchAll();
+        if (count($data)!=0) echo 'true'; else echo 'false';
+        break;
     case 'showBooks':
         $stmt=B::selectFromBase('users',array('id'),array('login'),array($_COOKIE['logged_user']));
         $data=$stmt->fetchAll();
-//        $from=1;
-//        $stmt=B::selectFromBaseSet('users_files',null,array('id_user'),array($data[0]['id'],$from,16),'LIMIT ?, ?');
-//        $data=$stmt->fetchAll();
         $stmt=B::selectFromBase('users_files',null,array('id_user'),array($data[0]['id']));
         $data=$stmt->fetchAll();
         $show='';

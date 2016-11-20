@@ -30,10 +30,10 @@ function checkKey($key){
     return $check;
 }
 class B{
-    public $db_login="mysql";
-    public $db_password="mysql";
+    public $db_login="root";
+    public $db_password="rtPtn81grtRs";
     public $db_host="localhost";
-    public $db_name="Library";
+    public $db_name="polisbookdb";
     public $db_charset="utf8";
     static function inBase($table_name,$fields,$values){
         $db=new B();

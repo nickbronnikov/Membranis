@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require 'includes/db.php';
 if ($_COOKIE['logged_user']!=null && !checkKey($_COOKIE['key'])) {
     delCookies('logged_user');
@@ -197,7 +197,7 @@ if ($_COOKIE['logged_user']!=null) {
     <div class="jumbotron" id="mainpanel">
         <div class="container">
             <div class="row">
-                <div class="col-md-7 col-md-offset-3 col-lg-7 col-lg-offset-3 col-sm-12 col-xs-12">
+                <div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2 col-sm-12 col-xs-12">
                     <div class="center-block reg main-jumbotron">
                         <h1 class="maintext text-center">Polisbook</h1>
                         <h2 class="maintext text-center">Your books. Always, everywhere, with you.
@@ -211,21 +211,21 @@ if ($_COOKIE['logged_user']!=null) {
 <div class="body-info">
     <div class="container">
         <div class="row">
-            <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12 well">
+            <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12 well btn-rad">
                 <h1 class="text-center maincolor"><b>Welcome to your library.</b></h1>
-                <h3 class="text-center maincolor">You can keep your books in the cloud and read them whenever you feel like it.</h3>
+                <h3 class="text-center maincolor">You can save your books to the cloud and read them whenever you want.</h3>
             </div>
         </div>
     </div>
     <div class="container">
         <div class="row">
-            <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12 well block"><div><img class="info-img" src="/img/Sync.png"></div><h3 class="maincolor text-center text-block"><b>Synchronization</b></h3>
+            <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12 well block btn-rad"><div><img class="info-img" src="/img/Sync.png"></div><h3 class="maincolor text-center text-block"><b>Synchronization</b></h3>
                 <h4 class="maincolor text-center">Sync your progress. Always start reading from the place where finished.</h4>
                 </div>
-            <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12 well block"><div><img class="info-img" src="/img/Devices.png"></div><h3 class="maincolor text-center text-block"><b>On all your devices</b></h3>
+            <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12 well block btn-rad"><div><img class="info-img" src="/img/Devices.png"></div><h3 class="maincolor text-center text-block"><b>On all your devices</b></h3>
                 <h4 class="maincolor text-center">Read your favorite books and magazines on any of your device.</h4>
                 </div>
-            <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12 well block"><div><img class="info-img" src="/img/Cloud.png"></div><h3 class="maincolor text-center text-block"><b>Cloud</b></h3>
+            <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12 well block btn-rad"><div><img class="info-img" src="/img/Cloud.png"></div><h3 class="maincolor text-center text-block"><b>Cloud</b></h3>
                 <h4 class="maincolor text-center">Keep your books in the cloud for easy access to them.</h4>
                 </div>
         </div>

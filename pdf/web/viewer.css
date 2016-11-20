@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 .textLayer {
   position: absolute;
   left: 0;
@@ -23,7 +22,10 @@
   opacity: 0.2;
   line-height: 1.0;
 }
-
+.rightBlock{
+  visibility: hidden;
+  max-height: 0px;
+}
 .textLayer > div {
   color: transparent;
   position: absolute;

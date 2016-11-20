@@ -1,4 +1,4 @@
-<?php 
+﻿<?php 
 require 'includes/db.php';
 if ($_COOKIE['logged_user']==null)  echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/">'; else
     if (!checkKey($_COOKIE['key'])) {
@@ -68,7 +68,7 @@ $data=$stmt->fetchAll();
                 <h3 class="modal-title"><strong>Not enough storage</strong></h3>
             </div>
             <div class="modal-body">
-                <div class="alert alert-danger alert-error">Not enough storage to download the file. Delete some files, clear your recycle bin, or increase the amount of available storage.</div>
+                <div class="alert alert-danger alert-error">Not enough storage to download the file. Delete some files or increase the amount of available storage.</div>
             </div>
         </div>
     </div>
@@ -106,7 +106,6 @@ $data=$stmt->fetchAll();
                 <li class="dropdown maincolor li-nav">
                     <button class="btn btn-default btn-rad dropdown-toggle" data-toggle="dropdown"><?=$_COOKIE['logged_user'];?>   <b class="caret"></b></button>
                     <ul class="dropdown-menu">
-                        <li><a href="" onclick="showBook(0)">Update list</a></li>
                         <li><a href="settings">Settings</a></li>
                         <li><a href="help">Help</a></li>
                         <li class="divider"></li>

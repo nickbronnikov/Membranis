@@ -61,7 +61,7 @@ if (isset($data['loginin'])) {
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right navel">
-                <a class="btn btn-success pull-right btn-rad" href="signup.php">Sign up</a>
+                <a class="btn btn-success pull-right btn-rad" href="signup">Sign up</a>
             </ul>
         </div>
     </div>
@@ -75,7 +75,7 @@ if (isset($data['loginin'])) {
                 <div id="login-form">
                 <div class="panel panel-default width-full">
                     <div class="panel-body">
-                        <form action="/signin.php" method="post">
+                        <form action="/signin" method="post">
                             <label for="login">Username or email address</label>
                             <input type="text" class="form-control" id="login" name="login"><br>
                             <label for="password">Password</label><span class="pull-right"><a href="recovery">Forgot password?</a></span>

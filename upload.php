@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require 'includes/db.php';
 require 'includes/file_work.php';
 require 'includes/EPUBandMOBI.php';
@@ -20,8 +20,7 @@ if(isset($_FILES['upl']) && $_FILES['upl']['error'] == 0) {
                         unlink($dirpdf);
                     } else {
                         $progress = json_encode(array('page_progress' => 0, 'progress' => 0, 'p' => 0));
-                        Cover::pdfCover('users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name, 'img/covers/' ,$cryptname.'.jpg');
-                        B::inBase('users_files', array('id_user', 'path', 'original_name', 'author', 'cover', 'progress'), array($data[0]['id'], 'users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name, $file_info['filename'], $file_info['filename'], 'img/covers/'.$cryptname.'.jpg', $progress));
+                        B::inBase('users_files', array('id_user', 'path', 'original_name', 'author', 'cover', 'progress'), array($data[0]['id'], 'users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name, $file_info['filename'], $file_info['filename'], 'img/pdf.png', $progress));
                     }
                 }
                 break;

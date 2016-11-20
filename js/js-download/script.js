@@ -39,8 +39,25 @@ $(function(){
             if (data.loaded / data.total < 1) NProgress.set(data.loaded / data.total);
             if(progress == 100){
                 data.context.removeClass('working');
-                $('.info-progress').html('<svg fill="#5cb85c" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/> <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>');
-                showBook(0);
+                $('.info-progress').html('<svg fill="#5cb85c" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/> <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>')
+                var check=true;
+                while(check){
+                        $.ajax({
+                            type: "POST",
+                            async: false,
+                            url: "includes/lib.php",
+                            data: {function: 'checkUpload',filename: fileName(data.files[0].name)},
+                            beforeSend: function () {
+                            },
+                            success: function (data) {
+                                if (data=='true') {
+                                    NProgress.done();
+                                    showBook(0);
+                                    check=false;
+                                }
+                            }
+                        });
+                }
             }
         },
         fail:function(e, data){
@@ -87,4 +104,15 @@ function checkSizeInSpace(size) {
     });
     if (checkSpace==true) return false;
     if (checkSpace==false) return true;
+}
+function fileName(name){
+    var lastPoint;
+    for (var i=0;i<name.length; i++){
+        if (name.charAt(i)=='.') lastPoint=i;
+    }
+    var orName='';
+    for (i=0;i<lastPoint; i++){
+        orName+=name.charAt(i);
+    }
+    return orName;
 }

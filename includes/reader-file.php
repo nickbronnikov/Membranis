@@ -262,7 +262,7 @@ switch ($_POST['function']) {
                 $description=$data[0]['author'].'. Page: '.$progress['pageProgress'].'.';
                 B::inBase('bookmarks',array('id_book','description','progress'),array($_POST['id'],$description,$data[0]['progress']));
                 $toProgress='toProgress('.$progress['pageProgress'].');$(\'#bookmarks-list\').modal(\'hide\')';
-                $bookmark='<div class="panel panel-default bmp" id="bookmarkID'.$lastid.'>
+                $bookmark='<div class="panel panel-default bmp" id="bookmarkID'.$lastid.'">
   <div class="panel-body bookmark-body">
   <div><button class="btn btn-danger btn-bookmark btn-sm btn-rad" id="btnDelBookmark'.$lastid.'" onclick="deleteBookmark('.$lastid.')">Delete</button><button class="btn btn-success btn-bookmark btn-sm btn-rad" id="btnGoBookmark'.$lastid.'" onclick="'.$toProgress.'">Go</button></div>
     <div class="description-info">'.$description.'</div>

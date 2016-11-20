@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 ?>
 <!DOCTYPE html>
 <html>
@@ -35,8 +35,8 @@
     <div class="container ">
         <div class="row">
             <div class="col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3 col-sm-12 col-xs-12" >
-                <h1 class="text-center maincolor" id="headinfo"><b>Join Membranis</b></h1>
-                <h3 class="text-center maincolor">The best place to read</h3>
+                <h1 class="text-center" id="headinfo">Join Membranis</h1>
+                <h3 class="text-center">The best place to read</h3>
             </div>
             <div class="col-md-3 col-lg-3"></div>
             <div id="reg-form">

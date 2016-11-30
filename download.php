@@ -9,7 +9,7 @@ if ($_COOKIE['logged_user']!=null && $_COOKIE['key']!=null){
         $stmt=B::selectFromBase('users_files',null,array('id'),array($_GET['id']));
         $data=$stmt->fetchAll();
         $file_info=pathinfo($data[0]['path']);
-        Header("HTTP/1.1 200 OK");
+        Header("HTTPS/1.1 200 OK");
         Header("Connection: close");
         Header("Content-Type: application/octet-stream");
         Header("Accept-Ranges: bytes");

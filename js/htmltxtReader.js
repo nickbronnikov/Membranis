@@ -7,6 +7,12 @@ function progressPage(progress){
     pageprogress=progress;
 }
 $(document).ready(function () {
+    if ($('#reader')[0].scrollHeight<=$(window).height()){
+        $('#scrollDown').addClass('disabled');
+        $('#scrollDown').html('');
+        $('#scrollUp').addClass('disabled');
+        $('#scrollUp').html('');
+    }
     $('#bookmarks').on('click',function () {
         $('#bookmarks-list').modal('show');
     });
@@ -37,8 +43,6 @@ $(document).ready(function () {
         var st = $(this).scrollTop();
         if (st > lastScrollTop) {
             $("html, body").animate({ scrollTop: $(document).height() }, 10);
-        } else {
-            // $("html, body").animate({ scrollTop: 0 }, 10);
         }
         lastScrollTop = st;
         var r=document.getElementById('reader');
@@ -49,14 +53,20 @@ $(document).ready(function () {
         }
     });
     $('#scrollDown').on('click',function () {
+        $('#scrollUp').removeClass('disabled');
         var r=document.getElementById('reader');
         var cont_top = r.pageYOffset ? r.pageYOffset : r.scrollTop;
-            $('#reader').animate({"scrollTop": cont_top + $(window).height()}, 300);
+        console.log(cont_top + $(window).height()+'     '+$('#reader')[0].scrollHeight);
+        if ((cont_top + $(window).height())>=$('#reader')[0].scrollHeight) $('#scrollDown').addClass('disabled');
+            $('#reader').animate({"scrollTop": cont_top + $(window).height()}, 0);
     });
     $('#scrollUp').on('click',function () {
+        $('#scrollDown').removeClass('disabled');
         var r=document.getElementById('reader');
         var cont_top = r.pageYOffset ? r.pageYOffset : r.scrollTop;
-        $('#reader').animate({"scrollTop": cont_top - $(window).height()}, 300);
+        console.log(cont_top);
+        if (cont_top==0) $('#scrollUp').addClass('disabled');
+        $('#reader').animate({"scrollTop": cont_top - $(window).height()}, 0);
     });
 });
 function height(){

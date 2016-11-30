@@ -483,6 +483,9 @@ footer {
 .page:hover {
     background-color: #f3f3f3;
 }
+.disabled{
+    pointer-events: none;
+}
 .btn-page{
     position: relative;
     top: 50%;

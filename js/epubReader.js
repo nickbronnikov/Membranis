@@ -50,23 +50,23 @@ $(document).ready(function () {
         }
     });
     $('#scrollDown').on('click',function () {
-        $('#scrollUp').removeAttr('disabled');
+        $('#scrollUp').removeClass('disabled');
         var r=document.getElementById('reader');
         var cont_top = r.pageYOffset ? r.pageYOffset : r.scrollTop;
         if (Math.floor((cont_top+$(window).height())/$('#reader')[0].scrollHeight*100)==100 || $('#reader')[0].scrollHeight<=$(window).height()){
             nextChapter();
         } else {
-            $('#reader').animate({"scrollTop": cont_top + $(window).height()}, 300);
+            $('#reader').animate({"scrollTop": cont_top + $(window).height()}, 0);
         }
     });
     $('#scrollUp').on('click',function () {
-        $('#scrollDown').removeAttr('disabled');
+        $('#scrollDown').removeClass('disabled');
         var r=document.getElementById('reader');
         var cont_top = r.pageYOffset ? r.pageYOffset : r.scrollTop;
         if (cont_top==0){
             previousChapter();
         } else {
-            $('#reader').animate({"scrollTop": cont_top - $(window).height()}, 300);
+            $('#reader').animate({"scrollTop": cont_top - $(window).height()}, 0);
         }
     });
 });
@@ -82,8 +82,7 @@ function nextChapter() {
             if (data!='**/**/**') {
                 $('#reader').html(data);
                 $('#reader').animate({"scrollTop": 0}, 100);
-                $('#scrollDown').attr('disabled','disabled');
-            }
+            } else $('#scrollDown').addClass('disabled');
             NProgress.done();
         }
     });
@@ -99,8 +98,7 @@ function previousChapter() {
         success: function (data) {
             if (data!='**/**/**') {
                 $('#reader').html(data);
-                $('#scrollUp').attr('disabled','disabled');
-            }
+            } else $('#scrollUp').addClass('disabled');
             NProgress.done();
         }
     });
@@ -108,8 +106,8 @@ function previousChapter() {
 function toChapter(chapter) {
     $.ajax({
         type: "POST",
-        async: false,
         url: "includes/reader-file.php",
+        async: false,
         data: {function: 'toChapterEPUB', chapter: chapter, id:id},
         beforeSend: function () {
             NProgress.start();

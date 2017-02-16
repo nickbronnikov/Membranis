@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    footer();
     $('#problem').on('input',function () {
         if (($(this).val().length!=0) && ($('#subject').val().length!=0)){
             $('#send').removeAttr('disabled');
@@ -32,3 +33,10 @@ $(document).ready(function () {
         });
     });
 });
+function footer() {
+    console.log($('#page').height()<($(window).height()-$('#nav').height()));
+    if ($('#page').height()<($(window).height()-$('#nav').height())){
+        console.log($(window).height()-$('#nav').height());
+        $('#page').css('min-height',$(window).height()-$('#nav').height()+'px');
+    }
+}

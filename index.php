@@ -155,8 +155,10 @@ if ($_COOKIE['logged_user']!=null) {
     <script src="js/dropzone.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700&subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/progress-bar/progress.js"></script>
     <link href="css/bootstrap.css" type="text/css" rel="stylesheet">
     <link href="css/style.css" type="text/css" rel="stylesheet">
+    <link href="css/progress.css" type="text/css" rel="stylesheet"/>
     <link rel="apple-touch-icon" sizes="57x57" href="img/logo/57.png" >
     <link rel="apple-touch-icon" sizes="114x114" href="img/logo/114.png" >
     <link rel="apple-touch-icon" sizes="72x72" href="img/logo/72.png" >
@@ -172,6 +174,7 @@ if ($_COOKIE['logged_user']!=null) {
     <link rel="icon" type="image/png" href="img/logo/32.png" sizes="32x32">
 </head>
 <body>
+<?php if ($_COOKIE['logged_user']!=null) echo '<script>progressShow()</script>' ?>
 <div class="navbar navbar-default navbar-static-top" id="nav" role="navigation">
     <div class="container navel">
         <div class="navbar-header">
@@ -190,7 +193,7 @@ if ($_COOKIE['logged_user']!=null) {
             </ul>
         </div>'; else echo '<div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right" >
-                <li class="dropdown maincolor li-nav" id="li-nav">
+                <li class="dropdown maincolor" id="li-nav">
                     <button class="btn btn-default btn-rad dropdown-toggle" data-toggle="dropdown">'.$_COOKIE['logged_user'].'   <b class="caret"></b></button>
                     <ul class="dropdown-menu">
                         <li><a href="library">Your library</a></li>
@@ -213,7 +216,7 @@ if ($_COOKIE['logged_user']!=null) {
                     <div class="center-block reg main-jumbotron">
                         <h1 class="maintext text-center">Polisbook</h1>
                         <h2 class="maintext text-center">Your books. Always, everywhere, with you.
-                        <div class="button-reg"><a href="signup" class="btn btn-success btn-lg center-block btn-rad" id="button-reg">Sign up</a>
+                        <div class="button-reg"><a href="signup" class="btn btn-success btn-lg center-block btn-rad" id="button-reg">Sign up</a></div>
                     </div>
                 </div>
             </div>
@@ -270,6 +273,7 @@ if ($_COOKIE['logged_user']!=null) {
         </div>
         <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
             <hr class="hr-info">
+            <a href="signup" class="btn btn-success btn-lg center-block btn-rad" id="button-reg">Join to PolisBook</a>
         </div>
     </div>
 </div>

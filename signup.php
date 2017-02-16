@@ -1,4 +1,9 @@
 ﻿<?php
+require 'includes/db.php';
+if ($_COOKIE['logged_user']!=null && $_COOKIE['key']!=null)
+    if (checkKey($_COOKIE['key'])) {
+        echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/">';
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -47,7 +52,7 @@
     <div class="container ">
         <div class="row">
             <div class="col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3 col-sm-12 col-xs-12" >
-                <h1 class="text-center" id="headinfo">Join Membranis</h1>
+                <h1 class="text-center" id="headinfo">Join PolisBook</h1>
                 <h3 class="text-center">The best place to read</h3>
             </div>
             <div class="col-md-3 col-lg-3"></div>
@@ -80,22 +85,22 @@
             </div>
             <div class="col-md-2 col-lg-2"></div>
                 <div id="form">
-            <div class="col-md-offset-3 col-lg-offset-3 col-md-5 col-lg-5 col-sm-12 col-xs-12 regform">
+            <div class="col-md-offset-3 col-lg-offset-3 col-md-6 col-lg-6 col-sm-12 col-xs-12 regform">
                 <label for="loginreg">Username</label>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="loginreg">
+                    <input type="text" class="form-control" id="loginreg" maxlength="30">
                     <span class="input-group-addon" id="loginregcheck"></span>
                 </div>
                 <span id="loginregalert"><p class="info-reg">This will be your username.</p></span>
                 <label for="emailreg">Email address</label>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="emailreg">
+                    <input type="text" class="form-control" id="emailreg" maxlength="50">
                     <span class="input-group-addon" id="emailregcheck"></span>
                 </div>
                 <span id="emailregalert"><p class="info-reg">We promise not to share your email with anyone.</p></span>
                 <label for="passwordreg">Password</label>
                 <div class="input-group">
-                    <input type="password" class="form-control" id="passwordreg">
+                    <input type="password" class="form-control" id="passwordreg" maxlength="40">
                     <span class="input-group-addon" id="passwordregcheck"></span>
                 </div>
                 <span id="passwordregallert"><p class="info-reg">Password should be at least 5 characters.</p></span>

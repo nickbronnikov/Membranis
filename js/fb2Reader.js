@@ -2,7 +2,15 @@ var empty='<div class="panel panel-default"><div class="panel-body" id="noOneBoo
 var pageprogress;
 var fromTop=0;
 var lastScrollTop = 0;
-var id = getUrlVars()["id"];
+var id = getId();
+function getId() {
+    var g=getUrlVars()["id"];
+    if (g.indexOf('#')==-1){
+        return g;
+    } else {
+        return g.split('#')[0];
+    }
+}
 function progressPage(progress){
     pageprogress=progress;
 }
@@ -74,7 +82,7 @@ function nextChapter() {
     $.ajax({
         type: "POST",
         url: "includes/reader-file.php",
-        data: {function: 'nextChapter', id:id},
+        data: {function: 'nextChapterFB2', id:id},
         beforeSend: function () {
             NProgress.start();
         },
@@ -91,7 +99,7 @@ function previousChapter() {
     $.ajax({
         type: "POST",
         url: "includes/reader-file.php",
-        data: {function: 'previousChapter', id:id},
+        data: {function: 'previousChapterFB2', id:id},
         beforeSend: function () {
             NProgress.start();
         },
@@ -108,7 +116,7 @@ function toChapter(chapter) {
         type: "POST",
         url: "includes/reader-file.php",
         async: false,
-        data: {function: 'toChapter', chapter: chapter, id:id},
+        data: {function: 'toChapterFB2', chapter: chapter, id:id},
         beforeSend: function () {
             NProgress.start();
         },
@@ -131,7 +139,7 @@ function pageProgress(scroll,documentHeight,windowHeight) {
     $.ajax({
         type: "POST",
         url: "includes/reader-file.php",
-        data: {function: 'pageScroll',scroll: scroll,docHeight: documentHeight, windowHeight: windowHeight, id:id},
+        data: {function: 'pageScrollFB2',scroll: scroll,docHeight: documentHeight, windowHeight: windowHeight, id:id},
         success: function (data) {
         }
     });
@@ -142,15 +150,6 @@ function getUrlVars() {
         vars[key] = value;
     });
     return vars;
-}
-function deleteBookmark(id) {
-    $.ajax({
-        type: "POST",
-        url: "includes/reader-file.php",
-        data: {function: 'pageScroll',scroll: scroll,docHeight: documentHeight, windowHeight: windowHeight, id:id},
-        success: function (data) {
-        }
-    });
 }
 function deleteBookmark(idBookmark) {
     var bookmarkID='#bookmarkID'+idBookmark.toString();

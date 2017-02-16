@@ -3,7 +3,15 @@ var pageprogress;
 var lastScrollTop = 0;
 var fromTop=0;
 var scroll=0;
-var id = getUrlVars()["id"];
+var id = getId();
+function getId() {
+    var g=getUrlVars()["id"];
+    if (g.indexOf('#')==-1){
+        return g;
+    } else {
+        return g.split('#')[0];
+    }
+}
 function progressPage(progress){
     pageprogress=progress;
 }
@@ -130,7 +138,7 @@ function pageProgress(scroll,documentHeight,windowHeight) {
     $.ajax({
         type: "POST",
         url: "includes/reader-file.php",
-        data: {function: 'pageScrollEPUB',scroll: scroll,docHeight: documentHeight, windowHeight: windowHeight, id:id},
+        data: {function: 'pageScrollEPUB',scroll: scroll,docHeight: documentHeight, id:id},
         success: function (data) {
 
         }

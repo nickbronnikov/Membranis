@@ -265,8 +265,18 @@ html,body {
 .body{
     background-image: linear-gradient(180deg, #f5f5f5, #fff);
 }
+.recovery-footer{
+    position: absolute;
+}
+.join{
+    min-height: 250px;
+    background: #fff;
+}
 .lib-body{
     padding-top: 3%;
+}
+.panel-confirm{
+    padding-top: 0px;
 }
 .preview-book{
     width: 100%;
@@ -299,13 +309,14 @@ html,body {
 }
 #headinfo{
     font-size: 3em;
+    font-weight: bold;
 }
 .button-reg {
     padding-top: 5%;
 
 }
 #login-form{
-    padding-top: 5%;
+    padding-top: 0%;
 }
 #login-div {
     padding-top: 5%;
@@ -445,7 +456,7 @@ footer {
 }
 @media (min-width: 768px) {
     .li-nav {
-        padding-top: 4%;
+        padding-top: 10px;
     }
     .li-nav-read{
         margin-right: 2%;
@@ -460,7 +471,7 @@ footer {
     top: 50%;
 }
 #li-nav {
-    padding-top: 8%;
+    padding-top: 10px;
 }
 .text-message{
     font-size: 2em;

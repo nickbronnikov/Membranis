@@ -2,7 +2,15 @@ var empty='<div class="panel panel-default"><div class="panel-body" id="noOneBoo
 var pageprogress;
 var lastScrollTop = 0;
 var fromTop=0;
-var id = getUrlVars()["id"];
+var id = getId();
+function getId() {
+    var g=getUrlVars()["id"];
+    if (g.indexOf('#')==-1){
+        return g;
+    } else {
+        return g.split('#')[0];
+    }
+}
 function progressPage(progress){
     pageprogress=progress;
 }

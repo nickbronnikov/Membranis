@@ -1,5 +1,5 @@
 ﻿<?php 
-require 'includes/db.php';
+require 'includes/lib.php';
 if ($_COOKIE['logged_user']==null)  echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/">'; else
     if (!checkKey($_COOKIE['key'])) {
         delCookies('logged_user');
@@ -8,6 +8,7 @@ if ($_COOKIE['logged_user']==null)  echo '<META HTTP-EQUIV="Refresh" CONTENT="0;
     }
 $stmt=B::selectFromBase('users',array('id'),array('login'),array($_COOKIE['logged_user']));
 $data=$stmt->fetchAll();
+$show=showBook::showAllBook();
 ?>
 <!DOCTYPE html>
 <html>
@@ -115,7 +116,7 @@ $data=$stmt->fetchAll();
                         </ul>
                     </span>
                 </span></li>
-                <li class="dropdown maincolor li-nav">
+                <li class="dropdown maincolor" id="li-nav">
                     <button class="btn btn-default btn-rad dropdown-toggle" data-toggle="dropdown"><?=$_COOKIE['logged_user'];?>   <b class="caret"></b></button>
                     <ul class="dropdown-menu">
                         <li><a href="settings">Settings</a></li>
@@ -131,6 +132,7 @@ $data=$stmt->fetchAll();
 <div>
 <div class="container lib-body">
     <div class="row" id="book">
+        <?=$show?>
     </div>
 </div>
 </div>

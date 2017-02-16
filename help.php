@@ -13,8 +13,10 @@ if ($_COOKIE['logged_user']!=null && checkKey($_COOKIE['key'])) {
     <script src="js/dropzone.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/help.js"></script>
+    <script src="js/progress-bar/progress.js"></script>
     <link href="css/bootstrap.css" type="text/css" rel="stylesheet">
     <link href="css/style.css" type="text/css" rel="stylesheet">
+    <link href="css/progress.css" type="text/css" rel="stylesheet"/>
     <link rel="apple-touch-icon" sizes="57x57" href="img/logo/57.png" >
     <link rel="apple-touch-icon" sizes="114x114" href="img/logo/114.png" >
     <link rel="apple-touch-icon" sizes="72x72" href="img/logo/72.png" >
@@ -30,6 +32,7 @@ if ($_COOKIE['logged_user']!=null && checkKey($_COOKIE['key'])) {
     <link rel="icon" type="image/png" href="img/logo/32.png" sizes="32x32">
 </head>
 <body>
+<script>progressShow()</script>
 <div class="navbar navbar-default navbar-static-top" id="nav" role="navigation">
     <div class="container navel">
         <div class="navbar-header">
@@ -43,7 +46,7 @@ if ($_COOKIE['logged_user']!=null && checkKey($_COOKIE['key'])) {
         </div>
         <?php if ($_COOKIE['logged_user']!=null) echo '<div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right" >
-                <li class="dropdown maincolor li-nav" id="li-nav">
+                <li class="dropdown maincolor" id="li-nav">
                     <button class="btn btn-default btn-rad dropdown-toggle" data-toggle="dropdown">'.$_COOKIE['logged_user'].'   <b class="caret"></b></button>
                     <ul class="dropdown-menu">
                         <li><a href="library">Your library</a></li>
@@ -61,6 +64,7 @@ if ($_COOKIE['logged_user']!=null && checkKey($_COOKIE['key'])) {
         ?>
     </div>
 </div>
+<div id="page">
 <div id="jumbotron-help"></div>
 <div class="container">
     <div class="row">
@@ -95,6 +99,7 @@ if ($_COOKIE['logged_user']!=null && checkKey($_COOKIE['key'])) {
         </div><div class="col-md-2 col-lg-2"></div>
 
     </div>
+</div>
 </div>
 <div id="footer">
     <div class="container">

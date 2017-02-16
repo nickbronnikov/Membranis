@@ -49,7 +49,7 @@ class B{
         $pdo=null;
         return $values;
     }
-    static function countId($table_name){
+    static function maxIdBookmark(){
         $db=new B();
         $dsn = "mysql:host=$db->db_host;dbname=$db->db_name;charset=$db->db_charset";
         $opt=array(
@@ -57,12 +57,12 @@ class B{
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
         );
         $pdo=new PDO($dsn,$db->db_login,$db->db_password,$opt);
-        $sql ="SELECT MAX(id) FROM `$db->db_name`.`$table_name`";
+        $sql ="SELECT auto_increment FROM information_schema.tables WHERE table_name='bookmarks'";
         $stm = $pdo->prepare($sql);
         $stm->execute();
         $ret=$stm->fetchAll();
         $pdo=null;
-        return $ret[0]['MAX(id)'];
+        return $ret[0]['auto_increment'];
     }
     static function updateBase($table_name,$fields,$values,$conditions,$key){
         $db=new B();
@@ -154,6 +154,21 @@ class B{
         $stmt=$pdo->prepare($query);
         $stmt->execute();
         $pdo=null;
+    }
+    static function maxIDBook(){
+        $db=new B();
+        $dsn = "mysql:host=$db->db_host;dbname=$db->db_name;charset=$db->db_charset";
+        $opt=array(
+            PDO::ATTR_ERRMODE  =>PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+        );
+        $pdo=new PDO($dsn,$db->db_login,$db->db_password,$opt);
+        $query="SELECT auto_increment FROM information_schema.tables WHERE table_name='users_files'";
+        $stmt=$pdo->prepare($query);
+        $stmt->execute();
+        $pdo=null;
+        $data=$stmt->fetchAll();
+        return $data[0]['auto_increment'];
     }
     function pdoSet($fields, &$values, $source = array()) {
         $query="";

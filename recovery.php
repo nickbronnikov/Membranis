@@ -1,11 +1,53 @@
-<?php
+﻿<?php
 include 'includes/db.php';
+function rus2translit($string) {
+    $converter = array(
+        'а' => 'a',   'б' => 'b',   'в' => 'v',
+        'г' => 'g',   'д' => 'd',   'е' => 'e',
+        'ё' => 'e',   'ж' => 'zh',  'з' => 'z',
+        'и' => 'i',   'й' => 'y',   'к' => 'k',
+        'л' => 'l',   'м' => 'm',   'н' => 'n',
+        'о' => 'o',   'п' => 'p',   'р' => 'r',
+        'с' => 's',   'т' => 't',   'у' => 'u',
+        'ф' => 'f',   'х' => 'h',   'ц' => 'c',
+        'ч' => 'ch',  'ш' => 'sh',  'щ' => 'sch',
+        'ь' => '\'',  'ы' => 'y',   'ъ' => '\'',
+        'э' => 'e',   'ю' => 'yu',  'я' => 'ya',
+
+        'А' => 'A',   'Б' => 'B',   'В' => 'V',
+        'Г' => 'G',   'Д' => 'D',   'Е' => 'E',
+        'Ё' => 'E',   'Ж' => 'Zh',  'З' => 'Z',
+        'И' => 'I',   'Й' => 'Y',   'К' => 'K',
+        'Л' => 'L',   'М' => 'M',   'Н' => 'N',
+        'О' => 'O',   'П' => 'P',   'Р' => 'R',
+        'С' => 'S',   'Т' => 'T',   'У' => 'U',
+        'Ф' => 'F',   'Х' => 'H',   'Ц' => 'C',
+        'Ч' => 'Ch',  'Ш' => 'Sh',  'Щ' => 'Sch',
+        'Ь' => '\'',  'Ы' => 'Y',   'Ъ' => '\'',
+        'Э' => 'E',   'Ю' => 'Yu',  'Я' => 'Ya',
+    );
+    return strtr($string, $converter);
+}
+function checkConfirm($key){
+    $stmt=B::selectFromBase('users',null,array('id_key'),array($key));
+    $data=$stmt->fetchAll();
+    if (count($data)>0) {
+        $id_key = preg_replace("/[^a-zA-ZА-Яа-я0-9\s]/", "", crypt(rus2translit($_COOKIE['logged_user'])));
+        B::updateBase('users',array('id_key','confirmation'),array($id_key,1),array('id_key'),array($key));
+        setCookies('logged_user',$data[0]['login']);
+        setCookies('key',$id_key);
+        return true;
+    } else return false;
+}
+if ($_GET['com']=='cnf' && isset($_GET['key'])){
+    $check=checkConfirm($_GET['key']); 
+} else $check=false;
 ?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Sign in to Membranis</title>
+    <title>Recovery</title>
     <script src="js/jquery-3.1.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/recovery.js"></script>
@@ -49,7 +91,7 @@ include 'includes/db.php';
                             <li class="divider"></li>
                             <li><a href="logout">Log out</a></li>
                         </ul>
-                    </li>'; else echo '<a class="btn btn-success pull-right btn-rad" href="signup.php">Sign up</a>';?>
+                    </li>'; else if (!$check) echo '<a class="btn btn-success pull-left button-nav button-color btn-rad" href="signin">Sign in</a><a class="btn btn-success pull-right btn-rad" href="signup.php">Sign up</a>';?>
             </ul>
         </div>
     </div>
@@ -58,23 +100,30 @@ include 'includes/db.php';
     <div class="container">
         <div class="row">
             <div class="col-md-offset-4 col-lg-offset-4 col-md-4 col-lg-4 col-xs-12 col-sm-12" id="login-div">
-                <h1 class="text-center">Recover the password</h1>
+                <?php if ($check) echo '<div id="login-form">
+                    <div class="panel panel-default width-full">
+                        <div class="panel-body panel-confirm">
+                                <h1 class="text-center">Your account is confirmed</h1>
+                                <div><a href="/" class="btn btn-success btn-lg center-block width-full btn-rad" id="start">Back to your library</a></div>
+                        </div>
+                    </div>
+                </div>'; else echo '<h1 class="text-center">Recover the password</h1>
+                <span class="width-full" id="info"></span>
                 <div id="login-form">
                     <div class="panel panel-default width-full">
                         <div class="panel-body">
-                            <form action="/signin.php" method="post">
                                 <label for="login">Email address</label>
-                                <input type="text" class="form-control" id="login" name="email"><br>
-                                <button type="submit" class="btn btn-lg btn-success width-full" name="recover"">Recover</button>
-                            </form>
+                                <input type="text" class="form-control" id="sEmail" name="email"><br>
+                                <button class="btn btn-lg btn-success width-full" id="recover">Recover</button>
                         </div>
                     </div>
-                </div>
+                </div>';
+                ?>
             </div>
         </div>
     </div>
 </div>
-<div id="footer">
+<div id="footer" class="recovery-footer">
     <div class="container">
         <div class="row">
             <div class="col-md-5 col-lg-5 col-sm-4 col-xs-4 copyright">

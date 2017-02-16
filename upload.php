@@ -1,14 +1,13 @@
 ﻿<?php
-require 'includes/db.php';
-require 'includes/file_work.php';
-require 'includes/EPUBandMOBI.php';
+require 'includes/reader-file.php';
 $allowed = array('fb2','pdf','epub','txt','html');
 if(isset($_FILES['upl']) && $_FILES['upl']['error'] == 0) {
     $extension = pathinfo($_FILES['upl']['name'], PATHINFO_EXTENSION);
     $stmt = B::selectFromBase('users', array('id', 'folder'), array('login'), array($_COOKIE['logged_user']));
     $data = $stmt->fetchAll();
     $file_info = pathinfo($_FILES['upl']['name']);
-    $cryptname = preg_replace("/[^a-zA-ZА-Яа-я0-9\s]/", "", crypt(rus2translit($file_info['filename'])));
+    $original_name=str_replace('.'.$file_info['extension'], "", $_FILES['upl']['name']);
+    $cryptname = preg_replace("/[^a-zA-ZА-Яа-я0-9\s]/", "", crypt(rus2translit($original_name)));
     $name = $cryptname . '.' . $file_info['extension'];
     if (in_array(strtolower($extension), $allowed)) {
         switch ($file_info['extension']) {
@@ -20,7 +19,7 @@ if(isset($_FILES['upl']) && $_FILES['upl']['error'] == 0) {
                         unlink($dirpdf);
                     } else {
                         $progress = json_encode(array('page_progress' => 0, 'progress' => 0, 'p' => 0));
-                        B::inBase('users_files', array('id_user', 'path', 'original_name', 'author', 'cover', 'progress'), array($data[0]['id'], 'users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name, $file_info['filename'], $file_info['filename'], 'img/pdf.png', $progress));
+                        B::inBase('users_files', array('id_user', 'path', 'original_name', 'author', 'cover', 'progress'), array($data[0]['id'], 'users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name, $original_name, $original_name, 'img/pdf.png', $progress));
                     }
                 }
                 break;
@@ -31,15 +30,15 @@ if(isset($_FILES['upl']) && $_FILES['upl']['error'] == 0) {
                     if (!checkFreeSpace(filesize('users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name))) {
                         unlink($dirfb2);
                     } else {
-                        $strlen = strlenFB2('users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name);
+                        $strlen = FB2::strlenFB2('users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name);
                         $progress = json_encode(array('chapter' => 0, 'page_progress' => 0, 'progress' => 0, 'p' => $strlen));
-                        if (Cover::checkCover('users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name)){
-                            Cover::fb2Cover('users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name, 'users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' ,'cover.jpg');
+                        if (FB2::checkCover('users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name)){
+                            FB2::fb2Cover('users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name, 'users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' ,'cover.jpg');
                             copy('users_files/' . $data[0]['folder'] . '/' . $cryptname . '/cover.jpg','img/covers/'.$cryptname.'.jpg');
                             unlink('users_files/' . $data[0]['folder'] . '/' . $cryptname . '/cover.jpg');
                             $covername='img/covers/'.$cryptname.'.jpg';
                         } else $covername='img/fb2.png';
-                        B::inBase('users_files', array('id_user', 'path', 'original_name', 'author', 'cover', 'progress'), array($data[0]['id'], 'users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name, $file_info['filename'], Cover::fb2Author('users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name), $covername, $progress));
+                        B::inBase('users_files', array('id_user', 'path', 'original_name', 'author', 'cover', 'progress'), array($data[0]['id'], 'users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name, $original_name, FB2::fb2Author('users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name), $covername, $progress));
                     }
                 }
                 break;
@@ -52,7 +51,7 @@ if(isset($_FILES['upl']) && $_FILES['upl']['error'] == 0) {
                     } else {
                         $path='./users_files/' . $data[0]['folder'] . "/" . $cryptname . "/" . $name;
                         $folder='./users_files/' . $data[0]['folder'] . "/" . $cryptname;
-                        $ret=cover($path,$folder,$cryptname);
+                        $ret=EPUB::cover($path,$folder,$cryptname);
                         $cover="";
                         if (stripos($ret[0],'cover')===false) $cover="img/epub.png"; else {
                             $cover='users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $ret[0];
@@ -62,7 +61,7 @@ if(isset($_FILES['upl']) && $_FILES['upl']['error'] == 0) {
                             $cover='img/covers/'.$cryptname.'.'.$ex[count($ex)-1];
                         }
                         $progress = json_encode(array('chapter_id' => 1,'chapter' => $ret[1],'page_progress' => 0,'progress' => 0, 'p' => $ret[2]));
-                        B::inBase('users_files', array('id_user', 'path', 'original_name', 'author', 'cover', 'progress'), array($data[0]['id'], 'users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name, $file_info['filename'], $ret[3], $cover, $progress));
+                        B::inBase('users_files', array('id_user', 'path', 'original_name', 'author', 'cover', 'progress'), array($data[0]['id'], 'users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name, $original_name, $ret[3], $cover, $progress));
                     }
                 }
                 break;
@@ -76,9 +75,10 @@ if(isset($_FILES['upl']) && $_FILES['upl']['error'] == 0) {
                         $path='./users_files/' . $data[0]['folder'] . "/" . $cryptname . "/" . $name;
                         $folder='./users_files/' . $data[0]['folder'] . "/" . $cryptname;
                         $progress = json_encode(array('progress' => 0));
-                        B::inBase('users_files', array('id_user', 'path', 'original_name', 'author', 'cover', 'progress'), array($data[0]['id'], 'users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name, $file_info['filename'], $file_info['filename'], '../img/txt.png', $progress));
+                        B::inBase('users_files', array('id_user', 'path', 'original_name', 'author', 'cover', 'progress'), array($data[0]['id'], 'users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name, $original_name, $original_name, '../img/txt.png', $progress));
                     }
                 }
+                setcookie('test','alluploaded');
                 break;
             case 'html':
                 $direpub = 'users_files/' . $data[0]['folder'] . '/' . $cryptname;
@@ -90,7 +90,7 @@ if(isset($_FILES['upl']) && $_FILES['upl']['error'] == 0) {
                         $path='./users_files/' . $data[0]['folder'] . "/" . $cryptname . "/" . $name;
                         $folder='./users_files/' . $data[0]['folder'] . "/" . $cryptname;
                         $progress = json_encode(array('progress' => 0));
-                        B::inBase('users_files', array('id_user', 'path', 'original_name', 'author', 'cover', 'progress'), array($data[0]['id'], 'users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name, $file_info['filename'], $file_info['filename'], '../img/html.png', $progress));
+                        B::inBase('users_files', array('id_user', 'path', 'original_name', 'author', 'cover', 'progress'), array($data[0]['id'], 'users_files/' . $data[0]['folder'] . '/' . $cryptname . '/' . $name, $original_name, $original_name, '../img/html.png', $progress));
                     }
                 }
                 break;

@@ -17,7 +17,6 @@ if (!checkKey($_COOKIE['key'])) {
     <link href="css/style.css" type="text/css" rel="stylesheet"/>
     <link href="css/progress.css" type="text/css" rel="stylesheet"/>
     <script src="js/js-download/jquery.knob.js"></script>
-    <script src="js/progress-bar/progress.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jqueryScrollTo.js"></script>
     <script src="js/progress-bar/progress.js"></script>
@@ -55,7 +54,7 @@ if (!checkKey($_COOKIE['key'])) {
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown maincolor li-nav" id="li-nav">
+                    <li class="dropdown maincolor" id="li-nav">
                         <button class="btn btn-default dropdown-toggle btn-rad" data-toggle="dropdown" id="user_name"><?=$_COOKIE['logged_user'];?>   <b class="caret"></b></button>
                         <ul class="dropdown-menu">
                             <li><a href="library">Your library</a></li>

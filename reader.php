@@ -1,6 +1,5 @@
 ﻿<?php
-require 'includes/db.php';
-require 'includes/file_work.php';
+require 'includes/reader-file.php';
 if ($_COOKIE['logged_user']==null || $_COOKIE['key']==null)  echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/">'; else
     if (!checkKey($_COOKIE['key'])) {
     delCookies('logged_user');
@@ -71,103 +70,21 @@ if ($user[0]['id']==$data[0]['id_user']) {
     }
     switch ($file_info['extension']) {
         case 'fb2':
-            $chapter = chapterList($data[0]['path']);
-            $progress = json_decode($data[0]['progress'], true);
-            $path=explode('/',$data[0]['path']);
-            $str = fb2($data[0]['path'], str_replace($path[count($path)-1], '', $data[0]['path']), $progress['chapter']);
-            $function = '<script>progressPage(' . $progress['page_progress'] . ')</script><script>styleReader(\'' . $ui_data[0]['style'] . '\')</script>';
-            $reader ='<div class="row">
-        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 rp">
-            <div class="page" id="scrollUp"><svg class="btn-page center-block" fill="#000000" height="48" viewBox="0 0 24 24" width="48" xmlns="http://www.w3.org/2000/svg">
-    <path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/>
-    <path d="M0-.5h24v24H0z" fill="none"/>
-</svg></div>
-        </div>
-        <div class="col-md-10 col-lg-10 col-sm-10 col-xs-10 well" id="reader">
-            ' . $str . '
-        </div>
-        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 rp">
-            <div class="page" id="scrollDown"><svg class="btn-page center-block" fill="#000000" height="48" viewBox="0 0 24 24" width="48" xmlns="http://www.w3.org/2000/svg">
-    <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/>
-    <path d="M0-.25h24v24H0z" fill="none"/>
-</svg></div>
-        </div>
-    </div>' . $function;
+            $chapter = FB2::chapterList($data[0]['path']);
+            $reader = FB2::getReader($data,$ui_data);
             break;
         case 'pdf':
-            $progress = json_decode($data[0]['progress'], true);
-            $reader = '<div class="row">
-    <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12">
-        <iframe id="pdf" src="https://polisbook.com/pdf/web/viewer.html?file=https://polisbook.com/' . $data[0]['path'] . '" width="100%" height="500px" onload="progressPage(' . $progress['pageProgress'] . ')"/>
-        </div></div>';
+            $reader = PDF::getReader($data);
             break;
         case 'epub':
-            $chapter = chapterListEPUB($data[0]['path']);
-            $progress = json_decode($data[0]['progress'], true);
-            $function = '<script>progressPage(' . $progress['page_progress'] . ')</script><script>styleReader(\'' . $ui_data[0]['style'] . '\')</script>';
-            $str='';
-            $str=EPUBChapter($data[0]['path'],$progress['chapter']);
-            $reader ='<div class="row">
-        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 rp">
-            <div class="page" id="scrollUp"><svg class="btn-page center-block" fill="#000000" height="48" viewBox="0 0 24 24" width="48" xmlns="http://www.w3.org/2000/svg">
-    <path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/>
-    <path d="M0-.5h24v24H0z" fill="none"/>
-</svg></div>
-        </div>
-        <div class="col-md-10 col-lg-10 col-sm-10 col-xs-10 well" id="reader">
-            ' . $str . '
-        </div>
-        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 rp">
-            <div class="page" id="scrollDown"><svg class="btn-page center-block" fill="#000000" height="48" viewBox="0 0 24 24" width="48" xmlns="http://www.w3.org/2000/svg">
-    <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/>
-    <path d="M0-.25h24v24H0z" fill="none"/>
-</svg></div>
-        </div>
-    </div>' . $function;
+            $chapter = EPUB::chapterListEPUB($data[0]['path']);
+            $reader = EPUB::getReader($data,$ui_data);
             break;
         case 'txt':
-            $progress=json_decode($data[0]['progress'],true);
-            $function='<script>progressPage(' . $progress['progress'] . ')</script><script>styleReader(\'' . $ui_data[0]['style'] . '\')</script>';
-            $str=file_get_contents($data[0]['path']);
-            $reader ='<div class="row">
-        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 rp">
-            <div class="page" id="scrollUp"><svg class="btn-page center-block" fill="#000000" height="48" viewBox="0 0 24 24" width="48" xmlns="http://www.w3.org/2000/svg">
-    <path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/>
-    <path d="M0-.5h24v24H0z" fill="none"/>
-</svg></div>
-        </div>
-        <div class="col-md-10 col-lg-10 col-sm-10 col-xs-10 well" id="reader">
-            ' . $str . '
-        </div>
-        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 rp">
-            <div class="page" id="scrollDown"><svg class="btn-page center-block" fill="#000000" height="48" viewBox="0 0 24 24" width="48" xmlns="http://www.w3.org/2000/svg">
-    <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/>
-    <path d="M0-.25h24v24H0z" fill="none"/>
-</svg></div>
-        </div>
-    </div>' . $function;
+            $reader=HTMLandTXT::getReaderTXT($data,$ui_data);
         break;
         case 'html':
-            $progress=json_decode($data[0]['progress'],true);
-            $function='<script>progressPage(' . $progress['progress'] . ')</script><script>styleReader(\'' . $ui_data[0]['style'] . '\')</script>';
-            $str=file_get_contents($data[0]['path']);
-            $reader ='<div class="row">
-        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 rp">
-            <div class="page" id="scrollUp"><svg class="btn-page center-block" fill="#000000" height="48" viewBox="0 0 24 24" width="48" xmlns="http://www.w3.org/2000/svg">
-    <path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/>
-    <path d="M0-.5h24v24H0z" fill="none"/>
-</svg></div>
-        </div>
-        <div class="col-md-10 col-lg-10 col-sm-10 col-xs-10 well" id="reader">
-            ' . $str . '
-        </div>
-        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1 rp">
-            <div class="page" id="scrollDown"><svg class="btn-page center-block" fill="#000000" height="48" viewBox="0 0 24 24" width="48" xmlns="http://www.w3.org/2000/svg">
-    <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/>
-    <path d="M0-.25h24v24H0z" fill="none"/>
-</svg></div>
-        </div>
-    </div>' . $function;
+            $reader=HTMLandTXT::getReaderHTML($data,$ui_data);
             break;
     }
 } else {
@@ -264,7 +181,7 @@ if ($user[0]['id']==$data[0]['id_user']) {
                             echo '';
                             break;
                     }?></li>
-                <li class="dropdown maincolor li-nav">
+                <li class="dropdown maincolor" id="li-nav">
                     <button class="btn btn-default dropdown-toggle btn-rad" data-toggle="dropdown"><?=$_COOKIE['logged_user'];?>   <b class="caret"></b></button>
                     <ul class="dropdown-menu">
                         <li><a href="library">Your library</a></li>

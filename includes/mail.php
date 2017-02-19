@@ -45,9 +45,6 @@ EiogpTl1muUXmGjvTWz4fpAAWrZbqJy8cgdlesqRjIbsLNPVWrupvnMEOQKf/Trg
     );
     $res = $oApi->send_email($email);
 return $res;
-    //if ($res['error']){
-    //    return true;
-    //} else return false;
 }
 function passwordEmail($login,$e_mail,$newPassword){
     $pubkey = '
@@ -94,7 +91,4 @@ EiogpTl1muUXmGjvTWz4fpAAWrZbqJy8cgdlesqRjIbsLNPVWrupvnMEOQKf/Trg
     );
     $res = $oApi->send_email($email);
 return $res;
-    //if ($res['error']){
-    //    return false;
-    //} else return true;
 }

@@ -1,6 +1,5 @@
-﻿<?php
-require 'db.php';
-require 'file_work.php';
+<?php
+require 'reader-file.php';
 require 'mail.php';
 $table_name='users';
 $fild=array($_POST['field']);
@@ -51,7 +50,7 @@ function allCheck($login,$email,$password){
     $password=htmlspecialchars($password);
     $table_name='users';
     $json=array();
-    if (!checkField($table_name,array('login'),array($login)) && !checkField($table_name,array('email'),array($email)) && strlen($password)>=5){
+    if (trim($email)!='' && trim($login)!='' && checkEmail($email) && !checkField($table_name,array('login'),array($login)) && !checkField($table_name,array('email'),array($email)) && strlen($password)>=5){
         $time=time();
         $password=password_hash($password,PASSWORD_DEFAULT);
         $folder=preg_replace ("/[^a-zA-ZА-Яа-я0-9\s]/","",crypt(rus2translit($login)));
@@ -68,8 +67,7 @@ function allCheck($login,$email,$password){
             setCookies("key",$row[0]['id_key']);
             $json['error']='false';
             $json['test']='true';
-            $c=confirmEmail($row[0]['login'],$row[0]['id_key'],$row[0]['email']);
-B::inBase('requests', array('subject', 'email', 'text'), array('checkemail', trim($_POST['email']), serialize($c)));
+            confirmEmail($row[0]['login'],$row[0]['id_key'],$row[0]['email']);
         }
     } else{
         $json['error']='true';

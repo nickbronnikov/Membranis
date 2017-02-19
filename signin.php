@@ -1,110 +1,16 @@
 <?php
-$alert='<div class="alert alert-warning alert-dismissable width-full">
-  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-  Incorrect username (email) or password. 
-</div>';
-require 'includes/db.php';
-$data=$_POST;
-$_SESSION['login']=$data['login'];
-$check=true;
-if (isset($data['loginin'])) {
-    if (!checkField('users', array('login'), array($data['login']))) $check = false; else {
-        $logpas = array($data['login'], $data['password']);
-        if (checkPassword($logpas,'login')) $check = true; else $check=false;
-    }
-    if ($check) {
-        setCookies("logged_user",$data['login']);
-        $stmt=B::selectFromBase('users',null,array('login'),array($data['login']));
-        $login=$stmt->fetchAll();
-        setCookies("key",$login[0]['id_key']);
+require 'includes/generate.php';
+if (isset($_COOKIE['logged_user'])){
+    if ($_COOKIE['logged_user']=='' || !checkKey($_COOKIE['key'])){
+        delCookies('logged_user');
+        delCookies('key');
         echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/">';
-    } else {
-        $check=true;
-        if (!checkField('users', array('email'), array($data['login']))) $check = false; else {
-            $logpas = array($data['login'], $data['password']);
-            if (checkPassword($logpas,'email')) $check = true; else $check=false;
-        }
-        if ($check) {
-            $stmt=B::selectFromBase('users',null,array('email'),array($data['login']));
-            $login=$stmt->fetchAll();
-            setCookies("logged_user",$login[0]['login']);
-            setCookies("key",$login[0]['id_key']);
-            echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/">';
-        }
     }
 }
+$html=new html('signin');
+$page=$html->getPage();
 ?>
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <title>Sign in to Membranis</title>
-    <script src="js/jquery-3.1.0.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/signup.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700&subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
-    <link href="css/bootstrap.css" type="text/css" rel="stylesheet">
-    <link href="css/style.css" type="text/css" rel="stylesheet">
-    <link rel="apple-touch-icon" sizes="57x57" href="img/logo/57.png" >
-    <link rel="apple-touch-icon" sizes="114x114" href="img/logo/114.png" >
-    <link rel="apple-touch-icon" sizes="72x72" href="img/logo/72.png" >
-    <link rel="apple-touch-icon" sizes="144x144" href="img/logo/144.png" >
-    <link rel="apple-touch-icon" sizes="60x60" href="img/logo/60.png" >
-    <link rel="apple-touch-icon" sizes="120x120" href="img/logo/120.png" >
-    <link rel="apple-touch-icon" sizes="76x76" href="img/logo/76.png" >
-    <link rel="apple-touch-icon" sizes="152x152" href="img/logo/152.png" >
-    <link rel="icon" type="image/png" href="img/logo/196.png" sizes="196x196">
-    <link rel="icon" type="image/png" href="img/logo/160.png" sizes="160x160">
-    <link rel="icon" type="image/png" href="img/logo/96.png" sizes="96x96">
-    <link rel="icon" type="image/png" href="img/logo/16.png" sizes="16x16">
-    <link rel="icon" type="image/png" href="img/logo/32.png" sizes="32x32">
-</head>
-<body>
-<div class="navbar navbar-default navbar-static-top" id="nav" role="navigation">
-    <div class="container navel">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/"><img src="img/Logo_s.png"></a>
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right navel">
-                <a class="btn btn-success pull-right btn-rad" href="signup">Sign up</a>
-            </ul>
-        </div>
-    </div>
-</div>
-<div class="body">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-offset-4 col-lg-offset-4 col-md-4 col-lg-4 col-xs-12 col-sm-12" id="login-div">
-                <h1 class="text-center">Sign in to Polisbook</h1>
-                <?php if ($check==false) echo $alert;?>
-                <div id="login-form">
-                <div class="panel panel-default width-full">
-                    <div class="panel-body">
-                        <form action="/signin" method="post">
-                            <label for="login">Username or email address</label>
-                            <input type="text" class="form-control" id="login" name="login"><br>
-                            <label for="password">Password</label><span class="pull-right"><a href="recovery">Forgot password?</a></span>
-                            <input type="password" class="form-control" id="password" name="password"><br>
-                            <button type="submit" class="btn btn-lg btn-success width-full" name="loginin"">Sign in</button>
-                        </form>
-                    </div>
-                </div>
-                    <div class="panel panel-default width-full">
-                        <div class="panel-body center-block">
-                            <h4 class="text-center">Don't have an account? <a href="signup">Create it!</a></h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</body>
+    <?=$page?>
 </html>

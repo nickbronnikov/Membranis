@@ -6,14 +6,14 @@ var step2='<div class="col-md-3 col-lg-3 col-md-offset-3 col-lg-offset-3 col-sm-
 var step3='<div class="col-md-offset-3 col-lg-offset-3 col-md-5 col-lg-5 col-sm-12 col-xs-12 regform"><div class="panel panel-default width-full"><div class="panel-body"><svg fill="#5cb85c" height="48" viewBox="0 0 24 24" width="48"  xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41L6 19l1.41-1.41L1.83 12 .41 13.41z"/></svg><span class="done">Done!</span><h4>Your account is created. Let\'s start working with your library.</h4><div><a href="/" class="btn btn-success btn-lg center-block width-full" id="start">Start</a></div></div></div></div>';
 $(document).ready(function () {
     $('#loginreg').on('focusout',function () {
-        if ($('#loginreg').val()=='') {
+        if ($('#loginreg').val().trim()=='') {
             $('#loginregalert').html("<div class='alert alert-danger'>Username can't be blank</div>");
             $('#loginregcheck').html(clear);
         } else
         $.ajax({
             type: "POST",
             url: "includes/reg.php",
-            data: {function: 'checkInput',key: $('#loginreg').val(),field: 'login'},
+            data: {function: 'checkInput',key: $('#loginreg').val().trim(),field: 'login'},
             beforeSend: function () {
                 $('#loginregalert').html('<p class="info-reg">This will be your username.</p>');
                 $('#loginregcheck').html(wait);
@@ -33,14 +33,14 @@ $(document).ready(function () {
         $('#loginregcheck').html('');
     });
     $('#emailreg').on('focusout',function () {
-        if ($('#emailreg').val()=='') {
+        if ($('#emailreg').val().trim()=='') {
             $('#emailregalert').html("<div class='alert alert-danger'>E-mail can't be blank</div>");
             $('#emailregcheck').html(clear);
         } else
         $.ajax({
             type: "POST",
             url: "includes/reg.php",
-            data: {function: 'checkInput',key: $('#emailreg').val(),field: 'email'},
+            data: {function: 'checkInput',key: $('#emailreg').val().trim(),field: 'email'},
             beforeSend: function () {
                 $('#emailregalert').html('<p class="info-reg">This is your e-mail address. We promise not to share your email with anyone.</p>');
                 $('#emailregcheck').html(wait);
@@ -85,7 +85,7 @@ $(document).ready(function () {
     });
 });
 function allCheck() {
-    var check=true;
+    if (checkAllFields())
     $.ajax({
         type: "POST",
         url: "includes/reg.php",
@@ -96,7 +96,7 @@ function allCheck() {
         },
         success: function (data) {
             var json = JSON.parse(data);
-            if (json.error=='false')showstep2(); else {
+            if (json.error=='false') showstep2(); else {
                 errorHandler(json);
             }
         }
@@ -136,4 +136,37 @@ function errorHandler(json) {
         $('#passwordregcheck').html(clear);
         $('#passwordregallert').html('<div class="alert alert-danger">Password should be at least 5 characters.</div>');
     }
+}
+function checkAllFields() {
+    var check=true;
+    if ($('#loginreg').val().trim()=='') check=false; else
+    $.ajax({
+        type: "POST",
+        url: "includes/reg.php",
+        data: {function: 'checkInput',key: $('#loginreg').val().trim(),field: 'login'},
+        beforeSend: function () {
+            $('#loginregalert').html('<p class="info-reg">This will be your username.</p>');
+            $('#loginregcheck').html(wait);
+        },
+        success: function (data) {
+            if (data==false) check=false; else
+                $('#loginregcheck').html(done);
+        }
+    });
+    if ($('#emailreg').val().trim()=='') check=false; else
+    $.ajax({
+        type: "POST",
+        url: "includes/reg.php",
+        data: {function: 'checkInput',key: $('#emailreg').val().trim(),field: 'email'},
+        beforeSend: function () {
+            $('#emailregalert').html('<p class="info-reg">This is your e-mail address. We promise not to share your email with anyone.</p>');
+            $('#emailregcheck').html(wait);
+        },
+        success: function (data) {
+            if(data==false) check=false; else
+                $('#emailregcheck').html(done);
+        }
+    });
+    if ($('#passwordreg').val().length<5) check=false;
+    return check;
 }

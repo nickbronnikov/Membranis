@@ -5,7 +5,7 @@ if ($_COOKIE['logged_user']!= null && $_COOKIE['key']!=null)
     if (checkKey($_COOKIE['key']))
 switch ($_POST['function']) {
     case 'nextChapterFB2':
-        echo FB2::nexChapter($_POST['id']);
+        echo FB2::nextChapter($_POST['id']);
         break;
     case 'previousChapterFB2':
         echo FB2::previousChapter($_POST['id']);
@@ -26,7 +26,7 @@ switch ($_POST['function']) {
         echo EPUB::previousChapter($_POST['id']);
         break;
     case 'pageScrollEPUB':
-            EPUB::pageScroll($_POST['id'],$_POST['scroll'],$_POST['docHeight']);
+            EPUB::pageScroll($_POST['id'],$_POST['scroll'],$_POST['docHeight'],$_POST['windowHeight']);
         break;
     case 'toChapterEPUB':
         echo EPUB::toChapter($_POST['id'],$_POST['chapter']);
@@ -60,20 +60,6 @@ switch ($_POST['function']) {
     case 'deleteBookmark':
         B::deleteFromBase('bookmarks',array('id'),array($_POST['id']));
         break;
-}
-function progress($chapter,$pageProgress,$strlen,$file_name){
-    $fb2DOM = new DOMDocument();
-    $fb2DOM->load($file_name);
-    $bodytag = $fb2DOM->getElementsByTagName('body');
-    $sectiontag = $bodytag[0]->getElementsByTagName('section');
-    $progress=0;
-    for ($i=0;$i<$chapter;$i++){
-        $progress+=strlen($sectiontag[$i]->textContent);
-    }
-    $progress+=round(strlen($sectiontag[$chapter]->textContent)/100*$pageProgress,0,PHP_ROUND_HALF_UP);
-    $progress=round($progress/$strlen*100);
-    if ($progress>98) $progress=100;
-    return $progress;
 }
 class FB2{
     static function checkCover($filename){
@@ -132,8 +118,12 @@ class FB2{
     static function strlenFB2($path){
         $fb2DOM = new DOMDocument();
         $fb2DOM->load($path);
-        $text = $fb2DOM->getElementsByTagName('body');
-        $longstr=strlen($text[0]->textContent);
+        $bodytag = $fb2DOM->getElementsByTagName('body');
+        $sectiontag = $bodytag[0]->getElementsByTagName('section');
+        $longstr=0;
+        for ($i=0;$i<$sectiontag->length;$i++){
+            $longstr+=strlen($sectiontag[$i]->textContent);
+        }
         return $longstr;
     }
     static function chapterCount($file_name){
@@ -229,14 +219,14 @@ class FB2{
     </div>' . $function;
         return $reader;
     }
-    static function nexChapter($id){
+    static function nextChapter($id){
         $stmt = B::selectFromBase('users_files', null, array('id'), array($id));
         $data = $stmt->fetchAll();
         $path=explode('/',$data[0]['path']);
         $progress=json_decode($data[0]['progress'],true);
         if (($progress['chapter']+1)<=FB2::chapterCount('../' . $data[0]['path'])) {
             $chapter = FB2::fb2Chapter('../' . $data[0]['path'], str_replace($path[count($path) - 1], '', $data[0]['path']), $progress['chapter'] + 1);
-            $newProgress = json_encode(array('chapter' => $progress['chapter'] + 1, 'page_progress' => 0, 'progress' => progress($progress['chapter'] + 1, 0, $progress['p'], '../' . $data[0]['path']), 'p' => $progress['p']));
+            $newProgress = json_encode(array('chapter' => $progress['chapter'] + 1, 'page_progress' => 0, 'progress' => FB2::progress($progress['chapter'] + 1, 0, $progress['p'], '../' . $data[0]['path']), 'p' => $progress['p']));
             B::updateBase('users_files', array('progress'), array($newProgress), array('id'), array($id));
             return $chapter;
         } else return '**/**/**';
@@ -248,7 +238,7 @@ class FB2{
         if ($progress['chapter']>0) {
             $path=explode('/',$data[0]['path']);
             $chapter = FB2::fb2Chapter('../' . $data[0]['path'], str_replace($path[count($path)-1], '', $data[0]['path']), $progress['chapter']-1);
-            $newProgress = json_encode(array('chapter' => $progress['chapter']-1, 'page_progress' => 0, 'progress'=>progress($progress['chapter']-1,0,$progress['p'],'../' . $data[0]['path']), 'p'=>$progress['p']));
+            $newProgress = json_encode(array('chapter' => $progress['chapter']-1, 'page_progress' => 0, 'progress'=>FB2::progress($progress['chapter']-1,0,$progress['p'],'../' . $data[0]['path']), 'p'=>$progress['p']));
             B::updateBase('users_files', array('progress'), array($newProgress), array('id'), array($id));
             return $chapter;
         } else return '**/**/**';
@@ -257,22 +247,37 @@ class FB2{
         $stmt = B::selectFromBase('users_files', null, array('id'), array($id));
         $data = $stmt->fetchAll();
         $progress = json_decode($data[0]['progress'],true);
+        $_SESSION['test1']=$chapter;
         $path=explode('/',$data[0]['path']);
-        $chapter = FB2::fb2Chapter('../' . $data[0]['path'], str_replace($path[count($path)-1], '', $data[0]['path']), $chapter);
-        $newProgress = json_encode(array('chapter' => $_POST['chapter'], 'page_progress' => 0, 'progress'=>progress($chapter,0,$progress['p'],'../' . $data[0]['path']), 'p'=>$progress['p']));
+        $text = FB2::fb2Chapter('../' . $data[0]['path'], str_replace($path[count($path)-1], '', $data[0]['path']), $chapter);
+        $newProgress = json_encode(array('chapter' => $_POST['chapter'], 'page_progress' => 0, 'progress'=>FB2::progress($chapter,0,$progress['p'],'../' . $data[0]['path']), 'p'=>$progress['p']));
         B::updateBase('users_files', array('progress'), array($newProgress), array('id'), array($id));
-        return $chapter;
+        return $text;
     }
     static function pageScroll($id,$scroll,$docHeight,$windowHeight){
         $stmt = B::selectFromBase('users_files', null, array('id'), array($id));
         $data = $stmt->fetchAll();
         $progress = json_decode($data[0]['progress'],true);
         if ($progress['progress']!=100) {
-            $newProgress = json_encode(array('chapter' => $progress['chapter'], 'page_progress' => round($scroll/$docHeight*100), 'progress' => progress($progress['chapter'], round($scroll/$docHeight*100) + $windowHeight, $progress['p'], '../' . $data[0]['path']), 'p' => $progress['p']));
+            $newProgress = json_encode(array('chapter' => $progress['chapter'], 'page_progress' => round(($scroll + $windowHeight)/$docHeight*100,0,PHP_ROUND_HALF_UP), 'progress' => FB2::progress($progress['chapter'], round(($scroll + $windowHeight)/$docHeight*100,0,PHP_ROUND_HALF_UP), $progress['p'], '../' . $data[0]['path']), 'p' => $progress['p']));
         } else {
-            $newProgress = json_encode(array('chapter' => $progress['chapter'], 'page_progress' => round($scroll/$docHeight*100), 'progress' => $progress['progress'], 'p' => $progress['p']));
+            $newProgress = json_encode(array('chapter' => $progress['chapter'], 'page_progress' => round(($scroll + $windowHeight)/$docHeight*100,0,PHP_ROUND_HALF_UP), 'progress' => $progress['progress'], 'p' => $progress['p']));
         }
         B::updateBase('users_files', array('progress'), array($newProgress), array('id'), array($id));
+    }
+    static function progress($chapter,$pageProgress,$strlen,$file_name){
+        $fb2DOM = new DOMDocument();
+        $fb2DOM->load($file_name);
+        $bodytag = $fb2DOM->getElementsByTagName('body');
+        $sectiontag = $bodytag[0]->getElementsByTagName('section');
+        $progress=0;
+        for ($i=0;$i<$chapter;$i++){
+            $progress+=strlen($sectiontag[$i]->textContent);
+        }
+        $progress+=round(strlen($sectiontag[$chapter]->textContent)/100*$pageProgress,0,PHP_ROUND_HALF_UP);
+        $progress=round($progress/$strlen*100,0,PHP_ROUND_HALF_UP);
+        if ($progress>99) $progress=100;
+        return $progress;
     }
 }
 class EPUB{
@@ -316,7 +321,7 @@ class EPUB{
     static function cover($path,$folder,$cryptname){
         $namecover = EPUB::EPUBCover($path,$folder,$cryptname);
         EPUB::content($path,$folder);
-        $length = array(EPUB::chapterName($folder,1),EPUB::EPUBLength($folder),EPUB::EPUBAuthor($folder));
+        $length = array(EPUB::chapterName($folder,1),EPUB::EPUBLength($path,$folder),EPUB::EPUBAuthor($folder));
         EPUB::EPUBimg($path,$folder);
         EPUB::EPUBChapters($folder);
         $ret=array($namecover, $length[0], $length[1], $length[2]);
@@ -387,11 +392,31 @@ class EPUB{
         }
         return $ln;
     }
-    static function EPUBLength($folder){
-        $doc = new DOMDocument();
-        $doc->load($folder.'/book.ncx');
-        $nav_point=$doc->getElementsByTagName('navPoint');
-        return $nav_point->length;
+    static function EPUBLength($path,$folder){
+        $zip = zip_open($path);
+        $lengths_of_chapters='';
+        $s=0;
+        if ($zip) {
+            while ($zip_entry = zip_read($zip)) {
+                if(!strpos(zip_entry_name($zip_entry),'.xhtml')===false) {
+                    if (zip_entry_open($zip, $zip_entry, "r")) {
+                        $str = zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
+                        $fb2DOM = new DOMDocument();
+                        $fb2DOM->loadXML($str);
+                        $text = $fb2DOM->getElementsByTagName('body');
+                        $longstr=strlen($text[0]->textContent);
+                        $lengths_of_chapters=$lengths_of_chapters.$longstr.'$$$$$$';
+                        $s+=$longstr;
+                        zip_entry_close($zip_entry);
+                    }
+                }
+            }
+            zip_close($zip);
+        }
+        $fp=fopen($folder.'/'.'lengths_of_chapters.txt','w+');
+        fwrite($fp,$lengths_of_chapters);
+        fclose($fp);
+        return $s;
     }
     static function EPUBAuthor ($folder){
         $str=$file = file_get_contents($folder.'/content.opf', FILE_USE_INCLUDE_PATH);
@@ -546,8 +571,7 @@ class EPUB{
             $file = str_replace('<a', '<p', $file);
             $file = str_replace('a/>', 'p/>', $file);
             $file = str_replace('src="', 'class="center-block" src="' . $file_path . "/", $file);
-            $pageProgress = round(($progress['chapter_id']+1)/$progress['p']*100, 0, PHP_ROUND_HALF_UP);
-            $newProgress = json_encode(array('chapter_id' => $progress['chapter_id'] + 1, 'chapter' => $name, 'page_progress' => 0, 'progress' => $pageProgress, 'p' => $progress['p']));
+            $newProgress = json_encode(array('chapter_id' => $progress['chapter_id'] + 1, 'chapter' => $name, 'page_progress' => 0, 'progress' => EPUB::progress('../'.$data[0]['path'], 0, $progress['chapter_id']+1, $progress['p']), 'p' => $progress['p']));
             B::updateBase('users_files', array('progress'), array($newProgress), array('id'), array($id));
             return $file;
         } else return '**/**/**';
@@ -582,7 +606,7 @@ class EPUB{
             $file = str_replace('a/>', 'p/>', $file);
             $file = str_replace('src="', 'class="center-block" src="' . $file_path . "/", $file);
             $pageProgress = round(($progress['chapter_id']-1)/$progress['p']*100, 0, PHP_ROUND_HALF_UP);
-            $newProgress = json_encode(array('chapter_id' => $progress['chapter_id'] - 1, 'chapter' => $name, 'page_progress' => 0, 'progress' => $pageProgress, 'p' => $progress['p']));
+            $newProgress = json_encode(array('chapter_id' => $progress['chapter_id'] - 1, 'chapter' => $name, 'page_progress' => 0, 'progress' => EPUB::progress('../'.$data[0]['path'], 0, $progress['chapter_id']-1, $progress['p']), 'p' => $progress['p']));
             B::updateBase('users_files', array('progress'), array($newProgress), array('id'), array($id));
             return $file;
         } else return '**/**/**';
@@ -593,7 +617,6 @@ class EPUB{
         $progress = json_decode($data[0]['progress'],true);
         $s=explode("/",$data[0]['path']);
         $file_path=str_replace("/".$s[count($s)-1], '', $data[0]['path']);
-        $pageProgress = round($chapter/$progress['p']*100, 0, PHP_ROUND_HALF_UP);
         $name=EPUB::chapterName("../".$file_path,$chapter);
         $or_name='';
         if (file_exists($_SERVER['DOCUMENT_ROOT'].'/'.$file_path."/".$progress['chapter'])) {
@@ -616,16 +639,30 @@ class EPUB{
         $file = str_replace('<a', '<p', $file);
         $file = str_replace('a/>', 'p/>', $file);
         $file = str_replace('src="', 'class="center-block" src="' . $file_path . "/", $file);
-        $newProgress = json_encode(array('chapter_id' => $chapter, 'chapter' => $name, 'page_progress' => 0, 'progress' => $pageProgress, 'p' => $progress['p']));
+        $newProgress = json_encode(array('chapter_id' => $chapter, 'chapter' => $name, 'page_progress' => 0, 'progress' => EPUB::progress('../'.$data[0]['path'], 0, $chapter, $progress['p']), 'p' => $progress['p']));
         B::updateBase('users_files', array('progress'), array($newProgress), array('id'), array($id));
         return $file;
     }
-    static function pageScroll($id,$scroll,$docHeight){
+    static function pageScroll($id,$scroll,$docHeight,$windowHeight){
         $stmt = B::selectFromBase('users_files', null, array('id'), array($id));
         $data = $stmt->fetchAll();
         $progress = json_decode($data[0]['progress'],true);
-        $newProgress = json_encode(array('chapter_id' => $progress['chapter_id'], 'chapter' => $progress['chapter'], 'page_progress' => round($scroll/$docHeight*100), 'progress' => $progress['progress'], 'p' => $progress['p']));
+        $newProgress = json_encode(array('chapter_id' => $progress['chapter_id'], 'chapter' => $progress['chapter'], 'page_progress' => round(($scroll+$windowHeight)/$docHeight*100,0,PHP_ROUND_HALF_UP), 'progress' => EPUB::progress('../'.$data[0]['path'], round(($scroll+$windowHeight)/$docHeight*100,0,PHP_ROUND_HALF_UP), $progress['chapter_id'], $progress['p']), 'p' => $progress['p']));
         B::updateBase('users_files', array('progress'), array($newProgress), array('id'), array($id));
+    }
+    static function progress($path,$pageProgress,$chapter,$length){
+        $s=explode("/",$path);
+        $file_path=str_replace("/".$s[count($s)-1], '', $path);
+        $file=file_get_contents('./'.$file_path."/lengths_of_chapters.txt", FILE_USE_INCLUDE_PATH);
+        $list=explode("$$$$$$",$file);
+        $progressBook=0;
+        for ($i=0;$i<$chapter-1;$i++){
+            $progressBook+=$list[$i];
+        }
+        $progressBook+=round($list[$chapter-1]/100*$pageProgress,0,PHP_ROUND_HALF_UP);
+        $progress=round($progressBook/$length*100,0,PHP_ROUND_HALF_UP);
+        if ($progress>99) $progress=100;
+        return $progress;
     }
 }
 class PDF{

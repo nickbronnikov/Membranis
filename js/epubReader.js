@@ -138,7 +138,7 @@ function pageProgress(scroll,documentHeight,windowHeight) {
     $.ajax({
         type: "POST",
         url: "includes/reader-file.php",
-        data: {function: 'pageScrollEPUB',scroll: scroll,docHeight: documentHeight, id:id},
+        data: {function: 'pageScrollEPUB',scroll: scroll,docHeight: documentHeight, windowHeight: windowHeight, id:id},
         success: function (data) {
 
         }

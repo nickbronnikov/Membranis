@@ -398,7 +398,7 @@ class EPUB{
         $s=0;
         if ($zip) {
             while ($zip_entry = zip_read($zip)) {
-                if(!strpos(zip_entry_name($zip_entry),'.xhtml')===false) {
+                if(!strpos(zip_entry_name($zip_entry),'.xhtml')===false || !strpos(zip_entry_name($zip_entry),'.html')===false) {
                     if (zip_entry_open($zip, $zip_entry, "r")) {
                         $str = zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
                         $fb2DOM = new DOMDocument();
@@ -546,8 +546,12 @@ class EPUB{
     static function nextChapter($id){
         $stmt = B::selectFromBase('users_files', null, array('id'), array($id));
         $data = $stmt->fetchAll();
+        $s=explode("/",$data[0]['path']);
+        $file_path=str_replace("/".$s[count($s)-1], '', $data[0]['path']);
+        $file=file_get_contents('../'.$file_path."/lengths_of_chapters.txt", FILE_USE_INCLUDE_PATH);
+        $list=explode("$$$$$$",$file);
         $progress = json_decode($data[0]['progress'],true);
-        if (($progress['chapter_id']+1)<=$progress['p']) {
+        if (($progress['chapter_id']+1)<count($list)) {
             $s=explode("/",$data[0]['path']);
             $file_path=str_replace("/".$s[count($s)-1], '', $data[0]['path']);
             if (file_exists($_SERVER['DOCUMENT_ROOT'].'/'.$file_path."/".$progress['chapter']))

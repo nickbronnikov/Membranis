@@ -29,10 +29,10 @@ class head{
     <title>'.$title.'</title>
     <script src="js/jquery-3.1.0.min.js"></script>
     <script src="js/dropzone.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700&subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
     <script src="js/bootstrap.min.js"></script>
     <script src="js/progress-bar/progress.js"></script>
     <script src="js/index.js"></script>
+    <script src="js/notifications.js"></script>
     <link href="css/bootstrap.css" type="text/css" rel="stylesheet">
     <link href="css/style.css" type="text/css" rel="stylesheet">
     <link href="css/progress.css" type="text/css" rel="stylesheet"/>
@@ -68,6 +68,7 @@ class head{
     <script src="js/js-download/script.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/progress-bar/progress.js"></script>
+    <script src="js/notifications.js"></script>
     <link rel="apple-touch-icon" sizes="57x57" href="img/logo/57.png" >
     <link rel="apple-touch-icon" sizes="114x114" href="img/logo/114.png" >
     <link rel="apple-touch-icon" sizes="72x72" href="img/logo/72.png" >
@@ -112,6 +113,7 @@ class head{
     <script type="text/javascript" src="js/colorpicker.js"></script>
     <script src="js/style.js"></script>
     <script src="js/settings.js"></script>
+    <script src="js/notifications.js"></script>
 </head>';
                 break;
             case 'help':
@@ -126,6 +128,7 @@ class head{
     <link href="css/bootstrap.css" type="text/css" rel="stylesheet">
     <link href="css/style.css" type="text/css" rel="stylesheet">
     <link href="css/progress.css" type="text/css" rel="stylesheet"/>
+    <script src="js/notifications.js"></script>
     <link rel="apple-touch-icon" sizes="57x57" href="img/logo/57.png" >
     <link rel="apple-touch-icon" sizes="114x114" href="img/logo/114.png" >
     <link rel="apple-touch-icon" sizes="72x72" href="img/logo/72.png" >
@@ -150,7 +153,7 @@ class head{
     <script src="js/jquery-3.1.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/recovery.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700&subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
+    <script src="js/notifications.js"></script>
     <link href="css/bootstrap.css" type="text/css" rel="stylesheet">
     <link href="css/style.css" type="text/css" rel="stylesheet">
     <link rel="apple-touch-icon" sizes="57x57" href="img/logo/57.png" >
@@ -175,7 +178,6 @@ class head{
     <script src="js/jquery-3.1.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/signup.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700&subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
     <link href="css/bootstrap.css" type="text/css" rel="stylesheet">
     <link href="css/style.css" type="text/css" rel="stylesheet">
     <link rel="apple-touch-icon" sizes="57x57" href="img/logo/57.png" >
@@ -245,17 +247,17 @@ class head{
                 }
                 $head='<head>
     <meta charset="utf-8">
-    <title>'.$data[0]['original_name'].'</title>
+    <title>'.$data[0]['author'].'</title>
     <script src="js/jquery-3.1.0.min.js"></script>
     <link href="css/bootstrap.css" type="text/css" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700&subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
-    <link href="css/style.css" type="text/css" rel="stylesheet"/>
+     <link href="css/style.css" type="text/css" rel="stylesheet"/>
     <link href="css/progress.css" type="text/css" rel="stylesheet"/>
     <script src="js/js-download/jquery.knob.js"></script>
     <script src="js/progress-bar/progress.js"></script>
     <script src="js/bootstrap.min.js"></script>'.$js.'
     <script src="js/jqueryScrollTo.js"></script>
     <script src="js/progress-bar/progress.js"></script>
+    <script src="js/notifications.js"></script>
     <link rel="apple-touch-icon" sizes="57x57" href="img/logo/57.png" >
     <link rel="apple-touch-icon" sizes="114x114" href="img/logo/114.png" >
     <link rel="apple-touch-icon" sizes="72x72" href="img/logo/72.png" >
@@ -275,17 +277,77 @@ class head{
         return $head;
     }
     function getMainNav(){
+        $modal_notifications='';
         $mainNav='';
+        if (isset($_COOKIE['logged_user'])){
+            $li_notifications='<span class="badge pull-right"></span>';
+            $notifications='<span class="badge"></span>   ';
+            $modalbody='';
+            $stmt=B::selectFromBase('users',null,array('login'),array($_COOKIE['logged_user']));
+            $data=$stmt->fetchAll();
+            $stmt=B::selectFromBaseSet('notifications',null,array('id_user','read_notification'),array($data[0]['id'],'0'),'ORDER BY `notifications`.`id` DESC');
+            $bnot=B::selectFromBaseSet('notifications',null,array('id_user'),array($data[0]['id']),'ORDER BY `notifications`.`id` DESC');
+            $bdata=$bnot->fetchAll();
+            $data=$stmt->fetchAll();
+            if (count($bdata)!=0){
+                $showall='<button class="btn btn-success btn-rad" id="seeAllNotifications" onclick="seeAllNotifications()">See all notification</button>';
+            } else {
+                $showall='';
+            }
+            if (count($data)==0){
+                $markall='';
+                $modalbody='<div class="panel panel-default">
+  <div class="panel-body" id="noOneNotification">
+    <svg class="center-block" fill="#5cb85c" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 0h24v24H0z" fill="none"/>
+    <path d="M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41L6 19l1.41-1.41L1.83 12 .41 13.41z"
+</svg>
+<h3 class="text-center"><strong>No unread notifications.</strong></h3>
+  </div>
+</div>';
+            } else {
+                $markall='<button class="btn btn-success button-color btn-rad" id="markAllNotifications" onclick="allRead()">Mark all notifications as read</button>';
+                foreach ($data as $item){
+                    $modalbody.='<div class="panel panel-default notification" id="notification'.$item['id'].'">
+  <div class="panel-body">
+    '.$item['notification'].'
+  </div>
+  <div class="panel-footer"><div class="btn-group btn-group-sm"><button class="btn btn-success btn-bookmark btn-sm btn-rad" id="btnReadNotification'.$item['id'].'" onclick="readNotification('.$item['id'].')">Read</button></div></div>
+</div>';
+                }
+                $notifications='<span class="badge">'.count($data).'</span>   ';
+                $li_notifications='<span class="badge pull-right">'.count($data).'</span>';
+            }
+            $modal_notifications='<div class="modal fade" tabindex="-1" role="dialog"  aria-hidden="true" id="notifications-list">
+        <div class="modal-dialog">
+            <div class="modal-content btn-rad">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="modal-title" id="myLargeModalLabel"><strong>Notifications</strong></h3>
+                </div>
+                <div class="modal-body list">
+                    <div id="ln">'.$modalbody.'</div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center" id="notmod-bottom-button">
+                        '.$markall.$showall.'
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>';
+        }
         switch ($this->page){
             case 'index':
                 if (isset($_COOKIE['logged_user'])) {
                     $progressShow='<script>progressShow()</script>';
                     $rNav='<div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right" >
+            <ul class="nav navbar-nav navbar-right nav-pills">
                 <li class="dropdown maincolor" id="li-nav">
-                    <button class="btn btn-default btn-rad dropdown-toggle" data-toggle="dropdown">'.$_COOKIE['logged_user'].'   <b class="caret"></b></button>
+                    <button class="btn btn-default btn-rad dropdown-toggle" data-toggle="dropdown">'.$_COOKIE['logged_user'].'   '.$notifications.'<b class="caret"></b></button>
                     <ul class="dropdown-menu">
                         <li><a href="library">Your library</a></li>
+                        <li><a id="notifications">Notifications'.$li_notifications.'</a></li>
                         <li><a href="settings">Settings</a></li>
                         <li><a href="help">Help</a></li>
                         <li class="divider"></li>
@@ -332,7 +394,7 @@ class head{
             </div>
         </div>
     </div>
-</div>';
+</div>'.$modal_notifications;
                 break;
             case 'library':
                 $mainNav='<script>progressShow()</script><div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="errorExtension">
@@ -409,8 +471,9 @@ class head{
                     </span>
                 </span></li>
                 <li class="dropdown maincolor" id="li-nav">
-                    <button class="btn btn-default btn-rad dropdown-toggle" data-toggle="dropdown">'.$_COOKIE['logged_user'].'   <b class="caret"></b></button>
+                    <button class="btn btn-default btn-rad dropdown-toggle" data-toggle="dropdown">'.$_COOKIE['logged_user'].'   '.$notifications.'<b class="caret"></b></button>
                     <ul class="dropdown-menu">
+                        <li><a id="notifications">Notifications'.$li_notifications.'</a></li>
                         <li><a href="settings">Settings</a></li>
                         <li><a href="help">Help</a></li>
                         <li class="divider"></li>
@@ -421,7 +484,7 @@ class head{
         </div>
     </div>
 </div>
-<div>';
+<div>'.$modal_notifications;
                 break;
             case 'settings':
                 $mainNav='<script>progressShow()</script>
@@ -440,9 +503,10 @@ class head{
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown maincolor" id="li-nav">
-                        <button class="btn btn-default dropdown-toggle btn-rad" data-toggle="dropdown" id="user_name">'.$_COOKIE['logged_user'].'   <b class="caret"></b></button>
+                        <button class="btn btn-default dropdown-toggle btn-rad" data-toggle="dropdown" id="user_name">'.$_COOKIE['logged_user'].'   '.$notifications.'<b class="caret"></b></button>
                         <ul class="dropdown-menu">
                             <li><a href="library">Your library</a></li>
+                            <li><a id="notifications">Notifications'.$li_notifications.'</a></li>
                             <li><a href="help">Help</a></li>
                             <li class="divider"></li>
                             <li><a href="logout">Log out</a></li>
@@ -451,15 +515,16 @@ class head{
                 </ul>
             </div>
         </div>
-    </div>';
+    </div>'.$modal_notifications;
                 break;
             case 'help':
                 if (isset($_COOKIE['logged_user'])) $rNav='<div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right" >
                 <li class="dropdown maincolor" id="li-nav">
-                    <button class="btn btn-default btn-rad dropdown-toggle" data-toggle="dropdown">'.$_COOKIE['logged_user'].'   <b class="caret"></b></button>
+                    <button class="btn btn-default btn-rad dropdown-toggle" data-toggle="dropdown">'.$_COOKIE['logged_user'].'   '.$notifications.'<b class="caret"></b></button>
                     <ul class="dropdown-menu">
                         <li><a href="library">Your library</a></li>
+                        <li><a id="notifications">Notifications'.$li_notifications.'</a></li>
                         <li><a href="settings">Settings</a></li>
                         <li class="divider"></li>
                         <li><a href="logout">Log out</a></li>
@@ -484,7 +549,7 @@ class head{
             <a class="navbar-brand" href="/"><img src="img/Logo_s.png"></a>
         </div>'.$rNav.'
     </div>
-</div>';
+</div>'.$modal_notifications;
                 break;
             case 'recovery':
                 if ($_GET['com']=='cnf' && isset($_GET['key'])){
@@ -492,9 +557,10 @@ class head{
                 } else $check=false;
                 $rNav='';
                 if (isset($_COOKIE['logged_user']) && checkKey($_COOKIE['key'])) $rNav='<li class="dropdown maincolor">
-                        <button class="btn btn-default dropdown-toggle btn-rad" data-toggle="dropdown" id="user_name">'.$_COOKIE["logged_user"].'   <b class="caret"></b></button>
+                        <button class="btn btn-default dropdown-toggle btn-rad" data-toggle="dropdown" id="user_name">'.$_COOKIE["logged_user"].'   '.$notifications.'<b class="caret"></b></button>
                         <ul class="dropdown-menu">
                             <li><a href="library">Your library</a></li>
+                            <li><a id="notifications">Notifications'.$li_notifications.'</a></li>
                             <li><a href="settings">Settings</a></li>
                             <li><a href="help">Help</a></li>
                             <li class="divider"></li>
@@ -517,7 +583,7 @@ class head{
             </ul>
         </div>
     </div>
-</div>';
+</div>'.$modal_notifications;
                 break;
             case 'signin':
                 $mainNav='<div class="navbar navbar-default navbar-static-top" id="nav" role="navigation">
@@ -613,9 +679,10 @@ class head{
                 </li>
                 <li class="dropdown maincolor li-nav">'.$rNav.'</li>
                 <li class="dropdown maincolor" id="li-nav">
-                    <button class="btn btn-default dropdown-toggle btn-rad" data-toggle="dropdown">'.$_COOKIE['logged_user'].'   <b class="caret"></b></button>
+                    <button class="btn btn-default dropdown-toggle btn-rad" data-toggle="dropdown">'.$_COOKIE['logged_user'].'   '.$notifications.'<b class="caret"></b></button>
                     <ul class="dropdown-menu">
                         <li><a href="library">Your library</a></li>
+                        <li><a id="notifications">Notifications'.$li_notifications.'</a></li>
                         <li><a href="settings">Settings</a></li>
                         <li><a href="help">Help</a></li>
                         <li class="divider"></li>
@@ -624,7 +691,7 @@ class head{
                 </li>
             </ul>
         </div>
-    </div>';
+    </div>'.$modal_notifications;
                 break;
         }
         return $mainNav;
@@ -1119,8 +1186,8 @@ class body{
     <svg class="center-block" fill="#5cb85c" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
     <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
     <path d="M0 0h24v24H0z" fill="none"/>
-        <h3 class="text-center"><strong>You have not added any one bookmark.</strong></h3>
 </svg>
+<h3 class="text-center"><strong>You have not added any one bookmark.</strong></h3>
   </div>
 </div>';
                     }else {
@@ -1175,7 +1242,7 @@ class body{
                 } else {
                     $reader='<h2>You are trying to read the book that is not available to you.</h2>';
                 }
-                $body='  <div class="modal fade" tabindex="-1" role="dialog"  aria-hidden="true" id="bookmarks-list">
+                $body='<div class="modal fade" tabindex="-1" role="dialog"  aria-hidden="true" id="bookmarks-list">
         <div class="modal-dialog">
             <div class="modal-content btn-rad">
                 <div class="modal-header">

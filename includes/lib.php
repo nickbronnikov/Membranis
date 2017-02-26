@@ -99,6 +99,51 @@ switch ($_POST['function']){
             echo '<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/">';
         }
         break;
+    case 'markAllNotificationsAsRead':
+        $stmt=B::selectFromBase('users',null,array('login'),array($_COOKIE['logged_user']));
+        $data=$stmt->fetchAll();
+        B::updateBase('notifications',array('read_notification'),array(1),array('id_user'),array($data[0]['id']));
+        break;
+    case 'markNotificationAsRead':
+        B::updateBase('notifications',array('read_notification'),array(1),array('id'),array($_POST['id']));
+        break;
+    case 'showNewNotifications':
+        $modalbody='';
+        $count_notifications=0;
+        $ids=explode('$$$$$',$_POST['ids']);
+        $stmt=B::selectFromBase('users',null,array('login'),array($_COOKIE['logged_user']));
+        $data=$stmt->fetchAll();
+        $stmt=B::selectFromBaseSet('notifications',null,array('id_user','read_notification'),array($data[0]['id'],'0'),'ORDER BY `notifications`.`id` DESC');
+        $data=$stmt->fetchAll();
+        foreach ($data as $item){
+            if (array_search($item['id'],$ids)===false) {
+                $count_notifications++;
+                $modalbody .= '<div class="panel panel-default notification" id="notification' . $item['id'] . '">
+  <div class="panel-body">
+    ' . $item['notification'] . '
+  </div>
+  <div class="panel-footer"><div class="btn-group btn-group-sm"><button class="btn btn-success btn-bookmark btn-sm btn-rad" id="btnReadNotification' . $item['id'] . '" onclick="readNotification(' . $item['id'] . ')">Read</button></div></div>
+</div>';
+            }
+        }
+        echo json_encode(array('notifications' => $modalbody, 'count' => $count_notifications));
+        break;
+    case 'showAllNotifications':
+        $modalbody='';
+        $stmt=B::selectFromBase('users',null,array('login'),array($_COOKIE['logged_user']));
+        $data=$stmt->fetchAll();
+        $stmt=B::selectFromBaseSet('notifications',null,array('id_user'),array($data[0]['id']),'ORDER BY `notifications`.`id` DESC');
+        $data=$stmt->fetchAll();
+        foreach ($data as $item){
+            $modalbody.='<div class="panel panel-default oldnotification" id="notification'.$item['id'].'">
+  <div class="panel-body">
+    '.$item['notification'].'
+  </div>
+  <div class="panel-footer"><div class="btn-group btn-group-sm"><button class="btn btn-success btn-bookmark btn-sm btn-rad" id="btnReadNotification'.$item['id'].'" onclick="readNotification('.$item['id'].')">Read</button></div></div>
+</div>';
+        }
+        echo $modalbody;
+        break;
 }
 class showBook{
     function showAllBook(){

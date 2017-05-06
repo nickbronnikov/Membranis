@@ -1,6 +1,5 @@
 <?php
-ini_set('default_charset','UTF-8');
-require 'lib.php';
+require 'db.php';
 if ($_COOKIE['logged_user']!= null && $_COOKIE['key']!=null)
     if (checkKey($_COOKIE['key']))
 switch ($_POST['function']) {
@@ -665,7 +664,7 @@ class EPUB{
         }
         $progressBook+=round($list[$chapter-1]/100*$pageProgress,0,PHP_ROUND_HALF_UP);
         $progress=round($progressBook/$length*100,0,PHP_ROUND_HALF_UP);
-        if ($progress>99) $progress=100;
+        if (($progressBook/$length*100)>99) $progress=100;
         return $progress;
     }
 }

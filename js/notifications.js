@@ -61,6 +61,7 @@ function readNotification(id) {
         beforeSend: function () {
             $('#notification'+id).addClass('readNotification');
             $('#btnReadNotification'+id).attr('disabled','disabled');
+            if ($('.badge').eq(0).html()!='')
             if ($('.badge').eq(0).html()=='1'){
                 $('.badge').eq(0).html('');
                 $('.badge').eq(1).html('');

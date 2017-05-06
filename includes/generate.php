@@ -1,5 +1,5 @@
 <?php
-require 'reader-file.php';
+require 'lib.php';
 class html{
     var $page;
     function html($name){

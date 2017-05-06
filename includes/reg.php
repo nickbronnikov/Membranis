@@ -1,5 +1,5 @@
 <?php
-require 'reader-file.php';
+require 'lib.php';
 require 'mail.php';
 $table_name='users';
 $fild=array($_POST['field']);

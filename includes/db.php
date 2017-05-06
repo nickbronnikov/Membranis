@@ -1,4 +1,6 @@
 <?php
+session_start();
+include 'resources.php';
 class B{
     public $db_login="mysql";
     public $db_password="mysql";
